@@ -29,6 +29,13 @@ export default function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
   const krepezhItems = COMPANY.categories.filter((c) => (c as any).group === "krepezh");
   const standalone   = COMPANY.categories.filter((c) => !(c as any).group);
 
+  // Количество пустых ячеек чтобы заполнить последнюю строку подкатегорий
+  // (3 правые колонки × 4 строки = 12 мест; у нас 11 подкатегорий → нужен 1 филлер)
+  const SUBCOLS = 3; // правые колонки в 4-колоночном гриде
+  const fillerCount = krepezhItems.length % SUBCOLS === 0
+    ? 0
+    : SUBCOLS - (krepezhItems.length % SUBCOLS);
+
   const handleClick = (title: string) => {
     trackCategoryClick(title);
     onCategoryClick?.(title);
@@ -111,14 +118,21 @@ export default function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
             );
           })}
 
+          {/* Заполняем пустые ячейки до конца строки чтобы следующие группы не залезали */}
+          {open && Array.from({ length: fillerCount }).map((_, i) => (
+            <div key={`filler-${i}`} className="bg-slate-800" />
+          ))}
+
           {/* ── ОСТАЛЬНЫЕ КАТЕГОРИИ (уходят вниз автоматически) ── */}
-          {standalone.map((cat) => {
+          {standalone.map((cat, i) => {
             const Icon = ICONS[cat.slug] ?? Wrench;
+            // Первая карточка принудительно с колонки 1 — чтобы начать новую строку
+            const forceNewRow = open && i === 0 ? "lg:col-start-1" : "";
             return (
               <div
                 key={cat.slug}
                 onClick={() => handleClick(cat.title)}
-                className="group bg-white hover:bg-slate-900 cursor-pointer p-6 transition-colors duration-150"
+                className={`group bg-white hover:bg-slate-900 cursor-pointer p-6 transition-colors duration-150 ${forceNewRow}`}
               >
                 <Icon size={28} className="text-orange-500 group-hover:text-orange-400 mb-3 transition-colors" />
                 <h3 className="font-black text-slate-900 group-hover:text-white text-base uppercase tracking-tight mb-1 transition-colors">
