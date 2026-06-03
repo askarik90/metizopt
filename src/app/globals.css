@@ -14,3 +14,10 @@
 body {
   font-family: var(--font-sans);
 }
+
+/* Крепеж: растягивается вертикально только на десктопе */
+@media (min-width: 1024px) {
+  .krepezh-expanded {
+    grid-row: span 4;
+  }
+}
