@@ -29,7 +29,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <span className="text-white font-black text-xl tracking-tighter uppercase">
-              Метиз<span className="text-orange-500">Опт</span>
+              KRP<span className="text-orange-500">.kz</span>
             </span>
           </Link>
 

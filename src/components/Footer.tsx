@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <div className="text-white font-black text-xl tracking-tighter uppercase mb-4">
-              Метиз<span className="text-orange-500">Опт</span>
+              KRP<span className="text-orange-500">.kz</span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed">
               Оптовые поставки крепежа, метизов и такелажа в Казахстане.

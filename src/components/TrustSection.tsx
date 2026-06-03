@@ -39,7 +39,7 @@ export default function TrustSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">
-            Почему выбирают МетизОпт
+            Почему выбирают KRP
           </h2>
           <p className="text-slate-500">
             Работаем с компаниями по всему Казахстану
