@@ -8,10 +8,12 @@ import {
 import { COMPANY } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import catalogTypes from "@/data/catalog-types.json";
+import typeSizes from "@/data/type-sizes.json";
 
 interface CategoryGridProps {}
 
 const TYPES = catalogTypes as Record<string, string[]>;
+const SIZES = typeSizes as Record<string, string[]>;
 
 const ICONS: Record<string, React.ElementType> = {
   bolty: Settings,       gayki: Settings,    shayby: Circle,
@@ -168,21 +170,29 @@ export default function CategoryGrid({}: CategoryGridProps) {
             </div>
 
             {/* Список типов */}
-            <div className="overflow-y-auto p-4 flex flex-wrap gap-2 content-start">
+            <div className="overflow-y-auto p-4 flex flex-wrap gap-3 content-start">
               {TYPES[modalSlug]?.map((t) => {
                 const active = picked.includes(t);
+                const sizes = SIZES[t] || [];
                 return (
                   <button
                     key={t}
                     onClick={() => togglePick(t)}
-                    className={`flex items-center gap-2 px-3 py-2 text-sm border-2 transition-colors text-left ${
+                    className={`flex flex-col gap-1 px-3 py-2 text-sm border-2 transition-colors text-left min-w-[180px] ${
                       active
                         ? "border-orange-600 bg-orange-50 text-orange-700"
                         : "border-slate-200 text-slate-700 hover:border-orange-400"
                     }`}
                   >
-                    {active && <Check size={14} className="shrink-0" />}
-                    {t}
+                    <div className="flex items-center gap-2">
+                      {active && <Check size={14} className="shrink-0" />}
+                      <span className="font-medium">{t}</span>
+                    </div>
+                    {sizes.length > 0 && (
+                      <div className={`text-xs ${active ? "text-orange-600" : "text-slate-500"}`}>
+                        Размеры: {sizes.join(", ")}
+                      </div>
+                    )}
                   </button>
                 );
               })}
