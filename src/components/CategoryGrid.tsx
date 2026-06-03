@@ -1,5 +1,5 @@
 "use client";
-import { Wrench, Settings, Circle, Anchor, Minus, Plug, Hammer, AlignJustify, Wind, Grid3x3, Star, Link2, Rope, Zap, Waves, Tag, Globe } from "lucide-react";
+import { Wrench, Settings, Circle, Anchor, Minus, Package, Hammer, FileText, Wind, BarChart3, Star, Link2, Link, Zap, Droplet, Tag, Globe } from "lucide-react";
 import { COMPANY } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -15,18 +15,18 @@ const categoryIconsLucide: Record<string, React.ElementType> = {
   vinty:              Wrench,
   ankera:             Anchor,
   shplinty:           Minus,
-  dyubelya:           Plug,
+  dyubelya:           Package,
   shurupy:            Wrench,
-  shpilki:            AlignJustify,
+  shpilki:            FileText,
   zaklepki:           Hammer,
   gvozdi:             Minus,
   ventilatsiya:       Wind,
-  perfo:              Grid3x3,
+  perfo:              BarChart3,
   nerzhaveyushchiy:   Star,
   takelazh:           Link2,
-  kanaty:             Rope,
+  kanaty:             Link,
   elektrody:          Zap,
-  shlangi:            Waves,
+  shlangi:            Droplet,
   "krepezh-gost":     Tag,
   "krepezh-din-iso":  Globe,
 };
