@@ -22,7 +22,7 @@ export default function UploadRequestBlock({ onUploadClick }: UploadRequestBlock
             </h2>
             <p className="text-slate-300 text-lg max-w-xl">
               Просто отправьте список. Мы сами разберём позиции, проверим наличие,
-              подберём аналоги и подготовим КП.
+              подберём аналоги и менеджер свяжется для уточнения.
             </p>
             <div className="flex items-center gap-2 mt-4">
               <span className="text-slate-500 text-sm">Принимаем:</span>

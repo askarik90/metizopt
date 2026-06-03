@@ -82,7 +82,7 @@ export default function LandingCategoryPage({
             Запросить наличие и цену
           </h2>
           <p className="text-slate-300 mb-6">
-            Пришлите список — менеджер проверит наличие и подготовит КП за 30 минут.
+            Пришлите список — менеджер проверит наличие и свяжется за 30 минут.
           </p>
           <button
             onClick={() => setModalOpen(true)}

@@ -42,7 +42,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
 
             <p className="text-slate-300 text-lg leading-relaxed mb-8">
               Болты, гайки, анкера, шайбы, шпильки, такелаж и строительный крепеж.
-              Пришлите список — проверим наличие, подберём аналоги и подготовим КП.
+              Пришлите список — проверим наличие, подберём аналоги и менеджер свяжется для уточнения.
             </p>
 
             <div className="flex flex-wrap gap-3 mb-8">
@@ -100,7 +100,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
             </div>
             <div className="bg-slate-800 border border-slate-700 p-8">
               <div className="text-5xl font-black text-orange-500 mb-2">30 мин</div>
-              <div className="text-white font-medium text-lg">среднее время расчёта КП</div>
+              <div className="text-white font-medium text-lg">среднее время ответа на заявку</div>
               <div className="text-slate-400 text-sm mt-1">Отправьте список — ответим быстро</div>
             </div>
           </div>

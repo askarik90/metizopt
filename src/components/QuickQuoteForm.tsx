@@ -91,7 +91,7 @@ export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
               <div className="flex items-start gap-3">
                 <span className="text-orange-500 font-black text-xl mt-0.5">03</span>
                 <div>
-                  <div className="text-white font-medium">КП за 30 минут</div>
+                  <div className="text-white font-medium">Ответ за 30 минут</div>
                   <div className="text-sm">В WhatsApp или на email</div>
                 </div>
               </div>

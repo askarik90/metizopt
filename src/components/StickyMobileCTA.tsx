@@ -36,7 +36,7 @@ export default function StickyMobileCTA({ onQuoteClick }: StickyMobileCTAProps) 
           className="flex flex-col items-center justify-center gap-1 bg-orange-600 hover:bg-orange-700 text-white py-3.5 transition-colors"
         >
           <FileText size={20} />
-          <span className="text-xs font-medium">КП</span>
+          <span className="text-xs font-medium">Заявка</span>
         </button>
       </div>
     </div>
