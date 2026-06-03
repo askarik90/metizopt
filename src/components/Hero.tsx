@@ -68,7 +68,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
                 className="flex items-center gap-2 border border-white text-white hover:bg-white hover:text-slate-900 px-6 py-3.5 font-medium text-base transition-colors min-h-[48px]"
               >
                 <FileText size={20} />
-                Запросить КП
+                Оставить заявку
               </button>
               <a
                 href={`tel:${COMPANY.phoneRaw}`}

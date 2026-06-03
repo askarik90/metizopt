@@ -23,8 +23,8 @@ export default function HowItWorks() {
     {
       icon: Send,
       num: "04",
-      title: "Получаете КП",
-      desc: "Коммерческое предложение в WhatsApp или на email за 30 минут",
+      title: "Менеджер свяжется",
+      desc: "Уточним детали, подберём аналоги и отправим предложение в WhatsApp или на email за 30 минут",
     },
   ];
 
