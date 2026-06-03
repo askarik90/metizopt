@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X, MessageCircle, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import SearchBar from "./SearchBar";
 
 interface HeaderProps {
   onQuoteClick?: () => void;
@@ -44,6 +45,11 @@ export default function Header({ onQuoteClick }: HeaderProps) {
               </Link>
             ))}
           </nav>
+
+          {/* Desktop search */}
+          <div className="hidden lg:block">
+            <SearchBar />
+          </div>
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-2">

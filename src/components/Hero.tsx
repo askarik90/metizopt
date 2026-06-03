@@ -24,9 +24,23 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (evt) => {
-      const dataUrl = evt.target?.result as string;
-      localStorage.setItem("heroBg", dataUrl);
-      setBg(dataUrl);
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas") as HTMLCanvasElement;
+        canvas.width = 1920;
+        canvas.height = 1200;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D | null;
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, 1920, 1200);
+        const compressed = canvas.toDataURL("image/jpeg", 0.7);
+        try {
+          localStorage.setItem("heroBg", compressed);
+          setBg(compressed);
+        } catch {
+          alert("Картинка слишком большая. Выберите меньший файл.");
+        }
+      };
+      img.src = (evt.target?.result as string) || "";
     };
     reader.readAsDataURL(file);
   };

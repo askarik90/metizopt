@@ -88,7 +88,7 @@ export default function ContactsPage() {
                   height="400"
                   style={{ border: 0 }}
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2744.9206584748837!2d76.94160277350267!3d43.23816197107937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38836ec8b7d3e3dd%3A0x1234567890!2z0KeU0LDQtdGA0LPRitGB0LrQsCDQnNCw0LvQtdC90YHRgtC-0YLQviDQndC70Y_QvdC-0LLQutC80LXQvQ!5e0!3m2!1sru!2skz!4v1686741234567"
-                  allowFullScreen=""
+                  allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 ></iframe>
@@ -139,7 +139,6 @@ export default function ContactsPage() {
                     <div className="text-slate-600">{COMPANY.workingHoursSat}</div>
                   </div>
                 </div>
-              </div>
               </div>
               <ContactForm />
             </div>
