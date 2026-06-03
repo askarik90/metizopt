@@ -1,5 +1,6 @@
 "use client";
-import { MessageCircle, Upload, FileText, Phone } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { MessageCircle, Upload, FileText, Phone, Image } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -10,6 +11,25 @@ interface HeroProps {
 
 export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   const { trackWhatsAppClick, trackPhoneClick } = useAnalytics();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [bg, setBg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("heroBg");
+    if (saved) setBg(saved);
+  }, []);
+
+  const handleBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const dataUrl = evt.target?.result as string;
+      localStorage.setItem("heroBg", dataUrl);
+      setBg(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const badges = [
     "Оптовые поставки",
@@ -24,9 +44,12 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     <section
       className="relative bg-slate-900 overflow-hidden"
       style={{
-        backgroundImage:
-          "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
-        backgroundSize: "28px 28px",
+        backgroundImage: bg
+          ? `url('${bg}')`
+          : "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
+        backgroundSize: bg ? "cover" : "28px 28px",
+        backgroundPosition: bg ? "center" : "0 0",
+        backgroundColor: "rgb(15, 23, 42)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
@@ -104,6 +127,24 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
               <div className="text-slate-400 text-sm mt-1">Отправьте список — ответим быстро</div>
             </div>
           </div>
+        </div>
+
+        {/* ВРЕМЕННО: кнопка загрузки фона */}
+        <div className="absolute bottom-4 right-4 z-10">
+          <button
+            onClick={() => fileRef.current?.click()}
+            title="Загрузить фон (временно)"
+            className="bg-slate-700/70 hover:bg-slate-600/70 text-white p-2 transition-colors"
+          >
+            <Image size={20} />
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleBgUpload}
+            className="hidden"
+          />
         </div>
       </div>
     </section>
