@@ -12,7 +12,7 @@ interface HeroProps {
 export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   const { trackWhatsAppClick, trackPhoneClick } = useAnalytics();
   const colorRef = useRef<HTMLInputElement>(null);
-  const [bgColor, setBgColor] = useState<string>("rgb(15, 23, 42)");
+  const [bgColor, setBgColor] = useState<string>("rgb(123, 147, 204)");
 
   useEffect(() => {
     const saved = localStorage.getItem("heroBgColor");

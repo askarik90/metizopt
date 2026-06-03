@@ -1,6 +1,6 @@
 export const COMPANY = {
-  name: "МетизОпт",
-  legalName: "ТОО МетизОпт",
+  name: "KRP",
+  legalName: "KRP.kz",
   phone: "+7 (708) 800-31-50",
   phoneRaw: "77088003150",
   whatsapp: "77710707552",
@@ -9,7 +9,7 @@ export const COMPANY = {
   city: "Алматы",
   workingHours: "Пн–Пт: 09:00–18:00",
   workingHoursSat: "Сб: 09:00–14:00",
-  domain: "metizopt.kz",
+  domain: "krp.kz",
 
   whatsappDefaultText: "Здравствуйте! Хочу запросить КП на крепеж. Прикреплю список товаров.",
 
