@@ -33,7 +33,7 @@ export default function HomePage() {
 
       <UploadRequestBlock onUploadClick={() => openModal()} />
 
-      <CategoryGrid onCategoryClick={(cat) => openModal(cat)} />
+      <CategoryGrid />
 
       <HowItWorks />
 

@@ -9,9 +9,7 @@ import { COMPANY } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import catalogTypes from "@/data/catalog-types.json";
 
-interface CategoryGridProps {
-  onCategoryClick?: (category: string) => void;
-}
+interface CategoryGridProps {}
 
 const TYPES = catalogTypes as Record<string, string[]>;
 
@@ -25,8 +23,7 @@ const ICONS: Record<string, React.ElementType> = {
   shlangi: Droplet,
 };
 
-export default function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
-  const { trackCategoryClick } = useAnalytics();
+export default function CategoryGrid({}: CategoryGridProps) {
   const [open, setOpen] = useState(false);
 
   // Модалка выбора типов
@@ -43,8 +40,6 @@ export default function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
   );
 
   const openModal = (slug: string, title: string) => {
-    trackCategoryClick(title);
-    onCategoryClick?.(title);
     setModalSlug(slug);
     setModalTitle(title);
     setPicked([]);
