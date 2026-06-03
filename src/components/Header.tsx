@@ -61,7 +61,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
               onClick={onQuoteClick}
               className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 text-sm font-medium transition-colors"
             >
-              Запросить КП
+              Оставить заявку
             </button>
           </div>
 
@@ -112,7 +112,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
               onClick={() => { setMenuOpen(false); onQuoteClick?.(); }}
               className="flex-1 bg-orange-600 text-white py-2.5 text-sm font-medium"
             >
-              Запросить КП
+              Оставить заявку
             </button>
           </div>
         </div>

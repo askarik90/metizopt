@@ -44,7 +44,7 @@ export default function Footer() {
                 { href: "/about", label: "О компании" },
                 { href: "/delivery", label: "Доставка и оплата" },
                 { href: "/contacts", label: "Контакты" },
-                { href: "/quote", label: "Запросить КП" },
+                { href: "/quote", label: "Оставить заявку" },
                 { href: "/catalog", label: "Каталог" },
               ].map((item) => (
                 <li key={item.href}>

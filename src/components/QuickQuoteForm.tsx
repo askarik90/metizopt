@@ -158,7 +158,7 @@ export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
             )}
             <button type="submit" disabled={loading}
               className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white py-4 font-medium text-base transition-colors">
-              {loading ? "Отправляем..." : "Получить КП"}
+              {loading ? "Отправляем..." : "Отправить заявку"}
             </button>
           </form>
         </div>

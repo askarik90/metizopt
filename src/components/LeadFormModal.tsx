@@ -80,7 +80,7 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
       <div className="relative bg-slate-900 border border-slate-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <h2 className="text-white font-black text-xl uppercase tracking-tight">
-            {title || "Запросить КП"}
+            {title || "Оставить заявку"}
           </h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
             <X size={24} />
@@ -202,7 +202,7 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
             disabled={loading}
             className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white py-3.5 font-medium text-base transition-colors"
           >
-            {loading ? "Отправляем..." : "Получить КП"}
+            {loading ? "Отправляем..." : "Отправить заявку"}
           </button>
 
           <p className="text-slate-500 text-xs text-center">

@@ -4,7 +4,7 @@ export const COMPANY = {
   phone: "+7 (708) 800-31-50",
   phoneRaw: "77088003150",
   whatsapp: "77710707552",
-  email: "info@metizopt.kz",
+  email: "140@bugel.kz",
   address: "г. Алматы, ул. Промышленная, 1",
   city: "Алматы",
   workingHours: "Пн–Пт: 09:00–18:00",

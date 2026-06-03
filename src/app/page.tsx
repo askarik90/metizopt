@@ -75,7 +75,7 @@ export default function HomePage() {
               onClick={() => openModal()}
               className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 font-medium text-base transition-colors"
             >
-              Запросить КП
+              Оставить заявку
             </button>
           </div>
         </div>
