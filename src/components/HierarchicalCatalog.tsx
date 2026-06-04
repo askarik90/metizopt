@@ -36,61 +36,62 @@ export default function HierarchicalCatalog() {
         </div>
 
         {/* Иерархический каталог */}
-        <div className="flex gap-4 flex-col lg:flex-row">
-          {/* Группы слева столбцом (фиксированная ширина на десктопе) */}
-          <div className="w-full lg:w-72 flex flex-col gap-3">
-            {COMPANY.groups.map((group) => {
-              const Icon = GROUP_ICONS[group.slug] || Wrench;
-              const isActive = expandedGroup === group.slug;
-              const groupSlugs = new Set(group.categories as readonly string[]);
-              const groupCategories = COMPANY.categories.filter((cat) =>
-                groupSlugs.has(cat.slug)
-              );
+        {expandedGroup ? (
+          // Когда раскрыта группа - sidebar + подгруппы
+          <div className="flex gap-4 flex-col lg:flex-row">
+            {/* Группы слева столбцом (фиксированная ширина на десктопе) */}
+            <div className="w-full lg:w-72 flex flex-col gap-3">
+              {COMPANY.groups.map((group) => {
+                const Icon = GROUP_ICONS[group.slug] || Wrench;
+                const isActive = expandedGroup === group.slug;
+                const groupSlugs = new Set(group.categories as readonly string[]);
+                const groupCategories = COMPANY.categories.filter((cat) =>
+                  groupSlugs.has(cat.slug)
+                );
 
-              return (
-                <button
-                  key={group.slug}
-                  onClick={() => {
-                    setExpandedGroup(isActive ? "" : group.slug);
-                    if (!isActive) {
-                      setTimeout(() => {
-                        sectionRef.current?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                        });
-                      }, 0);
-                    }
-                  }}
-                  className={`flex items-center gap-3 px-4 py-3 bg-white border transition-all rounded ${
-                    isActive
-                      ? "border-orange-400 bg-orange-50 shadow-md"
-                      : "border-slate-200 hover:border-orange-400 hover:bg-slate-50"
-                  }`}
-                >
-                  <div className={`w-6 h-6 flex-shrink-0 flex items-center justify-center rounded transition-colors ${
-                    isActive ? "bg-orange-200" : "bg-orange-100 group-hover:bg-orange-200"
-                  }`}>
-                    <Icon size={16} className="text-orange-600" />
-                  </div>
-                  <div className="flex-grow text-left min-w-0">
-                    <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${
-                      isActive ? "text-orange-600" : "text-slate-900"
+                return (
+                  <button
+                    key={group.slug}
+                    onClick={() => {
+                      setExpandedGroup(isActive ? "" : group.slug);
+                      if (!isActive) {
+                        setTimeout(() => {
+                          sectionRef.current?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        }, 0);
+                      }
+                    }}
+                    className={`flex items-center gap-3 px-4 py-3 bg-white border transition-all rounded ${
+                      isActive
+                        ? "border-orange-400 bg-orange-50 shadow-md"
+                        : "border-slate-200 hover:border-orange-400 hover:bg-slate-50"
+                    }`}
+                  >
+                    <div className={`w-6 h-6 flex-shrink-0 flex items-center justify-center rounded transition-colors ${
+                      isActive ? "bg-orange-200" : "bg-orange-100 group-hover:bg-orange-200"
                     }`}>
-                      {group.shortTitle}
-                    </h3>
-                    <p className="text-xs text-slate-500">
-                      {groupCategories.length}{" "}
-                      {groupCategories.length === 1 ? "кат." : "кат."}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                      <Icon size={16} className="text-orange-600" />
+                    </div>
+                    <div className="flex-grow text-left min-w-0">
+                      <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${
+                        isActive ? "text-orange-600" : "text-slate-900"
+                      }`}>
+                        {group.shortTitle}
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        {groupCategories.length}{" "}
+                        {groupCategories.length === 1 ? "кат." : "кат."}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* Подкатегории раскрытой группы справа */}
-          <div className="flex-1 min-w-0">
-            {expandedGroup && (
+            {/* Подкатегории раскрытой группы справа */}
+            <div className="flex-1 min-w-0">
               <div
                 ref={(el) => {
                   if (el) groupRefs.current[expandedGroup] = el;
@@ -163,9 +164,49 @@ export default function HierarchicalCatalog() {
                   );
                 })}
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Когда все группы свернуты - сетка столбцов
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-max">
+            {COMPANY.groups.map((group) => {
+              const Icon = GROUP_ICONS[group.slug] || Wrench;
+              const groupSlugs = new Set(group.categories as readonly string[]);
+              const groupCategories = COMPANY.categories.filter((cat) =>
+                groupSlugs.has(cat.slug)
+              );
+
+              return (
+                <button
+                  key={group.slug}
+                  onClick={() => {
+                    setExpandedGroup(group.slug);
+                    setTimeout(() => {
+                      sectionRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }, 0);
+                  }}
+                  className="flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 hover:border-orange-400 hover:bg-slate-50 transition-all rounded"
+                >
+                  <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-orange-100 rounded hover:bg-orange-200 transition-colors">
+                    <Icon size={18} className="text-orange-600" />
+                  </div>
+                  <div className="flex-grow text-left">
+                    <h3 className="font-black text-slate-900 text-base uppercase tracking-tight">
+                      {group.shortTitle}
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      {groupCategories.length}{" "}
+                      {groupCategories.length === 1 ? "категория" : "категорий"}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Подсказка */}
         <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
