@@ -1,43 +1,774 @@
 [
-  {"slug": "bolty", "title": "Болты", "desc": "Болты всех размеров и типов", "metaTitle": "Болты | KRP", "metaDesc": "Болты оптом в Алматы", "fullDescription": "Болты высокой прочности всех размеров", "standards": ["DIN 933", "ISO 4017"]},
-  {"slug": "gayki", "title": "Гайки", "desc": "Гайки шестигранные и дюймовые", "metaTitle": "Гайки | KRP", "metaDesc": "Гайки оптом в Алматы", "fullDescription": "Гайки высокого качества", "standards": ["DIN 934", "ISO 4032"]},
-  {"slug": "shayby", "title": "Шайбы", "desc": "Шайбы плоские и пружинные", "metaTitle": "Шайбы | KRP", "metaDesc": "Шайбы оптом", "fullDescription": "Шайбы для распределения нагрузки", "standards": ["DIN 125", "DIN 127"]},
-  {"slug": "vintyi", "title": "Винты", "desc": "Винты машинные и с резьбой", "metaTitle": "Винты | KRP", "metaDesc": "Винты оптом", "fullDescription": "Винты для соединения деталей", "standards": ["DIN 571", "DIN 912"]},
-  {"slug": "ankera", "title": "Анкера", "desc": "Анкера для крепления в бетон", "metaTitle": "Анкера | KRP", "metaDesc": "Анкера оптом", "fullDescription": "Анкера для прочного крепления", "standards": ["DIN 529", "ISO 6931"]},
-  {"slug": "shpilki", "title": "Шпильки", "desc": "Шпильки прижимные с резьбой", "metaTitle": "Шпильки | KRP", "metaDesc": "Шпильки оптом", "fullDescription": "Шпильки для крепления фланцев", "standards": ["DIN 975", "DIN 976"]},
-  {"slug": "dyubela", "title": "Дюбеля", "desc": "Дюбеля распорные универсальные", "metaTitle": "Дюбеля | KRP", "metaDesc": "Дюбеля оптом", "fullDescription": "Дюбеля для крепления в любые материалы", "standards": ["DIN 1052", "ISO 6931"]},
-  {"slug": "samorezi-shurupy", "title": "Шурупы/Саморезы", "desc": "Саморезы по дереву и металлу", "metaTitle": "Саморезы | KRP", "metaDesc": "Саморезы оптом", "fullDescription": "Саморезы высокого качества", "standards": ["DIN 7981", "DIN 7982"]},
-  {"slug": "zaklepki", "title": "Заклепки", "desc": "Заклепки слепые и трубчатые", "metaTitle": "Заклепки | KRP", "metaDesc": "Заклепки оптом", "fullDescription": "Заклепки для постоянного соединения", "standards": ["DIN 7337", "ISO 15977"]},
-  {"slug": "gvozdi", "title": "Гвозди", "desc": "Гвозди строительные и отделочные", "metaTitle": "Гвозди | KRP", "metaDesc": "Гвозди оптом", "fullDescription": "Гвозди для строительства", "standards": ["ГОСТ 4028", "ISO 1051"]},
-
-  {"slug": "nerzhav-bolty", "title": "Болты", "desc": "Болты из нержавеющей стали A2/A4", "metaTitle": "Болты нержавеющие | KRP", "metaDesc": "Болты нержавеющие", "fullDescription": "Болты из нержавеющей стали", "standards": ["DIN 933", "A2-70", "A4-80"]},
-  {"slug": "nerzhav-gayki", "title": "Гайки", "desc": "Гайки из нержавеющей стали", "metaTitle": "Гайки нержавеющие | KRP", "metaDesc": "Гайки нержавеющие", "fullDescription": "Гайки из нержавеющей стали", "standards": ["DIN 934", "A2-70", "A4-80"]},
-  {"slug": "nerzhav-shayby", "title": "Шайбы", "desc": "Шайбы из нержавеющей стали", "metaTitle": "Шайбы нержавеющие | KRP", "metaDesc": "Шайбы нержавеющие", "fullDescription": "Шайбы из нержавеющей стали", "standards": ["DIN 125", "A2", "A4"]},
-  {"slug": "nerzhav-vintyi", "title": "Винты", "desc": "Винты из нержавеющей стали", "metaTitle": "Винты нержавеющие | KRP", "metaDesc": "Винты нержавеющие", "fullDescription": "Винты из нержавеющей стали", "standards": ["DIN 571", "A2-70", "A4-80"]},
-  {"slug": "nerzhav-shpilki", "title": "Шпильки", "desc": "Шпильки из нержавеющей стали", "metaTitle": "Шпильки нержавеющие | KRP", "metaDesc": "Шпильки нержавеющие", "fullDescription": "Шпильки из нержавеющей стали", "standards": ["DIN 975", "A2-70", "A4-80"]},
-
-  {"slug": "takelazh-vertlyug", "title": "Вертлюг", "desc": "Вертлюг для тросов", "metaTitle": "Вертлюг | KRP", "metaDesc": "Вертлюг", "fullDescription": "Вертлюг", "standards": []},
-  {"slug": "takelazh-zazim-din741", "title": "Зажим канатный DIN 741", "desc": "Зажим канатный DIN 741", "metaTitle": "Зажим DIN 741 | KRP", "metaDesc": "Зажим канатный", "fullDescription": "Зажим канатный DIN 741", "standards": ["DIN 741"]},
-  {"slug": "takelazh-zazim-din3093", "title": "Зажим Троса DIN3093 алюминневый", "desc": "Зажим Троса DIN3093 алюминневый", "metaTitle": "Зажим DIN3093 | KRP", "metaDesc": "Зажим Троса", "fullDescription": "Зажим Троса DIN3093 алюминневый", "standards": ["DIN 3093"]},
-  {"slug": "takelazh-zazim-dvoinoi", "title": "Зажим троса двойной", "desc": "Зажим троса двойной", "metaTitle": "Зажим двойной | KRP", "metaDesc": "Зажим двойной", "fullDescription": "Зажим троса двойной", "standards": []},
-  {"slug": "takelazh-zazim-odinarnyi", "title": "Зажим троса одинарный", "desc": "Зажим троса одинарный", "metaTitle": "Зажим одинарный | KRP", "metaDesc": "Зажим одинарный", "fullDescription": "Зажим троса одинарный", "standards": []},
-  {"slug": "takelazh-karabin-din5299c", "title": "Карабин пожарный DIN 5299C", "desc": "Карабин пожарный DIN 5299C", "metaTitle": "Карабин DIN 5299C | KRP", "metaDesc": "Карабин пожарный", "fullDescription": "Карабин пожарный DIN 5299C", "standards": ["DIN 5299C"]},
-  {"slug": "takelazh-karabin-din5299d", "title": "Карабин стальной с фиксатором DIN 5299D", "desc": "Карабин стальной с фиксатором DIN 5299D", "metaTitle": "Карабин DIN 5299D | KRP", "metaDesc": "Карабин стальной", "fullDescription": "Карабин стальной с фиксатором DIN 5299D", "standards": ["DIN 5299D"]},
-  {"slug": "takelazh-koush-din6899b", "title": "Коуш DIN 6899B", "desc": "Коуш DIN 6899B", "metaTitle": "Коуш DIN 6899B | KRP", "metaDesc": "Коуш", "fullDescription": "Коуш DIN 6899B", "standards": ["DIN 6899B"]},
-  {"slug": "takelazh-kryuk-320a", "title": "Крюк 320A", "desc": "Крюк 320A", "metaTitle": "Крюк 320A | KRP", "metaDesc": "Крюк", "fullDescription": "Крюк 320A", "standards": []},
-  {"slug": "takelazh-kryuk-s", "title": "Крюк S тип", "desc": "Крюк S тип", "metaTitle": "Крюк S | KRP", "metaDesc": "Крюк S", "fullDescription": "Крюк S тип", "standards": []},
-  {"slug": "takelazh-rym-bolt-din580", "title": "Рым-болт DIN 580", "desc": "Рым-болт DIN 580", "metaTitle": "Рым-болт DIN 580 | KRP", "metaDesc": "Рым-болт", "fullDescription": "Рым-болт DIN 580", "standards": ["DIN 580"]},
-  {"slug": "takelazh-rym-gayka-din582", "title": "Рым-гайка DIN 582", "desc": "Рым-гайка DIN 582", "metaTitle": "Рым-гайка DIN 582 | KRP", "metaDesc": "Рым-гайка", "fullDescription": "Рым-гайка DIN 582", "standards": ["DIN 582"]},
-  {"slug": "takelazh-skoba-omegoobraznaya", "title": "Скоба омегообразная DIN G209 с винтом", "desc": "Скоба омегообразная DIN G209 с винтом", "metaTitle": "Скоба DIN G209 | KRP", "metaDesc": "Скоба омегообразная", "fullDescription": "Скоба омегообразная DIN G209 с винтом", "standards": ["DIN G209"]},
-  {"slug": "takelazh-skoba-g2130", "title": "Скоба омегообразная DIN G2130 болт, гайка", "desc": "Скоба омегообразная DIN G2130 болт, гайка", "metaTitle": "Скоба DIN G2130 | KRP", "metaDesc": "Скоба омегообразная", "fullDescription": "Скоба омегообразная DIN G2130 болт, гайка", "standards": ["DIN G2130"]},
-  {"slug": "takelazh-skoba-g2150", "title": "Скоба прямая DIN G2150 болт, гайка", "desc": "Скоба прямая DIN G2150 болт, гайка", "metaTitle": "Скоба DIN G2150 | KRP", "metaDesc": "Скоба прямая", "fullDescription": "Скоба прямая DIN G2150 болт, гайка", "standards": ["DIN G2150"]},
-  {"slug": "takelazh-soedinitel-tsepi", "title": "Соединитель цепи", "desc": "Соединитель цепи", "metaTitle": "Соединитель цепи | KRP", "metaDesc": "Соединитель", "fullDescription": "Соединитель цепи", "standards": []},
-  {"slug": "takelazh-tamper-din1478", "title": "Tamper DIN 1478 вилка-винка закрытый", "desc": "Tamper DIN 1478 вилка-винка закрытый", "metaTitle": "Tamper DIN 1478 | KRP", "metaDesc": "Tamper вилка", "fullDescription": "Tamper DIN 1478 вилка-винка закрытый", "standards": ["DIN 1478"]},
-  {"slug": "takelazh-tamper-din1480-koltso", "title": "Tamper DIN 1480 кольцо-кольцо", "desc": "Tamper DIN 1480 кольцо-кольцо", "metaTitle": "Tamper DIN 1480 | KRP", "metaDesc": "Tamper кольцо", "fullDescription": "Tamper DIN 1480 кольцо-кольцо", "standards": ["DIN 1480"]},
-  {"slug": "takelazh-tamper-din1480-kryuk", "title": "Tamper DIN 1480 крюк-кольцо", "desc": "Tamper DIN 1480 крюк-кольцо", "metaTitle": "Tamper крюк-кольцо | KRP", "metaDesc": "Tamper крюк", "fullDescription": "Tamper DIN 1480 крюк-кольцо", "standards": ["DIN 1480"]},
-  {"slug": "takelazh-tamper-din1480-kryuk2", "title": "Tamper DIN 1480 крюк-крюк", "desc": "Tamper DIN 1480 крюк-крюк", "metaTitle": "Tamper крюк-крюк | KRP", "metaDesc": "Tamper крюк", "fullDescription": "Tamper DIN 1480 крюк-крюк", "standards": ["DIN 1480"]},
-  {"slug": "takelazh-tros-ocinkovannyi-din3055", "title": "Трос стальной оцинкованный DIN 3055", "desc": "Трос стальной оцинкованный DIN 3055", "metaTitle": "Трос DIN 3055 | KRP", "metaDesc": "Трос оцинкованный", "fullDescription": "Трос стальной оцинкованный DIN 3055", "standards": ["DIN 3055"]},
-  {"slug": "takelazh-tros-din3055-pex", "title": "Трос стальной оцинкованный DIN 3055 в опалетке ПБХ", "desc": "Трос стальной оцинкованный DIN 3055 в опалетке ПБХ", "metaTitle": "Трос DIN 3055 ПБХ | KRP", "metaDesc": "Трос в опалетке", "fullDescription": "Трос стальной оцинкованный DIN 3055 в опалетке ПБХ", "standards": ["DIN 3055"]},
-  {"slug": "takelazh-tsen-din763", "title": "Цепь DIN 763 удлинозвенная", "desc": "Цепь DIN 763 удлинозвенная", "metaTitle": "Цепь DIN 763 | KRP", "metaDesc": "Цепь удлинозвенная", "fullDescription": "Цепь DIN 763 удлинозвенная", "standards": ["DIN 763"]},
-  {"slug": "takelazh-tsen-din766", "title": "Цепь DIN 766 короткозвенная", "desc": "Цепь DIN 766 короткозвенная", "metaTitle": "Цепь DIN 766 | KRP", "metaDesc": "Цепь короткозвенная", "fullDescription": "Цепь DIN 766 короткозвенная", "standards": ["DIN 766"]}
+  {
+    "slug": "krepezh-bolty",
+    "title": "Болты",
+    "desc": "Болты DIN 933, DIN 603, ГОСТ 7798, кл.пр. 5.8/8.8/10.9",
+    "metaTitle": "Болты | KRP",
+    "metaDesc": "Болты DIN 933, DIN 603, ГОСТ 7798, кл.пр. 5.8/8.8/10.9",
+    "fullDescription": "Болты DIN 933, DIN 603, ГОСТ 7798, кл.пр. 5.8/8.8/10.9",
+    "standards": [
+      "DIN 933",
+      "DIN 603",
+      "ГОСТ 7798",
+      "ГОСТ 7802",
+      "ГОСТ 7805"
+    ]
+  },
+  {
+    "slug": "krepezh-gayki",
+    "title": "Гайки",
+    "desc": "Гайки DIN 934, ГОСТ 5915, барашковые, корончатые, с нейлоном, с фланцем",
+    "metaTitle": "Гайки | KRP",
+    "metaDesc": "Гайки DIN 934, ГОСТ 5915, барашковые, корончатые, с нейлоном, с фланцем",
+    "fullDescription": "Гайки DIN 934, ГОСТ 5915, барашковые, корончатые, с нейлоном, с фланцем",
+    "standards": [
+      "DIN 934",
+      "DIN 985",
+      "DIN 935",
+      "DIN 315",
+      "ГОСТ 5915"
+    ]
+  },
+  {
+    "slug": "krepezh-shayby",
+    "title": "Шайбы",
+    "desc": "Шайбы плоские, гровер, усиленные DIN 125/127/9021",
+    "metaTitle": "Шайбы | KRP",
+    "metaDesc": "Шайбы плоские, гровер, усиленные DIN 125/127/9021",
+    "fullDescription": "Шайбы плоские, гровер, усиленные DIN 125/127/9021",
+    "standards": [
+      "DIN 125",
+      "DIN 127",
+      "DIN 9021",
+      "ГОСТ 11371"
+    ]
+  },
+  {
+    "slug": "krepezh-vintyi",
+    "title": "Винты",
+    "desc": "Винты DIN 912, 7380, 7985, 7991, 965, 967 — все типы головок",
+    "metaTitle": "Винты | KRP",
+    "metaDesc": "Винты DIN 912, 7380, 7985, 7991, 965, 967 — все типы головок",
+    "fullDescription": "Винты DIN 912, 7380, 7985, 7991, 965, 967 — все типы головок",
+    "standards": [
+      "DIN 912",
+      "DIN 7380",
+      "DIN 7985",
+      "DIN 7991",
+      "DIN 965",
+      "DIN 967"
+    ]
+  },
+  {
+    "slug": "krepezh-ankera",
+    "title": "Анкера",
+    "desc": "Анкера крюк, кольцо, клиновые, цанга, рамные",
+    "metaTitle": "Анкера | KRP",
+    "metaDesc": "Анкера крюк, кольцо, клиновые, цанга, рамные",
+    "fullDescription": "Анкера крюк, кольцо, клиновые, цанга, рамные",
+    "standards": [
+      "DIN 529"
+    ]
+  },
+  {
+    "slug": "krepezh-shplinty",
+    "title": "Шплинты",
+    "desc": "Шплинты DIN 94 ГОСТ 397-79",
+    "metaTitle": "Шплинты | KRP",
+    "metaDesc": "Шплинты DIN 94 ГОСТ 397-79",
+    "fullDescription": "Шплинты DIN 94 ГОСТ 397-79",
+    "standards": [
+      "DIN 94",
+      "ГОСТ 397"
+    ]
+  },
+  {
+    "slug": "krepezh-dyubela",
+    "title": "Дюбеля",
+    "desc": "Дюбеля по бетону, для газобетона, зонтики, ZUBR, фасадные, гвоздь",
+    "metaTitle": "Дюбеля | KRP",
+    "metaDesc": "Дюбеля по бетону, для газобетона, зонтики, ZUBR, фасадные, гвоздь",
+    "fullDescription": "Дюбеля по бетону, для газобетона, зонтики, ZUBR, фасадные, гвоздь",
+    "standards": []
+  },
+  {
+    "slug": "krepezh-samorezi",
+    "title": "Шурупы/Саморезы",
+    "desc": "Саморезы кровельные, для гипсокартона, Глухарь DIN 571, универсальные",
+    "metaTitle": "Шурупы/Саморезы | KRP",
+    "metaDesc": "Саморезы кровельные, для гипсокартона, Глухарь DIN 571, универсальные",
+    "fullDescription": "Саморезы кровельные, для гипсокартона, Глухарь DIN 571, универсальные",
+    "standards": [
+      "DIN 571"
+    ]
+  },
+  {
+    "slug": "krepezh-shpilki",
+    "title": "Шпильки",
+    "desc": "Шпильки кл. 5.8 и 10.9",
+    "metaTitle": "Шпильки | KRP",
+    "metaDesc": "Шпильки кл. 5.8 и 10.9",
+    "fullDescription": "Шпильки кл. 5.8 и 10.9",
+    "standards": [
+      "DIN 975",
+      "DIN 976"
+    ]
+  },
+  {
+    "slug": "krepezh-zaklepki",
+    "title": "Заклепки",
+    "desc": "Заклепки алюминиевые, стальные, нержавеющие А2, резьбовые",
+    "metaTitle": "Заклепки | KRP",
+    "metaDesc": "Заклепки алюминиевые, стальные, нержавеющие А2, резьбовые",
+    "fullDescription": "Заклепки алюминиевые, стальные, нержавеющие А2, резьбовые",
+    "standards": [
+      "DIN 7337"
+    ]
+  },
+  {
+    "slug": "krepezh-gvozdi",
+    "title": "Гвозди",
+    "desc": "Гвозди строительные, тарные 1.2–6.0 мм",
+    "metaTitle": "Гвозди | KRP",
+    "metaDesc": "Гвозди строительные, тарные 1.2–6.0 мм",
+    "fullDescription": "Гвозди строительные, тарные 1.2–6.0 мм",
+    "standards": [
+      "ГОСТ 4028"
+    ]
+  },
+  {
+    "slug": "nerzhav-bolty",
+    "title": "Болты",
+    "desc": "Болты нержавеющие DIN 933 A2",
+    "metaTitle": "Болты | KRP",
+    "metaDesc": "Болты нержавеющие DIN 933 A2",
+    "fullDescription": "Болты нержавеющие DIN 933 A2",
+    "standards": [
+      "DIN 933",
+      "A2-70"
+    ]
+  },
+  {
+    "slug": "nerzhav-gayki",
+    "title": "Гайки",
+    "desc": "Гайки нержавеющие DIN 934 A2",
+    "metaTitle": "Гайки | KRP",
+    "metaDesc": "Гайки нержавеющие DIN 934 A2",
+    "fullDescription": "Гайки нержавеющие DIN 934 A2",
+    "standards": [
+      "DIN 934",
+      "A2-70"
+    ]
+  },
+  {
+    "slug": "nerzhav-shayby",
+    "title": "Шайбы",
+    "desc": "Шайбы нержавеющие DIN 125 A2",
+    "metaTitle": "Шайбы | KRP",
+    "metaDesc": "Шайбы нержавеющие DIN 125 A2",
+    "fullDescription": "Шайбы нержавеющие DIN 125 A2",
+    "standards": [
+      "DIN 125",
+      "A2"
+    ]
+  },
+  {
+    "slug": "nerzhav-vintyi",
+    "title": "Винты",
+    "desc": "Винты нержавеющие DIN 7991 нерж.",
+    "metaTitle": "Винты | KRP",
+    "metaDesc": "Винты нержавеющие DIN 7991 нерж.",
+    "fullDescription": "Винты нержавеющие DIN 7991 нерж.",
+    "standards": [
+      "DIN 7991",
+      "A2"
+    ]
+  },
+  {
+    "slug": "nerzhav-shpilki",
+    "title": "Шпильки",
+    "desc": "Шпильки нержавеющие DIN 975 A2",
+    "metaTitle": "Шпильки | KRP",
+    "metaDesc": "Шпильки нержавеющие DIN 975 A2",
+    "fullDescription": "Шпильки нержавеющие DIN 975 A2",
+    "standards": [
+      "DIN 975",
+      "A2"
+    ]
+  },
+  {
+    "slug": "perfo-derzhatel-balki",
+    "title": "Держатель балки DB",
+    "desc": "Держатель балки левый/правый 170–210×40×40",
+    "metaTitle": "Держатель балки DB | KRP",
+    "metaDesc": "Держатель балки левый/правый 170–210×40×40",
+    "fullDescription": "Держатель балки левый/правый 170–210×40×40",
+    "standards": []
+  },
+  {
+    "slug": "perfo-plastina-kp",
+    "title": "Крепежная пластина KP",
+    "desc": "Крепежная пластина KP",
+    "metaTitle": "Крепежная пластина KP | KRP",
+    "metaDesc": "Крепежная пластина KP",
+    "fullDescription": "Крепежная пластина KP",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ankernyi-ugol-kau",
+    "title": "Крепежный анкерный угол KAU",
+    "desc": "Крепежный анкерный угол KAU",
+    "metaTitle": "Крепежный анкерный угол KAU | KRP",
+    "metaDesc": "Крепежный анкерный угол KAU",
+    "fullDescription": "Крепежный анкерный угол KAU",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-ku",
+    "title": "Крепежный угол KU",
+    "desc": "Крепежный угол KU",
+    "metaTitle": "Крепежный угол KU | KRP",
+    "metaDesc": "Крепежный угол KU",
+    "fullDescription": "Крепежный угол KU",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-kuas",
+    "title": "Крепежный угол асимметричный KUAS",
+    "desc": "Крепежный угол асимметричный KUAS",
+    "metaTitle": "Крепежный угол асимметричный KUAS | KRP",
+    "metaDesc": "Крепежный угол асимметричный KUAS",
+    "fullDescription": "Крепежный угол асимметричный KUAS",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-kus",
+    "title": "Крепежный угол 135 KUS",
+    "desc": "Крепежный угол под 135 градусов KUS",
+    "metaTitle": "Крепежный угол 135 KUS | KRP",
+    "metaDesc": "Крепежный угол под 135 градусов KUS",
+    "fullDescription": "Крепежный угол под 135 градусов KUS",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-kur",
+    "title": "Крепежный угол равносторонний KUR",
+    "desc": "Крепежный угол равносторонний KUR",
+    "metaTitle": "Крепежный угол равносторонний KUR | KRP",
+    "metaDesc": "Крепежный угол равносторонний KUR",
+    "fullDescription": "Крепежный угол равносторонний KUR",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-kuu",
+    "title": "Крепежный угол усиленный KUU",
+    "desc": "Крепежный угол усиленный KUU",
+    "metaTitle": "Крепежный угол усиленный KUU | KRP",
+    "metaDesc": "Крепежный угол усиленный KUU",
+    "fullDescription": "Крепежный угол усиленный KUU",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-kur-us",
+    "title": "Уголок равносторонний усиленный KUR US",
+    "desc": "Крепежный уголок равносторонний усиленный KUR US",
+    "metaTitle": "Уголок равносторонний усиленный KUR US | KRP",
+    "metaDesc": "Крепежный уголок равносторонний усиленный KUR US",
+    "fullDescription": "Крепежный уголок равносторонний усиленный KUR US",
+    "standards": []
+  },
+  {
+    "slug": "perfo-lenta",
+    "title": "Лента монтажная (волна, прямая, тарная)",
+    "desc": "Монтажная лента волна, прямая, тарная",
+    "metaTitle": "Лента монтажная (волна, прямая, тарная) | KRP",
+    "metaDesc": "Монтажная лента волна, прямая, тарная",
+    "fullDescription": "Монтажная лента волна, прямая, тарная",
+    "standards": []
+  },
+  {
+    "slug": "perfo-opora-balki",
+    "title": "Опора балки/бруса",
+    "desc": "Опора балки, бруса, скользящая",
+    "metaTitle": "Опора балки/бруса | KRP",
+    "metaDesc": "Опора балки, бруса, скользящая",
+    "fullDescription": "Опора балки, бруса, скользящая",
+    "standards": []
+  },
+  {
+    "slug": "perfo-lenta-lm",
+    "title": "Перфорированная лента LM",
+    "desc": "Перфорированная монтажная лента LM",
+    "metaTitle": "Перфорированная лента LM | KRP",
+    "metaDesc": "Перфорированная монтажная лента LM",
+    "fullDescription": "Перфорированная монтажная лента LM",
+    "standards": []
+  },
+  {
+    "slug": "perfo-plastina-ps",
+    "title": "Пластина соединительная PS",
+    "desc": "Пластина соединительная PS",
+    "metaTitle": "Пластина соединительная PS | KRP",
+    "metaDesc": "Пластина соединительная PS",
+    "fullDescription": "Пластина соединительная PS",
+    "standards": []
+  },
+  {
+    "slug": "perfo-prushina-pzp",
+    "title": "Проушина прямая PZP",
+    "desc": "Проушина прямая PZP",
+    "metaTitle": "Проушина прямая PZP | KRP",
+    "metaDesc": "Проушина прямая PZP",
+    "fullDescription": "Проушина прямая PZP",
+    "standards": []
+  },
+  {
+    "slug": "perfo-uglovoy-soedinitel",
+    "title": "Угловой соединитель US",
+    "desc": "Угловой соединитель US",
+    "metaTitle": "Угловой соединитель US | KRP",
+    "metaDesc": "Угловой соединитель US",
+    "fullDescription": "Угловой соединитель US",
+    "standards": []
+  },
+  {
+    "slug": "perfo-ugol-mebelnyi",
+    "title": "Угол мебельный KW",
+    "desc": "Угол мебельный KW",
+    "metaTitle": "Угол мебельный KW | KRP",
+    "metaDesc": "Угол мебельный KW",
+    "fullDescription": "Угол мебельный KW",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-vertlyug",
+    "title": "Вертлюг",
+    "desc": "Вертлюг",
+    "metaTitle": "Вертлюг | KRP",
+    "metaDesc": "Вертлюг",
+    "fullDescription": "Вертлюг",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-zazim-din741",
+    "title": "Зажим канатный DIN 741",
+    "desc": "Зажим канатный DIN 741",
+    "metaTitle": "Зажим канатный DIN 741 | KRP",
+    "metaDesc": "Зажим канатный DIN 741",
+    "fullDescription": "Зажим канатный DIN 741",
+    "standards": [
+      "DIN 741"
+    ]
+  },
+  {
+    "slug": "takelazh-zazim-din3093",
+    "title": "Зажим троса DIN3093 алюминиевый",
+    "desc": "Зажим Троса DIN3093 алюминиевый",
+    "metaTitle": "Зажим троса DIN3093 алюминиевый | KRP",
+    "metaDesc": "Зажим Троса DIN3093 алюминиевый",
+    "fullDescription": "Зажим Троса DIN3093 алюминиевый",
+    "standards": [
+      "DIN 3093"
+    ]
+  },
+  {
+    "slug": "takelazh-zazim-dvoinoi",
+    "title": "Зажим троса двойной",
+    "desc": "Зажим троса двойной",
+    "metaTitle": "Зажим троса двойной | KRP",
+    "metaDesc": "Зажим троса двойной",
+    "fullDescription": "Зажим троса двойной",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-zazim-odinarnyi",
+    "title": "Зажим троса одинарный",
+    "desc": "Зажим троса одинарный",
+    "metaTitle": "Зажим троса одинарный | KRP",
+    "metaDesc": "Зажим троса одинарный",
+    "fullDescription": "Зажим троса одинарный",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-karabin-5299c",
+    "title": "Карабин пожарный DIN 5299C",
+    "desc": "Карабин пожарный DIN 5299C",
+    "metaTitle": "Карабин пожарный DIN 5299C | KRP",
+    "metaDesc": "Карабин пожарный DIN 5299C",
+    "fullDescription": "Карабин пожарный DIN 5299C",
+    "standards": [
+      "DIN 5299C"
+    ]
+  },
+  {
+    "slug": "takelazh-karabin-5299d",
+    "title": "Карабин стальной с фиксатором DIN 5299D",
+    "desc": "Карабин стальной с фиксатором DIN 5299D",
+    "metaTitle": "Карабин стальной с фиксатором DIN 5299D | KRP",
+    "metaDesc": "Карабин стальной с фиксатором DIN 5299D",
+    "fullDescription": "Карабин стальной с фиксатором DIN 5299D",
+    "standards": [
+      "DIN 5299D"
+    ]
+  },
+  {
+    "slug": "takelazh-koush-6899b",
+    "title": "Коуш DIN 6899B",
+    "desc": "Коуш DIN 6899B",
+    "metaTitle": "Коуш DIN 6899B | KRP",
+    "metaDesc": "Коуш DIN 6899B",
+    "fullDescription": "Коуш DIN 6899B",
+    "standards": [
+      "DIN 6899B"
+    ]
+  },
+  {
+    "slug": "takelazh-kryuk-320a",
+    "title": "Крюк 320А",
+    "desc": "Крюк 320А",
+    "metaTitle": "Крюк 320А | KRP",
+    "metaDesc": "Крюк 320А",
+    "fullDescription": "Крюк 320А",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-kryuk-s",
+    "title": "Крюк S тип",
+    "desc": "Крюк S тип",
+    "metaTitle": "Крюк S тип | KRP",
+    "metaDesc": "Крюк S тип",
+    "fullDescription": "Крюк S тип",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-rym-bolt",
+    "title": "Рым-болт DIN 580",
+    "desc": "Рым-болт DIN 580",
+    "metaTitle": "Рым-болт DIN 580 | KRP",
+    "metaDesc": "Рым-болт DIN 580",
+    "fullDescription": "Рым-болт DIN 580",
+    "standards": [
+      "DIN 580"
+    ]
+  },
+  {
+    "slug": "takelazh-rym-gayka",
+    "title": "Рым-гайка DIN 582",
+    "desc": "Рым-гайка DIN 582",
+    "metaTitle": "Рым-гайка DIN 582 | KRP",
+    "metaDesc": "Рым-гайка DIN 582",
+    "fullDescription": "Рым-гайка DIN 582",
+    "standards": [
+      "DIN 582"
+    ]
+  },
+  {
+    "slug": "takelazh-skoba-g209",
+    "title": "Скоба омегообразная DIN G209",
+    "desc": "Скоба омегообразная DIN G209 с винтом",
+    "metaTitle": "Скоба омегообразная DIN G209 | KRP",
+    "metaDesc": "Скоба омегообразная DIN G209 с винтом",
+    "fullDescription": "Скоба омегообразная DIN G209 с винтом",
+    "standards": [
+      "DIN G209"
+    ]
+  },
+  {
+    "slug": "takelazh-skoba-g2130",
+    "title": "Скоба омегообразная DIN G2130",
+    "desc": "Скоба омегообразная DIN G2130 болт, гайка",
+    "metaTitle": "Скоба омегообразная DIN G2130 | KRP",
+    "metaDesc": "Скоба омегообразная DIN G2130 болт, гайка",
+    "fullDescription": "Скоба омегообразная DIN G2130 болт, гайка",
+    "standards": [
+      "DIN G2130"
+    ]
+  },
+  {
+    "slug": "takelazh-skoba-g2150",
+    "title": "Скоба прямая DIN G2150",
+    "desc": "Скоба прямая DIN G2150 болт, гайка",
+    "metaTitle": "Скоба прямая DIN G2150 | KRP",
+    "metaDesc": "Скоба прямая DIN G2150 болт, гайка",
+    "fullDescription": "Скоба прямая DIN G2150 болт, гайка",
+    "standards": [
+      "DIN G2150"
+    ]
+  },
+  {
+    "slug": "takelazh-soedinitel-tsepi",
+    "title": "Соединитель цепи",
+    "desc": "Соединитель цепи",
+    "metaTitle": "Соединитель цепи | KRP",
+    "metaDesc": "Соединитель цепи",
+    "fullDescription": "Соединитель цепи",
+    "standards": []
+  },
+  {
+    "slug": "takelazh-talrep-1478",
+    "title": "Талреп DIN 1478 вилка-вилка",
+    "desc": "Талреп DIN 1478 вилка-вилка закрытый",
+    "metaTitle": "Талреп DIN 1478 вилка-вилка | KRP",
+    "metaDesc": "Талреп DIN 1478 вилка-вилка закрытый",
+    "fullDescription": "Талреп DIN 1478 вилка-вилка закрытый",
+    "standards": [
+      "DIN 1478"
+    ]
+  },
+  {
+    "slug": "takelazh-talrep-1480-kk",
+    "title": "Талреп DIN 1480 кольцо-кольцо",
+    "desc": "Талреп DIN 1480 кольцо-кольцо",
+    "metaTitle": "Талреп DIN 1480 кольцо-кольцо | KRP",
+    "metaDesc": "Талреп DIN 1480 кольцо-кольцо",
+    "fullDescription": "Талреп DIN 1480 кольцо-кольцо",
+    "standards": [
+      "DIN 1480"
+    ]
+  },
+  {
+    "slug": "takelazh-talrep-1480-kryuk-k",
+    "title": "Талреп DIN 1480 крюк-кольцо",
+    "desc": "Талреп DIN 1480 крюк-кольцо",
+    "metaTitle": "Талреп DIN 1480 крюк-кольцо | KRP",
+    "metaDesc": "Талреп DIN 1480 крюк-кольцо",
+    "fullDescription": "Талреп DIN 1480 крюк-кольцо",
+    "standards": [
+      "DIN 1480"
+    ]
+  },
+  {
+    "slug": "takelazh-talrep-1480-kryuk-kryuk",
+    "title": "Талреп DIN 1480 крюк-крюк",
+    "desc": "Талреп DIN 1480 крюк-крюк",
+    "metaTitle": "Талреп DIN 1480 крюк-крюк | KRP",
+    "metaDesc": "Талреп DIN 1480 крюк-крюк",
+    "fullDescription": "Талреп DIN 1480 крюк-крюк",
+    "standards": [
+      "DIN 1480"
+    ]
+  },
+  {
+    "slug": "takelazh-tros-din3055",
+    "title": "Трос стальной оцинкованный DIN 3055",
+    "desc": "Трос стальной оцинкованный DIN 3055",
+    "metaTitle": "Трос стальной оцинкованный DIN 3055 | KRP",
+    "metaDesc": "Трос стальной оцинкованный DIN 3055",
+    "fullDescription": "Трос стальной оцинкованный DIN 3055",
+    "standards": [
+      "DIN 3055"
+    ]
+  },
+  {
+    "slug": "takelazh-tros-din3055-pvkh",
+    "title": "Трос DIN 3055 в оплётке ПВХ",
+    "desc": "Трос стальной оцинкованный DIN 3055 в оплётке ПВХ",
+    "metaTitle": "Трос DIN 3055 в оплётке ПВХ | KRP",
+    "metaDesc": "Трос стальной оцинкованный DIN 3055 в оплётке ПВХ",
+    "fullDescription": "Трос стальной оцинкованный DIN 3055 в оплётке ПВХ",
+    "standards": [
+      "DIN 3055"
+    ]
+  },
+  {
+    "slug": "takelazh-tsep-din763",
+    "title": "Цепь DIN 763 длиннозвенная",
+    "desc": "Цепь DIN 763 длиннозвенная",
+    "metaTitle": "Цепь DIN 763 длиннозвенная | KRP",
+    "metaDesc": "Цепь DIN 763 длиннозвенная",
+    "fullDescription": "Цепь DIN 763 длиннозвенная",
+    "standards": [
+      "DIN 763"
+    ]
+  },
+  {
+    "slug": "takelazh-tsep-din766",
+    "title": "Цепь DIN 766 короткозвенная",
+    "desc": "Цепь DIN 766 короткозвенная",
+    "metaTitle": "Цепь DIN 766 короткозвенная | KRP",
+    "metaDesc": "Цепь DIN 766 короткозвенная",
+    "fullDescription": "Цепь DIN 766 короткозвенная",
+    "standards": [
+      "DIN 766"
+    ]
+  },
+  {
+    "slug": "kanat-din3059",
+    "title": "Канат DIN 3059",
+    "desc": "Канат стальной DIN 3059",
+    "metaTitle": "Канат DIN 3059 | KRP",
+    "metaDesc": "Канат стальной DIN 3059",
+    "fullDescription": "Канат стальной DIN 3059",
+    "standards": [
+      "DIN 3059"
+    ]
+  },
+  {
+    "slug": "kanat-gost2688",
+    "title": "Канат ГОСТ 2688-80",
+    "desc": "Канат стальной ГОСТ 2688-80",
+    "metaTitle": "Канат ГОСТ 2688-80 | KRP",
+    "metaDesc": "Канат стальной ГОСТ 2688-80",
+    "fullDescription": "Канат стальной ГОСТ 2688-80",
+    "standards": [
+      "ГОСТ 2688"
+    ]
+  },
+  {
+    "slug": "kanat-gost7668",
+    "title": "Канат ГОСТ 7668-80",
+    "desc": "Канат стальной ГОСТ 7668-80",
+    "metaTitle": "Канат ГОСТ 7668-80 | KRP",
+    "metaDesc": "Канат стальной ГОСТ 7668-80",
+    "fullDescription": "Канат стальной ГОСТ 7668-80",
+    "standards": [
+      "ГОСТ 7668"
+    ]
+  },
+  {
+    "slug": "ventil-profil-l",
+    "title": "Профиль L-образный",
+    "desc": "Профиль L-образный для вентиляции",
+    "metaTitle": "Профиль L-образный | KRP",
+    "metaDesc": "Профиль L-образный для вентиляции",
+    "fullDescription": "Профиль L-образный для вентиляции",
+    "standards": []
+  },
+  {
+    "slug": "ventil-profil-u",
+    "title": "Профиль U-образный",
+    "desc": "Профиль U-образный для вентиляции",
+    "metaTitle": "Профиль U-образный | KRP",
+    "metaDesc": "Профиль U-образный для вентиляции",
+    "fullDescription": "Профиль U-образный для вентиляции",
+    "standards": []
+  },
+  {
+    "slug": "ventil-skoba-flantsev",
+    "title": "Скоба для стяжки фланцев",
+    "desc": "Скоба для стяжки фланцев оц.",
+    "metaTitle": "Скоба для стяжки фланцев | KRP",
+    "metaDesc": "Скоба для стяжки фланцев оц.",
+    "fullDescription": "Скоба для стяжки фланцев оц.",
+    "standards": []
+  },
+  {
+    "slug": "ventil-strubtsiny",
+    "title": "Струбцины",
+    "desc": "Струбцины для вентиляции",
+    "metaTitle": "Струбцины | KRP",
+    "metaDesc": "Струбцины для вентиляции",
+    "fullDescription": "Струбцины для вентиляции",
+    "standards": []
+  },
+  {
+    "slug": "ventil-traversa",
+    "title": "Траверса",
+    "desc": "Траверса для вентиляции",
+    "metaTitle": "Траверса | KRP",
+    "metaDesc": "Траверса для вентиляции",
+    "fullDescription": "Траверса для вентиляции",
+    "standards": []
+  },
+  {
+    "slug": "ventil-trubki-kflex",
+    "title": "Трубки K-Flex",
+    "desc": "Трубки K-Flex",
+    "metaTitle": "Трубки K-Flex | KRP",
+    "metaDesc": "Трубки K-Flex",
+    "fullDescription": "Трубки K-Flex",
+    "standards": []
+  },
+  {
+    "slug": "ventil-ugolok",
+    "title": "Уголок для воздуховодов",
+    "desc": "Уголок для воздуховодов",
+    "metaTitle": "Уголок для воздуховодов | KRP",
+    "metaDesc": "Уголок для воздуховодов",
+    "fullDescription": "Уголок для воздуховодов",
+    "standards": []
+  },
+  {
+    "slug": "ventil-khomut",
+    "title": "Хомуты для труб",
+    "desc": "Хомуты для труб",
+    "metaTitle": "Хомуты для труб | KRP",
+    "metaDesc": "Хомуты для труб",
+    "fullDescription": "Хомуты для труб",
+    "standards": []
+  },
+  {
+    "slug": "ventil-shina",
+    "title": "Шина монтажная",
+    "desc": "Шина монтажная для вентиляции",
+    "metaTitle": "Шина монтажная | KRP",
+    "metaDesc": "Шина монтажная для вентиляции",
+    "fullDescription": "Шина монтажная для вентиляции",
+    "standards": []
+  },
+  {
+    "slug": "ventil-shpilka",
+    "title": "Шпилька сантехническая",
+    "desc": "Шпилька сантехническая",
+    "metaTitle": "Шпилька сантехническая | KRP",
+    "metaDesc": "Шпилька сантехническая",
+    "fullDescription": "Шпилька сантехническая",
+    "standards": []
+  },
+  {
+    "slug": "svarka-lez",
+    "title": "ЛЭЗ",
+    "desc": "Электроды ЛЭЗ",
+    "metaTitle": "ЛЭЗ | KRP",
+    "metaDesc": "Электроды ЛЭЗ",
+    "fullDescription": "Электроды ЛЭЗ",
+    "standards": [
+      "ГОСТ 9466"
+    ]
+  },
+  {
+    "slug": "svarka-monolith",
+    "title": "Монолит (Украина)",
+    "desc": "Электроды Монолит (Украина)",
+    "metaTitle": "Монолит (Украина) | KRP",
+    "metaDesc": "Электроды Монолит (Украина)",
+    "fullDescription": "Электроды Монолит (Украина)",
+    "standards": [
+      "ГОСТ 9466"
+    ]
+  },
+  {
+    "slug": "svarka-rossiya",
+    "title": "Электроды Россия",
+    "desc": "Электроды российского производства",
+    "metaTitle": "Электроды Россия | KRP",
+    "metaDesc": "Электроды российского производства",
+    "fullDescription": "Электроды российского производства",
+    "standards": [
+      "ГОСТ 9466",
+      "ГОСТ 9467"
+    ]
+  },
+  {
+    "slug": "svarka-kitay",
+    "title": "Электроды и проволока (Китай)",
+    "desc": "Сварочная проволока и электроды КНР",
+    "metaTitle": "Электроды и проволока (Китай) | KRP",
+    "metaDesc": "Сварочная проволока и электроды КНР",
+    "fullDescription": "Сварочная проволока и электроды КНР",
+    "standards": [
+      "ISO 14341"
+    ]
+  },
+  {
+    "slug": "svarka-crown",
+    "title": "CROWN",
+    "desc": "Электроды CROWN",
+    "metaTitle": "CROWN | KRP",
+    "metaDesc": "Электроды CROWN",
+    "fullDescription": "Электроды CROWN",
+    "standards": [
+      "ГОСТ 9466"
+    ]
+  }
 ]

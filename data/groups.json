@@ -8,72 +8,72 @@
     "metaDesc": "Крепеж оптом: болты, гайки, шайбы, винты, анкера и другое",
     "fullDescription": "Полный ассортимент крепежа для строительства и производства",
     "image": "/images/groups/krepezh.jpg",
-    "categories": ["bolty", "gayki", "shayby", "vintyi", "ankera", "shpilki", "dyubela", "samorezi-shurupy", "zaklepki", "gvozdi"]
+    "categories": ["krepezh-bolty","krepezh-gayki","krepezh-shayby","krepezh-vintyi","krepezh-ankera","krepezh-shplinty","krepezh-dyubela","krepezh-samorezi","krepezh-shpilki","krepezh-zaklepki","krepezh-gvozdi"]
   },
   {
     "slug": "nerzhaveyushchiy",
     "title": "Нержавеющий крепеж",
     "shortTitle": "Нержавейка",
-    "desc": "Нержавеющий крепеж A2 и A4",
+    "desc": "Нержавеющий крепеж A2 и A4 для спецприменений",
     "metaTitle": "Нержавеющий крепеж оптом | KRP",
     "metaDesc": "Нержавеющий крепеж A2 и A4 оптом в Алматы",
     "fullDescription": "Нержавеющий крепеж для пищевой промышленности и влажных помещений",
     "image": "/images/groups/nerzhaveyushchiy.jpg",
-    "categories": ["nerzhav-bolty", "nerzhav-gayki", "nerzhav-shayby", "nerzhav-vintyi", "nerzhav-shpilki"]
+    "categories": ["nerzhav-bolty","nerzhav-gayki","nerzhav-shayby","nerzhav-vintyi","nerzhav-shpilki"]
+  },
+  {
+    "slug": "ventilatsiya",
+    "title": "Комплектующие для вентиляции",
+    "shortTitle": "Вентиляция",
+    "desc": "Профили, скобы, хомуты, траверсы для вентиляционных систем",
+    "metaTitle": "Комплектующие для вентиляции | KRP",
+    "metaDesc": "Комплектующие для вентиляции оптом в Алматы",
+    "fullDescription": "Полный спектр комплектующих для монтажа вентиляционных систем",
+    "image": "/images/groups/ventilatsiya.jpg",
+    "categories": ["ventil-profil-l","ventil-profil-u","ventil-skoba-flantsev","ventil-strubtsiny","ventil-traversa","ventil-trubki-kflex","ventil-ugolok","ventil-khomut","ventil-shina","ventil-shpilka"]
+  },
+  {
+    "slug": "perfo",
+    "title": "Перфорированный крепеж",
+    "shortTitle": "Перфо",
+    "desc": "Перфорированные уголки, пластины, ленты, опоры балок",
+    "metaTitle": "Перфорированный крепеж | KRP",
+    "metaDesc": "Перфорированный крепеж оптом в Алматы",
+    "fullDescription": "Перфорированный крепеж для монтажа строительных конструкций",
+    "image": "/images/groups/perfo.jpg",
+    "categories": ["perfo-derzhatel-balki","perfo-plastina-kp","perfo-ankernyi-ugol-kau","perfo-ugol-ku","perfo-ugol-kuas","perfo-ugol-kus","perfo-ugol-kur","perfo-ugol-kuu","perfo-ugol-kur-us","perfo-lenta","perfo-opora-balki","perfo-lenta-lm","perfo-plastina-ps","perfo-prushina-pzp","perfo-uglovoy-soedinitel","perfo-ugol-mebelnyi"]
   },
   {
     "slug": "takelazh",
-    "title": "Такелаж (цены, тросы, зажимы)",
+    "title": "Такелаж",
     "shortTitle": "Такелаж",
-    "desc": "Такелажное оборудование: цепи, тросы, зажимы, карабины",
+    "desc": "Цепи, тросы, зажимы, карабины, скобы, талрепы, рым-болты",
     "metaTitle": "Такелаж оптом в Алматы | KRP",
-    "metaDesc": "Такелаж оптом: цепи, тросы, карабины, зажимы, крюки",
-    "fullDescription": "Полный спектр такелажного оборудования для грузоподъемных работ",
+    "metaDesc": "Такелажное оборудование оптом: цепи, тросы, карабины, зажимы",
+    "fullDescription": "Полный спектр такелажного оборудования для грузоподъёмных работ",
     "image": "/images/groups/takelazh.jpg",
-    "categories": ["takelazh-vertlyug", "takelazh-zazim-din741", "takelazh-zazim-din3093", "takelazh-zazim-dvoinoi", "takelazh-zazim-odinarnyi", "takelazh-karabin-din5299c", "takelazh-karabin-din5299d", "takelazh-koush-din6899b", "takelazh-kryuk-320a", "takelazh-kryuk-s", "takelazh-rym-bolt-din580", "takelazh-rym-gayka-din582", "takelazh-skoba-omegoobraznaya", "takelazh-skoba-g2130", "takelazh-skoba-g2150", "takelazh-soedinitel-tsepi", "takelazh-tamper-din1478", "takelazh-tamper-din1480-koltso", "takelazh-tamper-din1480-kryuk", "takelazh-tamper-din1480-kryuk2", "takelazh-tros-ocinkovannyi-din3055", "takelazh-tros-din3055-pex", "takelazh-tsen-din763", "takelazh-tsen-din766"]
-  },
-  {
-    "slug": "komplementarjushchie-dlya-ventilacii",
-    "title": "Комплектующие для вентиляции",
-    "shortTitle": "Вентиляция",
-    "desc": "Комплектующие для вентиляции",
-    "metaTitle": "Комплектующие для вентиляции | KRP",
-    "metaDesc": "Комплектующие для вентиляции оптом",
-    "fullDescription": "Комплектующие для вентиляционных систем",
-    "image": "/images/groups/ventilaciya.jpg",
-    "categories": []
-  },
-  {
-    "slug": "perforirovannyj-krepezh",
-    "title": "Перфорированный крепеж",
-    "shortTitle": "Перфо",
-    "desc": "Перфорированный крепеж",
-    "metaTitle": "Перфорированный крепеж | KRP",
-    "metaDesc": "Перфорированный крепеж оптом",
-    "fullDescription": "Перфорированный крепеж для монтажа",
-    "image": "/images/groups/perfo.jpg",
-    "categories": []
+    "categories": ["takelazh-vertlyug","takelazh-zazim-din741","takelazh-zazim-din3093","takelazh-zazim-dvoinoi","takelazh-zazim-odinarnyi","takelazh-karabin-5299c","takelazh-karabin-5299d","takelazh-koush-6899b","takelazh-kryuk-320a","takelazh-kryuk-s","takelazh-rym-bolt","takelazh-rym-gayka","takelazh-skoba-g209","takelazh-skoba-g2130","takelazh-skoba-g2150","takelazh-soedinitel-tsepi","takelazh-talrep-1478","takelazh-talrep-1480-kk","takelazh-talrep-1480-kryuk-k","takelazh-talrep-1480-kryuk-kryuk","takelazh-tros-din3055","takelazh-tros-din3055-pvkh","takelazh-tsep-din763","takelazh-tsep-din766"]
   },
   {
     "slug": "kanaty",
     "title": "Канаты",
     "shortTitle": "Канаты",
-    "desc": "Канаты и стальные тросы",
-    "metaTitle": "Канаты оптом | KRP",
-    "metaDesc": "Канаты и тросы оптом в Алматы",
-    "fullDescription": "Стальные канаты и тросы",
+    "desc": "Стальные канаты DIN 3059, ГОСТ 2688, ГОСТ 7668",
+    "metaTitle": "Канаты стальные оптом | KRP",
+    "metaDesc": "Стальные канаты оптом в Алматы",
+    "fullDescription": "Стальные канаты различных конструкций и диаметров",
     "image": "/images/groups/kanaty.jpg",
-    "categories": []
+    "categories": ["kanat-din3059","kanat-gost2688","kanat-gost7668"]
   },
   {
-    "slug": "elektrody-i-svarochnyj-propolka",
+    "slug": "elektrody",
     "title": "Электроды и сварочная проволока",
     "shortTitle": "Электроды",
-    "desc": "Электроды и сварочная проволока",
-    "metaTitle": "Электроды оптом | KRP",
-    "metaDesc": "Электроды и сварочная проволока оптом",
-    "fullDescription": "Электроды и сварочная проволока",
+    "desc": "Электроды ЛЭЗ, Монолит, сварочная проволока CROWN",
+    "metaTitle": "Электроды и сварочная проволока | KRP",
+    "metaDesc": "Электроды и сварочная проволока оптом в Алматы",
+    "fullDescription": "Сварочные электроды и проволока всех марок и производителей",
     "image": "/images/groups/elektrody.jpg",
-    "categories": []
+    "categories": ["svarka-lez","svarka-monolith","svarka-rossiya","svarka-kitay","svarka-crown"]
   }
 ]
