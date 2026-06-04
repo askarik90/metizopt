@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Package, Check, ChevronDown } from "lucide-react";
+import { COMPANY } from "@/config/company";
 import catalogDb from "@/data/catalog-db.json";
 import TYPES from "@/data/catalog-types.json";
 
@@ -21,6 +22,11 @@ export default function CatalogList({ slug }: CatalogListProps) {
       newExpanded.add(type);
     }
     setExpandedTypes(newExpanded);
+  };
+
+  const getCategoryName = (slug: string) => {
+    const cat = COMPANY.categories.find((c) => c.slug === slug);
+    return cat?.title || slug;
   };
 
   // Все уникальные подкатегории
@@ -76,7 +82,7 @@ export default function CatalogList({ slug }: CatalogListProps) {
                         : "text-slate-600 hover:text-slate-900"
                     }`}
                   >
-                    <div className="font-medium">{cat.replace(/_/g, " ").toUpperCase()}</div>
+                    <div className="font-medium">{getCategoryName(cat)}</div>
                     <div className="text-xs text-slate-500">{itemCount} товаров</div>
                   </button>
                 );
