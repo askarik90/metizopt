@@ -43,6 +43,19 @@ html[data-design-variant="2"] select:focus {
   outline: none !important;
 }
 
+/* 2️⃣ Растянутая начальная страница (Hero) — увеличено padding секции */
+html[data-design-variant="2"] section:first-of-type {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+@media (min-width: 640px) {
+  html[data-design-variant="2"] section:first-of-type {
+    padding-top: 6rem !important;
+    padding-bottom: 6rem !important;
+  }
+}
+
 /* 3️⃣ Hover-эффекты на кнопках (translateY, box-shadow) */
 html[data-design-variant="2"] button,
 html[data-design-variant="2"] a[role="button"] {
