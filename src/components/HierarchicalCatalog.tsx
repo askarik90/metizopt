@@ -89,11 +89,13 @@ export default function HierarchicalCatalog() {
                       </div>
                     </div>
 
-                    {/* Изображение справа */}
+                    {/* Изображение справа с градиентом */}
                     <div
-                      className="absolute right-0 top-0 w-16 h-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity bg-cover bg-center"
+                      className="absolute right-0 top-0 h-full w-1/2 opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
                       style={{
-                        backgroundImage: `url('${group.image}')`,
+                        backgroundImage: `linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 40%, rgba(255,255,255,0.5) 70%, rgba(255,255,255,1) 100%), url('${group.image}')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center right',
                       }}
                     />
                   </button>
@@ -217,11 +219,12 @@ export default function HierarchicalCatalog() {
                     </div>
                   </div>
 
-                  {/* Правая часть - изображение */}
-                  <div
-                    className="absolute right-0 top-0 w-32 h-full opacity-40 group-hover/btn:opacity-60 transition-opacity bg-cover bg-center"
+                  {/* Правая часть - изображение с градиентом */}
+                  <div className="absolute right-0 top-0 h-full w-2/3 opacity-50 group-hover/btn:opacity-70 transition-opacity"
                     style={{
-                      backgroundImage: `url('${group.image}')`,
+                      backgroundImage: `linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0.6) 60%, rgba(255,255,255,1) 100%), url('${group.image}')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center right',
                     }}
                   />
                 </button>
