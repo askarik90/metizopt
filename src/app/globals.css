@@ -46,7 +46,7 @@ html[data-design-variant="2"] select:focus {
 /* 2️⃣ Растянутая начальная страница (Hero) — увеличено padding и центрирование */
 html[data-design-variant="2"] section:first-of-type {
   padding-top: 5rem !important;
-  padding-bottom: 5rem !important;
+  padding-bottom: 3rem !important;
   display: flex !important;
   align-items: center !important;
   min-height: auto !important;
@@ -55,7 +55,7 @@ html[data-design-variant="2"] section:first-of-type {
 @media (min-width: 640px) {
   html[data-design-variant="2"] section:first-of-type {
     padding-top: 6rem !important;
-    padding-bottom: 6rem !important;
+    padding-bottom: 4rem !important;
   }
 }
 
