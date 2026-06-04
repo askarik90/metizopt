@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, Upload, FileText, Phone, Palette } from "lucide-react";
+import { MessageCircle, Upload, FileText, Phone, Palette, Image, X } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -12,20 +12,54 @@ interface HeroProps {
 export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   const { trackWhatsAppClick, trackPhoneClick } = useAnalytics();
   const colorRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const [bgColor, setBgColor] = useState<string>("rgb(123, 147, 204)");
+  const [bgImage, setBgImage] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("heroBgColor");
-    if (saved) setBgColor(saved);
+    const savedColor = localStorage.getItem("heroBgColor");
+    if (savedColor) setBgColor(savedColor);
+    const savedImage = localStorage.getItem("heroBgImage");
+    if (savedImage) setBgImage(savedImage);
   }, []);
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
-    // Конвертируем hex в rgb для консистентности
     const rgb = hexToRgb(color);
     const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     localStorage.setItem("heroBgColor", rgbStr);
     setBgColor(rgbStr);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas") as HTMLCanvasElement;
+        canvas.width = 1920;
+        canvas.height = 1200;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D | null;
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, 1920, 1200);
+        const compressed = canvas.toDataURL("image/jpeg", 0.7);
+        try {
+          localStorage.setItem("heroBgImage", compressed);
+          setBgImage(compressed);
+        } catch {
+          alert("Картинка слишком большая. Выберите меньший файл.");
+        }
+      };
+      img.src = (evt.target?.result as string) || "";
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeBgImage = () => {
+    localStorage.removeItem("heroBgImage");
+    setBgImage(null);
   };
 
   const hexToRgb = (hex: string) => {
@@ -36,7 +70,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
           g: parseInt(result[2], 16),
           b: parseInt(result[3], 16),
         }
-      : { r: 15, g: 23, b: 42 };
+      : { r: 123, g: 147, b: 204 };
   };
 
   const badges = [
@@ -53,8 +87,11 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
       className="relative overflow-hidden"
       style={{
         backgroundColor: bgColor,
-        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
-        backgroundSize: "28px 28px",
+        backgroundImage: bgImage
+          ? `url('${bgImage}')`
+          : "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
+        backgroundSize: bgImage ? "cover" : "28px 28px",
+        backgroundPosition: bgImage ? "center" : "0 0",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
@@ -134,16 +171,47 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
           </div>
         </div>
 
-        {/* ВРЕМЕННО: выбор цвета фона */}
+        {/* ВРЕМЕННО: фон (цвет + фото) */}
         <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2 bg-slate-900/70 px-3 py-2 rounded">
-          <Palette size={18} className="text-white" />
+          {/* Цвет */}
+          <div className="flex items-center gap-1" title="Выбрать цвет фона">
+            <Palette size={16} className="text-white" />
+            <input
+              ref={colorRef}
+              type="color"
+              value={bgColor === "rgb(123, 147, 204)" ? "#7b93cc" : bgColor}
+              onChange={handleColorChange}
+              className="w-6 h-6 cursor-pointer border-0"
+            />
+          </div>
+
+          {/* Разделитель */}
+          <div className="w-px h-6 bg-slate-600"></div>
+
+          {/* Фото */}
+          <button
+            onClick={() => fileRef.current?.click()}
+            title={bgImage ? "Заменить фото" : "Загрузить фото"}
+            className="flex items-center gap-1 text-white hover:text-orange-300 transition-colors"
+          >
+            <Image size={16} />
+          </button>
+          {bgImage && (
+            <button
+              onClick={removeBgImage}
+              title="Удалить фото"
+              className="text-white hover:text-red-400 transition-colors"
+            >
+              <X size={14} />
+            </button>
+          )}
+
           <input
-            ref={colorRef}
-            type="color"
-            value={bgColor === "rgb(15, 23, 42)" ? "#0f172a" : bgColor}
-            onChange={handleColorChange}
-            title="Выбрать цвет фона"
-            className="w-8 h-8 cursor-pointer border-0"
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
           />
         </div>
       </div>
