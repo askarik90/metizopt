@@ -24,7 +24,7 @@ export default function HierarchicalCatalog() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <section ref={sectionRef} className="bg-slate-50 py-16 scroll-mt-32">
+    <section ref={sectionRef} className="bg-slate-50 py-16 scroll-mt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10" id="catalog-title">
           <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">
