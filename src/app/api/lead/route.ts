@@ -32,6 +32,33 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
 
     console.log("NEW LEAD:", JSON.stringify(lead, null, 2));
 
+    // Save to leads storage
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/leads`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: lead.name,
+            company: lead.company,
+            phone: lead.phone,
+            whatsapp: lead.whatsapp,
+            city: lead.city,
+            message: lead.message,
+            category: lead.category,
+            fileUrl: lead.fileUrl,
+            pageUrl: lead.page_url,
+          }),
+        }
+      );
+      const savedLead = await response.json();
+      console.log("✅ Lead saved to storage:", savedLead.lead?.id);
+    } catch (storageError) {
+      console.error("Warning: Could not save to storage:", storageError);
+      // Continue anyway - lead is logged
+    }
+
     // --- CRM WEBHOOK ---
     // const webhookUrl = process.env.CRM_WEBHOOK_URL;
     // if (webhookUrl) {
