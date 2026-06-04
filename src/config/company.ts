@@ -5,7 +5,7 @@ export const COMPANY = {
   phoneRaw: "77088003150",
   whatsapp: "77710707552",
   email: "140@bugel.kz",
-  address: "ТОО Bugel, 8X23+PP Алматы, Казахстан",
+  address: "Республика Казахстан, г. Алматы, ул. Нарынкольская, 1А",
   coordinates: { lat: 43.301504, lng: 76.953638 },
   city: "Алматы",
   workingHours: "Пн–Пт: 09:00–18:00",
