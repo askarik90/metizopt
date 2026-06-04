@@ -91,9 +91,9 @@ export default function HierarchicalCatalog() {
 
                     {/* Изображение справа с градиентом */}
                     <div
-                      className="absolute right-0 top-0 h-full w-1/2 opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
+                      className="absolute right-0 top-0 h-full w-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
                       style={{
-                        backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0) 100%), url('${group.image}')`,
+                        backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 20%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'right center',
                       }}
@@ -220,9 +220,9 @@ export default function HierarchicalCatalog() {
                   </div>
 
                   {/* Правая часть - изображение с градиентом */}
-                  <div className="absolute right-0 top-0 h-full w-1/2 opacity-50 group-hover/btn:opacity-70 transition-opacity"
+                  <div className="absolute right-0 top-0 h-full w-full opacity-50 group-hover/btn:opacity-70 transition-opacity"
                     style={{
-                      backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0) 100%), url('${group.image}')`,
+                      backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 20%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'right center',
                     }}
