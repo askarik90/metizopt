@@ -1,9 +1,9 @@
 {
-  "bgColor": "rgb(123, 147, 204)",
+  "bgColor": "rgb(200, 100, 50)",
   "bgImage": null,
-  "overlayOpacity": 40,
-  "overlayColor": "#000000",
-  "overlayType": "solid",
-  "approved": false,
-  "approvedAt": null
+  "overlayOpacity": 60,
+  "overlayColor": "#ff6600",
+  "overlayType": "gradient",
+  "approved": true,
+  "approvedAt": "2026-06-04T05:39:15.538Z"
 }

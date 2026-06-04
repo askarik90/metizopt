@@ -168,11 +168,15 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     "Обработка заявки за 30 мин",
   ];
 
-  const overlayOpacityPercent = overlayOpacity / 100;
-  const overlayRgba = overlayColor
-    .replace(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, (m, r, g, b) => {
-      return `rgba(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}, ${overlayOpacityPercent})`;
-    });
+  const hexToRgba = (hex: string, alpha: number) => {
+    const hexColor = hex.replace("#", "");
+    const r = parseInt(hexColor.substr(0, 2), 16);
+    const g = parseInt(hexColor.substr(2, 2), 16);
+    const b = parseInt(hexColor.substr(4, 2), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha / 100})`;
+  };
+
+  const overlayRgba = hexToRgba(overlayColor, overlayOpacity);
 
   return (
     <section
