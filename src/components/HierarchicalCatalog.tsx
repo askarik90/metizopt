@@ -130,7 +130,7 @@ export default function HierarchicalCatalog() {
                           <Link
                             key={cat.slug}
                             href={`/catalog/${cat.slug}`}
-                            className="flex flex-col p-4 bg-white border border-slate-200 hover:border-orange-400 hover:shadow-md transition-all group/cat rounded"
+                            className="flex flex-col p-4 bg-white border border-slate-100 hover:border-orange-400 hover:shadow-md transition-all group/cat rounded"
                           >
                             {/* Номер и стрелка */}
                             <div className="flex items-start justify-between mb-3">
