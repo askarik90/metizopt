@@ -43,20 +43,13 @@ html[data-design-variant="2"] select:focus {
   outline: none !important;
 }
 
-/* 2️⃣ Растянутая начальная страница (Hero) — увеличено padding и центрирование */
+/* 2️⃣ Растянутая начальная страница (Hero) — автоцентрирование независимо от экрана */
 html[data-design-variant="2"] section:first-of-type {
-  padding-top: 5rem !important;
-  padding-bottom: 3rem !important;
+  min-height: 80vh !important;
   display: flex !important;
+  justify-content: center !important;
   align-items: center !important;
-  min-height: auto !important;
-}
-
-@media (min-width: 640px) {
-  html[data-design-variant="2"] section:first-of-type {
-    padding-top: 6rem !important;
-    padding-bottom: 4rem !important;
-  }
+  padding: 2rem !important;
 }
 
 /* 3️⃣ Hover-эффекты на кнопках (translateY, box-shadow) */
