@@ -86,17 +86,15 @@ html[data-design-variant="2"] a[role="button"]:active {
 }
 
 /* Улучшенные карточки */
-html[data-design-variant="2"] [role="button"]:has(> *),
-html[data-design-variant="2"] .group/btn,
-html[data-design-variant="2"] .group/cat {
+html[data-design-variant="2"] [role="button"],
+html[data-design-variant="2"] [class*="group"] {
   border-radius: 12px !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html[data-design-variant="2"] [role="button"]:hover:has(> *),
-html[data-design-variant="2"] .group/btn:hover,
-html[data-design-variant="2"] .group/cat:hover {
+html[data-design-variant="2"] [role="button"]:hover,
+html[data-design-variant="2"] [class*="group"]:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
