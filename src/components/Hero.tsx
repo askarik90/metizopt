@@ -281,9 +281,9 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
               <div className="text-slate-400 text-sm mt-1">Всегда в наличии в Алматы</div>
             </div>
             <div className="bg-slate-800 border border-slate-700 p-8">
-              <div className="text-5xl font-black text-orange-500 mb-2">30 мин</div>
+              <div className="text-5xl font-black text-orange-500 mb-2">до 30 мин</div>
               <div className="text-white font-medium text-lg">среднее время ответа на заявку</div>
-              <div className="text-slate-400 text-sm mt-1">До отправки заявки</div>
+              <div className="text-slate-400 text-sm mt-1">Отправьте список — ответим быстро</div>
             </div>
           </div>
         </div>
