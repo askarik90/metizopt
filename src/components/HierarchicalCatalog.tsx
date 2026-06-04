@@ -21,11 +21,12 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
 export default function HierarchicalCatalog() {
   const [expandedGroup, setExpandedGroup] = useState<string>("krepezh");
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const sectionRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <section className="bg-slate-50 py-16">
+    <section ref={sectionRef} className="bg-slate-50 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
+        <div className="mb-10" id="catalog-title">
           <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">
             Каталог товаров
           </h2>
@@ -58,10 +59,10 @@ export default function HierarchicalCatalog() {
                     const newState = isExpanded ? "" : group.slug;
                     setExpandedGroup(newState);
 
-                    // Скроллим к группе если открываем
+                    // Скроллим к заголовку "Каталог товаров" если открываем
                     if (newState === group.slug) {
                       setTimeout(() => {
-                        groupRefs.current[group.slug]?.scrollIntoView({
+                        sectionRef.current?.scrollIntoView({
                           behavior: "smooth",
                           block: "start",
                         });
