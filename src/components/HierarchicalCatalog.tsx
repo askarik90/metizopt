@@ -80,7 +80,7 @@ export default function HierarchicalCatalog() {
                         <h3 className={`font-bold text-xs uppercase tracking-tight leading-snug break-words ${
                           isActive ? "text-orange-600" : "text-slate-900"
                         }`}>
-                          {group.shortTitle}
+                          {group.title.split(" оптом")[0]}
                         </h3>
                         <p className="text-xs text-slate-500">
                           {groupCategories.length}{" "}
