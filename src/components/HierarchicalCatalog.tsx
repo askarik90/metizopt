@@ -34,7 +34,7 @@ export default function HierarchicalCatalog() {
         </div>
 
         {/* Иерархический каталог */}
-        <div className="space-y-2 bg-white border border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-max">
           {COMPANY.groups.map((group) => {
             const Icon = GROUP_ICONS[group.slug] || Wrench;
             const isExpanded = expandedGroup === group.slug;
@@ -44,13 +44,20 @@ export default function HierarchicalCatalog() {
             );
 
             return (
-              <div key={group.slug}>
+              <div
+                key={group.slug}
+                className={isExpanded ? "lg:col-span-3 md:col-span-2" : ""}
+              >
                 {/* Группа (родитель) */}
                 <button
                   onClick={() =>
                     setExpandedGroup(isExpanded ? "" : group.slug)
                   }
-                  className="w-full flex items-center gap-3 px-6 py-4 bg-white hover:bg-slate-50 border-b border-slate-100 transition-colors group"
+                  className={`w-full flex items-center gap-3 px-6 py-4 bg-white border transition-all hover:shadow-md group rounded-t-lg ${
+                    isExpanded
+                      ? "border-orange-400 shadow-md"
+                      : "border-slate-200 hover:bg-slate-50"
+                  }`}
                 >
                   {/* Иконка группы */}
                   <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-orange-100 rounded group-hover:bg-orange-200 transition-colors">
@@ -79,8 +86,8 @@ export default function HierarchicalCatalog() {
 
                 {/* Категории (потомки) */}
                 {isExpanded && (
-                  <div className="bg-slate-50 border-b border-slate-100 p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="bg-slate-50 border border-orange-400 border-t-0 p-6 rounded-b-lg">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       {groupCategories.map((cat, index) => (
                         <Link
                           key={cat.slug}
