@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, Upload, FileText, Phone, Palette, Image, X } from "lucide-react";
+import { MessageCircle, Upload, FileText, Phone, Palette, ImageIcon, X } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -194,7 +194,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
             title={bgImage ? "Заменить фото" : "Загрузить фото"}
             className="flex items-center gap-1 text-white hover:text-orange-300 transition-colors"
           >
-            <Image size={16} />
+            <ImageIcon size={16} />
           </button>
           {bgImage && (
             <button
