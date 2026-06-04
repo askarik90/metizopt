@@ -141,12 +141,12 @@ export default function HierarchicalCatalog() {
                             </div>
 
                             {/* Название */}
-                            <h4 className="font-bold text-slate-900 text-sm uppercase group-hover/cat:text-orange-600 transition-colors mb-2">
+                            <h4 className="font-bold text-slate-900 text-xs uppercase group-hover/cat:text-orange-600 transition-colors mb-2 leading-tight break-words">
                               {cat.title}
                             </h4>
 
                             {/* Описание */}
-                            <p className="text-xs text-slate-500 line-clamp-2 mb-3 flex-grow">
+                            <p className="text-xs text-slate-500 line-clamp-3 mb-3 flex-grow leading-relaxed">
                               {cat.desc}
                             </p>
 
