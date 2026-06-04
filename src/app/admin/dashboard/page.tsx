@@ -134,6 +134,30 @@ export default function AdminDashboard() {
         </div>
       </header>
 
+      {/* Navigation */}
+      <nav className="bg-slate-50 border-b border-slate-200 sticky top-16 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-6">
+          <a
+            href="/admin/dashboard"
+            className="py-3 px-2 font-bold text-orange-600 border-b-2 border-orange-600"
+          >
+            📋 Leads
+          </a>
+          <a
+            href="/admin/faq"
+            className="py-3 px-2 font-bold text-slate-600 hover:text-slate-900 hover:border-b-2 hover:border-slate-300 transition"
+          >
+            ❓ FAQ
+          </a>
+          <a
+            href="/admin/settings"
+            className="py-3 px-2 font-bold text-slate-600 hover:text-slate-900 hover:border-b-2 hover:border-slate-300 transition"
+          >
+            ⚙️ Контакты
+          </a>
+        </div>
+      </nav>
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats */}
