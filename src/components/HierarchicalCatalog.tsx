@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { COMPANY } from "@/config/company";
+import { useGroups, useCategories } from "@/hooks/useCatalog";
 import { ChevronDown } from "lucide-react";
 import {
   Wrench, Wind, BarChart3, Star, Link2, Zap, Droplet,
@@ -19,7 +20,9 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
 };
 
 export default function HierarchicalCatalog() {
-  const [expandedGroup, setExpandedGroup] = useState<string>(COMPANY.groups[0]?.slug || "");
+  const { groups } = useGroups();
+  const { categories } = useCategories();
+  const [expandedGroup, setExpandedGroup] = useState<string>(groups[0]?.slug || "");
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const sectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,11 +44,11 @@ export default function HierarchicalCatalog() {
           <div className="flex gap-4 flex-col lg:flex-row">
             {/* Группы слева столбцом (фиксированная ширина на десктопе) */}
             <div className="w-4/5 lg:w-72 flex flex-col gap-3">
-              {COMPANY.groups.map((group) => {
+              {groups.map((group) => {
                 const Icon = GROUP_ICONS[group.slug] || Wrench;
                 const isActive = expandedGroup === group.slug;
                 const groupSlugs = new Set(group.categories as readonly string[]);
-                const groupCategories = COMPANY.categories.filter((cat) =>
+                const groupCategories = categories.filter((cat) =>
                   groupSlugs.has(cat.slug)
                 );
 
@@ -111,11 +114,11 @@ export default function HierarchicalCatalog() {
                 }}
                 className="bg-slate-50 border border-orange-400 p-6 rounded-lg"
               >
-                {COMPANY.groups.map((group) => {
+                {groups.map((group) => {
                   if (group.slug !== expandedGroup) return null;
 
                   const groupSlugs = new Set(group.categories as readonly string[]);
-                  const groupCategories = COMPANY.categories.filter((cat) =>
+                  const groupCategories = categories.filter((cat) =>
                     groupSlugs.has(cat.slug)
                   );
 
@@ -182,10 +185,10 @@ export default function HierarchicalCatalog() {
         ) : (
           // Когда все группы свернуты - сетка столбцов
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-max">
-            {COMPANY.groups.map((group) => {
+            {groups.map((group) => {
               const Icon = GROUP_ICONS[group.slug] || Wrench;
               const groupSlugs = new Set(group.categories as readonly string[]);
-              const groupCategories = COMPANY.categories.filter((cat) =>
+              const groupCategories = categories.filter((cat) =>
                 groupSlugs.has(cat.slug)
               );
 
