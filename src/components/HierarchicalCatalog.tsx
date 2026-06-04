@@ -220,11 +220,11 @@ export default function HierarchicalCatalog() {
                   </div>
 
                   {/* Правая часть - изображение с градиентом */}
-                  <div className="absolute right-0 top-0 h-full w-2/3 opacity-50 group-hover/btn:opacity-70 transition-opacity"
+                  <div className="absolute right-0 top-0 h-full w-1/2 opacity-50 group-hover/btn:opacity-70 transition-opacity"
                     style={{
-                      backgroundImage: `linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0.6) 60%, rgba(255,255,255,1) 100%), url('${group.image}')`,
+                      backgroundImage: `linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 35%, rgba(255,255,255,0.7) 75%, rgba(255,255,255,1) 100%), url('${group.image}')`,
                       backgroundSize: 'cover',
-                      backgroundPosition: 'center right',
+                      backgroundPosition: 'right center',
                     }}
                   />
                 </button>
