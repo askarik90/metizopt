@@ -89,11 +89,11 @@ export default function HierarchicalCatalog() {
                       </div>
                     </div>
 
-                    {/* Градиент справа */}
+                    {/* Изображение справа */}
                     <div
-                      className="absolute right-0 top-0 w-16 h-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
+                      className="absolute right-0 top-0 w-16 h-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity bg-cover bg-center"
                       style={{
-                        background: group.image,
+                        backgroundImage: `url('${group.image}')`,
                       }}
                     />
                   </button>
@@ -217,11 +217,11 @@ export default function HierarchicalCatalog() {
                     </div>
                   </div>
 
-                  {/* Правая часть - градиент картинка */}
+                  {/* Правая часть - изображение */}
                   <div
-                    className="absolute right-0 top-0 w-32 h-full opacity-40 group-hover/btn:opacity-60 transition-opacity"
+                    className="absolute right-0 top-0 w-32 h-full opacity-40 group-hover/btn:opacity-60 transition-opacity bg-cover bg-center"
                     style={{
-                      background: group.image,
+                      backgroundImage: `url('${group.image}')`,
                     }}
                   />
                 </button>
