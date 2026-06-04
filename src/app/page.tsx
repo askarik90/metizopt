@@ -3,6 +3,7 @@ import { useState, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import UploadRequestBlock from "@/components/UploadRequestBlock";
+import GroupsSection from "@/components/GroupsSection";
 import CategoryGrid from "@/components/CategoryGrid";
 import HowItWorks from "@/components/HowItWorks";
 import QuickQuoteForm from "@/components/QuickQuoteForm";
@@ -32,6 +33,8 @@ export default function HomePage() {
       </Suspense>
 
       <UploadRequestBlock onUploadClick={() => openModal()} />
+
+      <GroupsSection />
 
       <CategoryGrid />
 
