@@ -91,7 +91,7 @@ export default function HierarchicalCatalog() {
 
                     {/* Изображение справа с градиентом */}
                     <div
-                      className="absolute right-0 top-0 h-full w-3/5 opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
+                      className="absolute right-0 top-0 h-full w-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
                       style={{
                         backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.1) 70%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                         backgroundSize: 'cover',
@@ -220,7 +220,7 @@ export default function HierarchicalCatalog() {
                   </div>
 
                   {/* Правая часть - изображение с градиентом */}
-                  <div className="absolute right-0 top-0 h-full w-3/5 opacity-50 group-hover/btn:opacity-70 transition-opacity"
+                  <div className="absolute right-0 top-0 h-full w-full opacity-50 group-hover/btn:opacity-70 transition-opacity"
                     style={{
                       backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.1) 70%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                       backgroundSize: 'cover',
