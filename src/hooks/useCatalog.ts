@@ -24,7 +24,9 @@ export interface Category {
 }
 
 export function useGroups() {
-  const [groups, setGroups] = useState<Group[]>(COMPANY.groups as any[]);
+  const [groups, setGroups] = useState<Group[]>(
+    (COMPANY.groups as unknown as Group[]) || []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,7 +55,7 @@ export function useGroups() {
 
 export function useCategories() {
   const [categories, setCategories] = useState<Category[]>(
-    COMPANY.categories as any[]
+    (COMPANY.categories as unknown as Category[]) || []
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
