@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isAdminAuthenticated } from "@/utils/auth";
-import { Trash2, Plus, Edit2, ArrowLeft } from "lucide-react";
+import { Trash2, Plus, Edit2, ArrowLeft, Filter } from "lucide-react";
 
 interface Category {
   slug: string;
@@ -15,12 +15,20 @@ interface Category {
   standards: string[];
 }
 
+interface Group {
+  slug: string;
+  title: string;
+  categories: string[];
+}
+
 export default function AdminCategoriesPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
+  const [filterGroup, setFilterGroup] = useState<string>("");
   const [formData, setFormData] = useState<Partial<Category>>({
     slug: "",
     title: "",
@@ -39,16 +47,24 @@ export default function AdminCategoriesPage() {
   }, [router]);
 
   useEffect(() => {
-    fetchCategories();
+    fetchData();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch("/api/categories");
-      const data = await res.json();
-      setCategories(data.categories);
+      const [catRes, groupRes] = await Promise.all([
+        fetch("/api/categories"),
+        fetch("/api/groups"),
+      ]);
+      const catData = await catRes.json();
+      const groupData = await groupRes.json();
+      setCategories(catData.categories);
+      setGroups(groupData.groups);
+      if (groupData.groups.length > 0) {
+        setFilterGroup(groupData.groups[0].slug);
+      }
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -145,6 +161,16 @@ export default function AdminCategoriesPage() {
     setStandardsInput("");
   };
 
+  const getFilteredCategories = () => {
+    if (!filterGroup) return categories;
+    const selectedGroup = groups.find((g) => g.slug === filterGroup);
+    if (!selectedGroup) return categories;
+    const categorySet = new Set(selectedGroup.categories);
+    return categories.filter((c) => categorySet.has(c.slug));
+  };
+
+  const filteredCategories = getFilteredCategories();
+
   return (
     <div className="min-h-screen bg-slate-100">
       {/* Header */}
@@ -168,15 +194,35 @@ export default function AdminCategoriesPage() {
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Add Button */}
+        {/* Filters and Buttons */}
         {!showForm && (
-          <button
-            onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg mb-6 transition"
-          >
-            <Plus size={18} />
-            Добавить категорию
-          </button>
+          <div className="flex flex-col lg:flex-row gap-3 mb-6">
+            <div className="flex-1 flex items-center gap-2">
+              <Filter size={18} className="text-slate-600" />
+              <select
+                value={filterGroup}
+                onChange={(e) => setFilterGroup(e.target.value)}
+                className="flex-1 px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none bg-white text-slate-900"
+              >
+                <option value="">Все группы ({categories.length})</option>
+                {groups.map((group) => {
+                  const count = group.categories.length;
+                  return (
+                    <option key={group.slug} value={group.slug}>
+                      {group.title.split(" оптом")[0]} ({count})
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <button
+              onClick={() => setShowForm(true)}
+              className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition whitespace-nowrap"
+            >
+              <Plus size={18} />
+              Добавить категорию
+            </button>
+          </div>
         )}
 
         {/* Form */}
@@ -322,12 +368,14 @@ export default function AdminCategoriesPage() {
             <div className="text-center text-slate-500 py-8">
               Загрузка категорий...
             </div>
-          ) : categories.length === 0 ? (
+          ) : filteredCategories.length === 0 ? (
             <div className="text-center text-slate-500 py-8">
-              Нет категорий. Добавьте первую!
+              {categories.length === 0
+                ? "Нет категорий. Добавьте первую!"
+                : "Нет категорий в этой группе"}
             </div>
           ) : (
-            categories.map((category) => (
+            filteredCategories.map((category) => (
               <div
                 key={category.slug}
                 className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition"
