@@ -5,35 +5,32 @@ import { useRouter } from "next/navigation";
 import { isAdminAuthenticated } from "@/utils/auth";
 import { Trash2, Plus, Edit2, ArrowLeft } from "lucide-react";
 
-interface Group {
+interface Category {
   slug: string;
   title: string;
-  shortTitle: string;
   desc: string;
   metaTitle: string;
   metaDesc: string;
   fullDescription: string;
-  image: string;
-  categories: string[];
+  standards: string[];
 }
 
-export default function AdminCatalogPage() {
+export default function AdminCategoriesPage() {
   const router = useRouter();
-  const [groups, setGroups] = useState<Group[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
-  const [formData, setFormData] = useState<Partial<Group>>({
+  const [formData, setFormData] = useState<Partial<Category>>({
     slug: "",
     title: "",
-    shortTitle: "",
     desc: "",
     metaTitle: "",
     metaDesc: "",
     fullDescription: "",
-    image: "",
-    categories: [],
+    standards: [],
   });
+  const [standardsInput, setStandardsInput] = useState("");
 
   useEffect(() => {
     if (!isAdminAuthenticated()) {
@@ -42,16 +39,16 @@ export default function AdminCatalogPage() {
   }, [router]);
 
   useEffect(() => {
-    fetchGroups();
+    fetchCategories();
   }, []);
 
-  const fetchGroups = async () => {
+  const fetchCategories = async () => {
     try {
-      const res = await fetch("/api/groups");
+      const res = await fetch("/api/categories");
       const data = await res.json();
-      setGroups(data.groups);
+      setCategories(data.categories);
     } catch (error) {
-      console.error("Error fetching groups:", error);
+      console.error("Error fetching categories:", error);
     } finally {
       setLoading(false);
     }
@@ -64,59 +61,72 @@ export default function AdminCatalogPage() {
       return;
     }
 
+    const standards = standardsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s);
+
+    const submitData = {
+      ...formData,
+      standards,
+    };
+
     try {
       if (editingSlug) {
         // Update
-        const res = await fetch("/api/groups", {
+        const res = await fetch("/api/categories", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(submitData),
         });
 
         if (res.ok) {
-          setGroups(
-            groups.map((g) =>
-              g.slug === editingSlug ? (formData as Group) : g
+          setCategories(
+            categories.map((c) =>
+              c.slug === editingSlug ? (submitData as Category) : c
             )
           );
         }
       } else {
         // Create
-        const res = await fetch("/api/groups", {
+        const res = await fetch("/api/categories", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(submitData),
         });
 
         if (res.ok) {
           const data = await res.json();
-          setGroups([...groups, data.group]);
+          setCategories([...categories, data.category]);
         }
       }
 
       resetForm();
     } catch (error) {
-      console.error("Error saving group:", error);
+      console.error("Error saving category:", error);
       alert("Ошибка при сохранении");
     }
   };
 
-  const handleEdit = (group: Group) => {
-    setEditingSlug(group.slug);
-    setFormData(group);
+  const handleEdit = (category: Category) => {
+    setEditingSlug(category.slug);
+    setFormData(category);
+    setStandardsInput(category.standards.join(", "));
     setShowForm(true);
   };
 
   const handleDelete = async (slug: string) => {
-    if (!confirm("Удалить эту группу?")) return;
+    if (!confirm("Удалить эту категорию?")) return;
 
     try {
-      const res = await fetch(`/api/groups?slug=${slug}`, { method: "DELETE" });
+      const res = await fetch(`/api/categories?slug=${slug}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
-        setGroups(groups.filter((g) => g.slug !== slug));
+        setCategories(categories.filter((c) => c.slug !== slug));
       }
     } catch (error) {
-      console.error("Error deleting group:", error);
+      console.error("Error deleting category:", error);
     }
   };
 
@@ -126,14 +136,13 @@ export default function AdminCatalogPage() {
     setFormData({
       slug: "",
       title: "",
-      shortTitle: "",
       desc: "",
       metaTitle: "",
       metaDesc: "",
       fullDescription: "",
-      image: "",
-      categories: [],
+      standards: [],
     });
+    setStandardsInput("");
   };
 
   return (
@@ -143,15 +152,15 @@ export default function AdminCatalogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-black text-slate-900">Каталог</h1>
-              <p className="text-xs text-slate-500">Управление группами товаров</p>
+              <h1 className="text-2xl font-black text-slate-900">Категории</h1>
+              <p className="text-xs text-slate-500">Управление категориями товаров</p>
             </div>
             <a
-              href="/admin/dashboard"
+              href="/admin/catalog"
               className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold"
             >
               <ArrowLeft size={18} />
-              Назад
+              К группам
             </a>
           </div>
         </div>
@@ -159,30 +168,22 @@ export default function AdminCatalogPage() {
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Buttons */}
+        {/* Add Button */}
         {!showForm && (
-          <div className="flex gap-3 mb-6">
-            <button
-              onClick={() => setShowForm(true)}
-              className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition"
-            >
-              <Plus size={18} />
-              Добавить группу
-            </button>
-            <a
-              href="/admin/catalog/categories"
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition"
-            >
-              📋 Управлять категориями
-            </a>
-          </div>
+          <button
+            onClick={() => setShowForm(true)}
+            className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg mb-6 transition"
+          >
+            <Plus size={18} />
+            Добавить категорию
+          </button>
         )}
 
         {/* Form */}
         {showForm && (
           <div className="bg-white rounded-lg border border-slate-200 p-6 mb-6">
             <h2 className="text-xl font-bold text-slate-900 mb-4">
-              {editingSlug ? "Редактировать группу" : "Новая группа"}
+              {editingSlug ? "Редактировать категорию" : "Новая категория"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -197,7 +198,7 @@ export default function AdminCatalogPage() {
                       setFormData({ ...formData, slug: e.target.value })
                     }
                     disabled={!!editingSlug}
-                    placeholder="krepezh"
+                    placeholder="bolty-optom"
                     className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none disabled:bg-slate-100"
                   />
                 </div>
@@ -211,25 +212,10 @@ export default function AdminCatalogPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, title: e.target.value })
                     }
-                    placeholder="Крепеж оптом в Алматы"
+                    placeholder="Болты оптом в Алматы"
                     className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-slate-900 mb-2">
-                  Короткое название
-                </label>
-                <input
-                  type="text"
-                  value={formData.shortTitle || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, shortTitle: e.target.value })
-                  }
-                  placeholder="Крепеж"
-                  className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
-                />
               </div>
 
               <div>
@@ -241,7 +227,7 @@ export default function AdminCatalogPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, desc: e.target.value })
                   }
-                  placeholder="Болты, гайки, анкера..."
+                  placeholder="Болты высокой прочности всех размеров"
                   rows={2}
                   className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                 />
@@ -257,7 +243,7 @@ export default function AdminCatalogPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, metaTitle: e.target.value })
                   }
-                  placeholder="Крепеж оптом — болты, гайки | KRP"
+                  placeholder="Болты оптом — все размеры | KRP"
                   className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                 />
               </div>
@@ -271,7 +257,7 @@ export default function AdminCatalogPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, metaDesc: e.target.value })
                   }
-                  placeholder="Оптовые поставки крепежа в Алматы..."
+                  placeholder="Болты оптом в Алматы. Все размеры и стандарты..."
                   rows={2}
                   className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                 />
@@ -289,7 +275,7 @@ export default function AdminCatalogPage() {
                       fullDescription: e.target.value,
                     })
                   }
-                  placeholder="Подробное описание для страницы каталога..."
+                  placeholder="Подробное описание для страницы товара..."
                   rows={4}
                   className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                 />
@@ -297,17 +283,18 @@ export default function AdminCatalogPage() {
 
               <div>
                 <label className="block text-sm font-bold text-slate-900 mb-2">
-                  URL изображения
+                  Стандарты (через запятую)
                 </label>
                 <input
                   type="text"
-                  value={formData.image || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image: e.target.value })
-                  }
-                  placeholder="/images/groups/krepezh.jpg"
+                  value={standardsInput}
+                  onChange={(e) => setStandardsInput(e.target.value)}
+                  placeholder="DIN 933, ISO 4017, ГОСТ 7805"
                   className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                 />
+                <p className="text-xs text-slate-500 mt-1">
+                  Разделяйте стандарты запятыми. Например: DIN 933, ISO 4017, ГОСТ 7805
+                </p>
               </div>
 
               <div className="flex gap-3">
@@ -329,55 +316,51 @@ export default function AdminCatalogPage() {
           </div>
         )}
 
-        {/* Groups List */}
+        {/* Categories List */}
         <div className="space-y-4">
           {loading ? (
             <div className="text-center text-slate-500 py-8">
-              Загрузка групп...
+              Загрузка категорий...
             </div>
-          ) : groups.length === 0 ? (
+          ) : categories.length === 0 ? (
             <div className="text-center text-slate-500 py-8">
-              Нет групп. Добавьте первую!
+              Нет категорий. Добавьте первую!
             </div>
           ) : (
-            groups.map((group) => (
+            categories.map((category) => (
               <div
-                key={group.slug}
+                key={category.slug}
                 className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition"
               >
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      {group.image && (
-                        <img
-                          src={group.image}
-                          alt={group.title}
-                          className="w-12 h-12 object-cover rounded"
-                        />
-                      )}
-                      <div>
-                        <h3 className="font-bold text-slate-900 text-lg">
-                          {group.title}
-                        </h3>
-                        <p className="text-xs text-slate-500">
-                          {group.categories.length} категорий
-                        </p>
-                      </div>
+                    <h3 className="font-bold text-slate-900 text-lg mb-2">
+                      {category.title}
+                    </h3>
+                    <p className="text-slate-600 text-sm mb-2">{category.desc}</p>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {category.standards.map((std) => (
+                        <span
+                          key={std}
+                          className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded"
+                        >
+                          {std}
+                        </span>
+                      ))}
                     </div>
-                    <p className="text-slate-600 text-sm mb-2">{group.desc}</p>
                     <p className="text-xs text-slate-500">
-                      <strong>Slug:</strong> {group.slug}
+                      <strong>Slug:</strong> {category.slug}
                     </p>
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleEdit(group)}
+                      onClick={() => handleEdit(category)}
                       className="bg-blue-100 hover:bg-blue-200 text-blue-600 p-2 rounded transition"
                     >
                       <Edit2 size={18} />
                     </button>
                     <button
-                      onClick={() => handleDelete(group.slug)}
+                      onClick={() => handleDelete(category.slug)}
                       className="bg-red-100 hover:bg-red-200 text-red-600 p-2 rounded transition"
                     >
                       <Trash2 size={18} />
