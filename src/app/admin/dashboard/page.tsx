@@ -155,6 +155,12 @@ export default function AdminDashboard() {
           >
             ⚙️ Контакты
           </a>
+          <a
+            href="/admin/catalog"
+            className="py-3 px-2 font-bold text-slate-600 hover:text-slate-900 hover:border-b-2 hover:border-slate-300 transition"
+          >
+            📦 Каталог
+          </a>
         </div>
       </nav>
 
