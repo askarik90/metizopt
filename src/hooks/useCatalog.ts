@@ -44,7 +44,7 @@ export function useGroups() {
       console.error("Error fetching groups:", err);
       setError(err instanceof Error ? err.message : "Unknown error");
       // Fallback to company config
-      setGroups(COMPANY.groups as any[]);
+      setGroups(COMPANY.groups as unknown as Group[]);
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ export function useCategories() {
       console.error("Error fetching categories:", err);
       setError(err instanceof Error ? err.message : "Unknown error");
       // Fallback to company config
-      setCategories(COMPANY.categories as any[]);
+      setCategories(COMPANY.categories as unknown as Category[]);
     } finally {
       setLoading(false);
     }
