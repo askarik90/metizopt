@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, Upload, FileText, Phone, Palette, ImageIcon, X } from "lucide-react";
+import { MessageCircle, Upload, FileText, Phone, Palette, ImageIcon, X, Settings } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -13,14 +13,25 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   const { trackWhatsAppClick, trackPhoneClick } = useAnalytics();
   const colorRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const overlayColorRef = useRef<HTMLInputElement>(null);
   const [bgColor, setBgColor] = useState<string>("rgb(123, 147, 204)");
   const [bgImage, setBgImage] = useState<string | null>(null);
+  const [overlayOpacity, setOverlayOpacity] = useState<number>(40);
+  const [overlayColor, setOverlayColor] = useState<string>("#000000");
+  const [overlayType, setOverlayType] = useState<"solid" | "gradient">("solid");
+  const [showOverlaySettings, setShowOverlaySettings] = useState(false);
 
   useEffect(() => {
     const savedColor = localStorage.getItem("heroBgColor");
     if (savedColor) setBgColor(savedColor);
     const savedImage = localStorage.getItem("heroBgImage");
     if (savedImage) setBgImage(savedImage);
+    const savedOpacity = localStorage.getItem("heroOverlayOpacity");
+    if (savedOpacity) setOverlayOpacity(parseInt(savedOpacity));
+    const savedOverlayColor = localStorage.getItem("heroOverlayColor");
+    if (savedOverlayColor) setOverlayColor(savedOverlayColor);
+    const savedOverlayType = localStorage.getItem("heroOverlayType");
+    if (savedOverlayType) setOverlayType(savedOverlayType as "solid" | "gradient");
   }, []);
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +73,22 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     setBgImage(null);
   };
 
+  const handleOverlayOpacityChange = (value: number) => {
+    setOverlayOpacity(value);
+    localStorage.setItem("heroOverlayOpacity", value.toString());
+  };
+
+  const handleOverlayColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const color = e.target.value;
+    setOverlayColor(color);
+    localStorage.setItem("heroOverlayColor", color);
+  };
+
+  const handleOverlayTypeChange = (type: "solid" | "gradient") => {
+    setOverlayType(type);
+    localStorage.setItem("heroOverlayType", type);
+  };
+
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
@@ -82,6 +109,12 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     "Обработка заявки за 30 мин",
   ];
 
+  const overlayOpacityPercent = overlayOpacity / 100;
+  const overlayRgba = overlayColor
+    .replace(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, (m, r, g, b) => {
+      return `rgba(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}, ${overlayOpacityPercent})`;
+    });
+
   return (
     <section
       className="relative overflow-hidden"
@@ -94,7 +127,20 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
         backgroundPosition: bgImage ? "center" : "0 0",
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      {/* Overlay слой */}
+      {bgImage && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              overlayType === "gradient"
+                ? `linear-gradient(to right, ${overlayRgba}, transparent)`
+                : overlayRgba,
+          }}
+        />
+      )}
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="inline-flex items-center gap-2 bg-orange-600/20 border border-orange-600/30 text-orange-400 text-xs font-medium px-3 py-1.5 mb-6">
@@ -197,13 +243,99 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
             <ImageIcon size={16} />
           </button>
           {bgImage && (
-            <button
-              onClick={removeBgImage}
-              title="Удалить фото"
-              className="text-white hover:text-red-400 transition-colors"
-            >
-              <X size={14} />
-            </button>
+            <>
+              <button
+                onClick={removeBgImage}
+                title="Удалить фото"
+                className="text-white hover:text-red-400 transition-colors"
+              >
+                <X size={14} />
+              </button>
+
+              {/* Разделитель */}
+              <div className="w-px h-6 bg-slate-600"></div>
+
+              {/* Настройки overlay */}
+              <button
+                onClick={() => setShowOverlaySettings(!showOverlaySettings)}
+                title="Настройки затемнения"
+                className="relative flex items-center gap-1 text-white hover:text-orange-300 transition-colors"
+              >
+                <Settings size={16} />
+
+                {/* Popup с настройками overlay */}
+                {showOverlaySettings && (
+                  <div className="absolute bottom-10 right-0 bg-slate-800 border border-slate-600 rounded-lg p-4 w-64 shadow-xl z-50">
+                    <h3 className="font-bold text-white text-sm mb-4">Настройки затемнения</h3>
+
+                    {/* Opacity */}
+                    <div className="mb-4">
+                      <label className="block text-xs font-medium text-slate-300 mb-2">
+                        Интенсивность: {overlayOpacity}%
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={overlayOpacity}
+                        onChange={(e) => handleOverlayOpacityChange(parseInt(e.target.value))}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Color */}
+                    <div className="mb-4">
+                      <label className="block text-xs font-medium text-slate-300 mb-2">
+                        Цвет затемнения
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          ref={overlayColorRef}
+                          type="color"
+                          value={overlayColor}
+                          onChange={handleOverlayColorChange}
+                          className="w-10 h-10 cursor-pointer border border-slate-600 rounded"
+                        />
+                        <span className="text-xs text-slate-400">{overlayColor}</span>
+                      </div>
+                    </div>
+
+                    {/* Type */}
+                    <div className="mb-4">
+                      <label className="block text-xs font-medium text-slate-300 mb-2">
+                        Тип затемнения
+                      </label>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleOverlayTypeChange("solid")}
+                          className={`flex-1 px-3 py-2 rounded text-xs font-medium transition-colors ${
+                            overlayType === "solid"
+                              ? "bg-orange-600 text-white"
+                              : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          }`}
+                        >
+                          Равномерное
+                        </button>
+                        <button
+                          onClick={() => handleOverlayTypeChange("gradient")}
+                          className={`flex-1 px-3 py-2 rounded text-xs font-medium transition-colors ${
+                            overlayType === "gradient"
+                              ? "bg-orange-600 text-white"
+                              : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          }`}
+                        >
+                          Градиент
+                        </button>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-400 border-t border-slate-600 pt-3">
+                      💡 Настройки сохраняются автоматически
+                    </p>
+                  </div>
+                )}
+              </button>
+            </>
           )}
 
           <input
