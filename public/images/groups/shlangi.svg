@@ -1,48 +1,9 @@
 <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bgGrad8" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#4c1d95;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="hoseRubber" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#c4b5fd;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="braid" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#d8b4fe;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#9333ea;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <rect width="600" height="400" fill="url(#bgGrad8)"/>
-  
-  <!-- Main hose - wavy -->
-  <path d="M 80 200 Q 150 150 220 200 T 360 200" fill="none" stroke="url(#hoseRubber)" stroke-width="18" stroke-linecap="round"/>
-  
-  <!-- Braided reinforcement pattern -->
-  <path d="M 85 195 Q 150 145 215 195" fill="none" stroke="url(#braid)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4"/>
-  <path d="M 85 205 Q 150 155 215 205" fill="none" stroke="url(#braid)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4"/>
-  
-  <!-- Hose coil -->
-  <circle cx="450" cy="150" r="35" fill="none" stroke="url(#hoseRubber)" stroke-width="12" stroke-linecap="round"/>
-  <circle cx="450" cy="150" r="20" fill="none" stroke="url(#hoseRubber)" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
-  
-  <!-- Braiding on coil -->
-  <circle cx="450" cy="150" r="35" fill="none" stroke="url(#braid)" stroke-width="1.5" opacity="0.5" stroke-dasharray="3,3"/>
-  
-  <!-- Hose connector/fitting -->
-  <circle cx="380" cy="200" r="10" fill="url(#hoseRubber)" stroke="#4c1d95" stroke-width="2"/>
-  <rect x="375" y="210" width="10" height="20" fill="url(#hoseRubber)" stroke="#4c1d95" stroke-width="1" rx="2"/>
-  
-  <!-- Hose ending -->
-  <circle cx="360" cy="200" r="9" fill="url(#hoseRubber)" stroke="#4c1d95" stroke-width="1.5"/>
-  
-  <!-- Flex/bend indicator lines -->
-  <line x1="150" y1="180" x2="150" y2="220" stroke="#9333ea" stroke-width="1" opacity="0.4"/>
-  <line x1="220" y1="180" x2="220" y2="220" stroke="#9333ea" stroke-width="1" opacity="0.4"/>
-  
-  <!-- Shine on hose -->
-  <ellipse cx="200" cy="180" rx="20" ry="6" fill="#ffffff" opacity="0.2"/>
-  <ellipse cx="450" cy="130" rx="10" ry="5" fill="#ffffff" opacity="0.25"/>
+  <rect width="600" height="400" fill="#f3e8ff"/>
+  <!-- Спиральный шланг справа -->
+  <path d="M 400 80 Q 460 120 480 200 Q 470 280 420 320" fill="none" stroke="#a78bfa" stroke-width="14" stroke-linecap="round" opacity="0.8"/>
+  <path d="M 400 80 Q 460 120 480 200 Q 470 280 420 320" fill="none" stroke="#7c3aed" stroke-width="6" opacity="0.3" stroke-dasharray="15,5"/>
+  <!-- Фитинг на конце -->
+  <circle cx="510" cy="250" r="16" fill="#a78bfa" opacity="0.8" stroke="#7c3aed" stroke-width="2"/>
+  <rect x="500" y="268" width="20" height="25" fill="#a78bfa" opacity="0.8" stroke="#7c3aed" stroke-width="1" rx="2"/>
 </svg>

@@ -1,39 +1,11 @@
 <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bgGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#7c2d12;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#9a3412;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="chainMetal" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#fed7aa;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#fb923c;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <rect width="600" height="400" fill="url(#bgGrad5)"/>
-  
-  <!-- Chain links -->
-  <ellipse cx="120" cy="100" rx="18" ry="25" fill="none" stroke="url(#chainMetal)" stroke-width="5"/>
-  <ellipse cx="160" cy="140" rx="18" ry="25" fill="none" stroke="url(#chainMetal)" stroke-width="5"/>
-  <ellipse cx="200" cy="180" rx="18" ry="25" fill="none" stroke="url(#chainMetal)" stroke-width="5"/>
-  <ellipse cx="240" cy="220" rx="18" ry="25" fill="none" stroke="url(#chainMetal)" stroke-width="5"/>
-  <ellipse cx="280" cy="260" rx="18" ry="25" fill="none" stroke="url(#chainMetal)" stroke-width="5"/>
-  <ellipse cx="320" cy="300" rx="18" ry="25" fill="none" stroke="url(#chainMetal)" stroke-width="5"/>
-  
-  <!-- Hook -->
-  <path d="M 380 80 Q 420 80 420 140 Q 420 180 380 200" fill="none" stroke="url(#chainMetal)" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="420" cy="140" r="15" fill="url(#chainMetal)" stroke="#7c2d12" stroke-width="2"/>
-  
-  <!-- Shackle/Connector -->
-  <rect x="480" y="120" width="35" height="50" fill="url(#chainMetal)" stroke="#7c2d12" stroke-width="2" rx="3"/>
-  <line x1="497" y1="125" x2="497" y2="165" stroke="#7c2d12" stroke-width="1" opacity="0.6"/>
-  
-  <!-- Rope/Cable attachment point -->
-  <circle cx="500" cy="200" r="12" fill="url(#chainMetal)" stroke="#7c2d12" stroke-width="2"/>
-  <line x1="500" y1="215" x2="500" y2="300" stroke="#9a3412" stroke-width="6" opacity="0.7"/>
-  
-  <!-- Shine on chain -->
-  <ellipse cx="140" cy="115" rx="5" ry="12" fill="#ffffff" opacity="0.3"/>
-  <ellipse cx="220" cy="195" rx="5" ry="12" fill="#ffffff" opacity="0.3"/>
+  <rect width="600" height="400" fill="#fef5f1"/>
+  <!-- Цепь справа -->
+  <ellipse cx="440" cy="100" rx="18" ry="25" fill="none" stroke="#f97316" stroke-width="5" opacity="0.8"/>
+  <ellipse cx="480" cy="150" rx="18" ry="25" fill="none" stroke="#f97316" stroke-width="5" opacity="0.8"/>
+  <ellipse cx="450" cy="220" rx="18" ry="25" fill="none" stroke="#f97316" stroke-width="5" opacity="0.8"/>
+  <ellipse cx="500" cy="280" rx="18" ry="25" fill="none" stroke="#f97316" stroke-width="5" opacity="0.8"/>
+  <!-- Крюк -->
+  <path d="M 520 100 Q 540 100 540 140 Q 540 170 520 190" fill="none" stroke="#f97316" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="540" cy="140" r="12" fill="#f97316" opacity="0.8"/>
 </svg>

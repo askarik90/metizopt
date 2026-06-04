@@ -1,46 +1,10 @@
 <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bgGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#374151;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1f2937;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="metalShiny" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#e5e7eb;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#d1d5db;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#9ca3af;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <rect width="600" height="400" fill="url(#bgGrad4)"/>
-  
-  <!-- Stainless steel bolt -->
-  <circle cx="150" cy="130" r="40" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="2"/>
-  <rect x="140" y="175" width="20" height="120" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="1.5"/>
-  <polygon points="120,295 180,295 175,320 125,320" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="1.5"/>
-  
-  <!-- Bolt head hexagon pattern -->
-  <line x1="130" y1="130" x2="170" y2="130" stroke="#9ca3af" stroke-width="2" opacity="0.7"/>
-  <line x1="120" y1="120" x2="180" y2="120" stroke="#9ca3af" stroke-width="1.5" opacity="0.5"/>
-  
-  <!-- Stainless washers -->
-  <circle cx="320" cy="150" r="25" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="2"/>
-  <circle cx="320" cy="150" r="12" fill="#374151"/>
-  
-  <circle cx="450" cy="200" r="20" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="1.5"/>
-  <circle cx="450" cy="200" r="10" fill="#374151"/>
-  
-  <!-- Stainless nuts -->
-  <polygon points="280,280 300,285 305,305 295,310 275,305 270,285" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="1"/>
-  
-  <!-- Threaded bolt -->
-  <rect x="480" y="250" width="14" height="100" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="1"/>
-  <line x1="480" y1="265" x2="494" y2="265" stroke="#4b5563" stroke-width="0.5" opacity="0.6"/>
-  <line x1="480" y1="280" x2="494" y2="280" stroke="#4b5563" stroke-width="0.5" opacity="0.6"/>
-  <line x1="480" y1="295" x2="494" y2="295" stroke="#4b5563" stroke-width="0.5" opacity="0.6"/>
-  <line x1="480" y1="310" x2="494" y2="310" stroke="#4b5563" stroke-width="0.5" opacity="0.6"/>
-  <circle cx="487" cy="240" r="12" fill="url(#metalShiny)" stroke="#4b5563" stroke-width="1"/>
-  
-  <!-- Heavy shine effect (stainless steel)-->
-  <ellipse cx="160" cy="110" rx="20" ry="30" fill="#ffffff" opacity="0.4"/>
-  <ellipse cx="330" cy="140" rx="10" ry="15" fill="#ffffff" opacity="0.5"/>
+  <rect width="600" height="400" fill="#f0f0f0"/>
+  <defs><linearGradient id="n1"><stop offset="0%" style="stop-color:#e5e7eb"/><stop offset="50%" style="stop-color:#d1d5db"/><stop offset="100%" style="stop-color:#9ca3af"/></linearGradient></defs>
+  <circle cx="450" cy="140" r="40" fill="url(#n1)" stroke="#6b7280" stroke-width="2"/>
+  <rect x="440" y="185" width="20" height="110" fill="url(#n1)" stroke="#6b7280" stroke-width="1.5"/>
+  <circle cx="500" cy="180" r="25" fill="url(#n1)" stroke="#6b7280" stroke-width="1.5"/>
+  <circle cx="500" cy="180" r="12" fill="#f0f0f0" stroke="#9ca3af" stroke-width="1"/>
+  <polygon points="440,295 460,295 455,310 445,310" fill="url(#n1)" stroke="#6b7280" stroke-width="1.5"/>
+  <ellipse cx="430" cy="130" rx="20" ry="30" fill="#ffffff" opacity="0.4"/>
 </svg>
