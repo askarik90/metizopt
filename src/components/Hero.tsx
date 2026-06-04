@@ -327,16 +327,18 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
               <div className="w-px h-6 bg-slate-600"></div>
 
               {/* Настройки overlay */}
-              <button
-                onClick={() => setShowOverlaySettings(!showOverlaySettings)}
-                title="Настройки затемнения"
-                className="relative flex items-center gap-1 text-white hover:text-orange-300 transition-colors"
-              >
-                <Settings size={16} />
+              <div className="relative">
+                <button
+                  onClick={() => setShowOverlaySettings(!showOverlaySettings)}
+                  title="Настройки затемнения"
+                  className="flex items-center gap-1 text-white hover:text-orange-300 transition-colors"
+                >
+                  <Settings size={16} />
+                </button>
 
                 {/* Popup с настройками overlay */}
                 {showOverlaySettings && (
-                  <div className="fixed bottom-20 right-8 bg-slate-800 border border-slate-600 rounded-lg p-4 w-72 shadow-2xl z-50 max-h-96 overflow-y-auto">
+                  <div className="absolute bottom-full right-0 mb-2 bg-slate-800 border border-slate-600 rounded-lg p-4 w-72 shadow-2xl z-50 max-h-96 overflow-y-auto">
                     <h3 className="font-bold text-white text-sm mb-4">Настройки затемнения</h3>
 
                     {/* Opacity */}
@@ -436,7 +438,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
                     )}
                   </div>
                 )}
-              </button>
+              </div>
             </>
           )}
 
