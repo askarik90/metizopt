@@ -36,7 +36,10 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
             if (settings.bgColor) setBgColor(settings.bgColor);
             if (settings.bgImage) setBgImage(settings.bgImage);
             if (settings.overlayOpacity) setOverlayOpacity(settings.overlayOpacity);
-            if (settings.overlayColor) setOverlayColor(settings.overlayColor);
+            if (settings.overlayColor) {
+              const validColor = settings.overlayColor.startsWith("#") ? settings.overlayColor : `#${settings.overlayColor}`;
+              setOverlayColor(validColor);
+            }
             if (settings.overlayType) setOverlayType(settings.overlayType);
           }
         }
@@ -55,7 +58,10 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     const savedOpacity = localStorage.getItem("heroOverlayOpacity");
     if (savedOpacity) setOverlayOpacity(parseInt(savedOpacity));
     const savedOverlayColor = localStorage.getItem("heroOverlayColor");
-    if (savedOverlayColor) setOverlayColor(savedOverlayColor);
+    if (savedOverlayColor) {
+      const validColor = savedOverlayColor.startsWith("#") ? savedOverlayColor : `#${savedOverlayColor}`;
+      setOverlayColor(validColor);
+    }
     const savedOverlayType = localStorage.getItem("heroOverlayType");
     if (savedOverlayType) setOverlayType(savedOverlayType as "solid" | "gradient");
   }, []);
@@ -105,9 +111,11 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   };
 
   const handleOverlayColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const color = e.target.value;
-    setOverlayColor(color);
-    localStorage.setItem("heroOverlayColor", color);
+    const color = e.target.value || "#000000";
+    const validColor = color.startsWith("#") ? color : `#${color}`;
+    console.log("Color changed to:", validColor);
+    setOverlayColor(validColor);
+    localStorage.setItem("heroOverlayColor", validColor);
   };
 
   const handleOverlayTypeChange = (type: "solid" | "gradient") => {
@@ -328,7 +336,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
 
                 {/* Popup с настройками overlay */}
                 {showOverlaySettings && (
-                  <div className="absolute bottom-10 right-0 bg-slate-800 border border-slate-600 rounded-lg p-4 w-64 shadow-xl z-50">
+                  <div className="fixed bottom-20 right-8 bg-slate-800 border border-slate-600 rounded-lg p-4 w-72 shadow-2xl z-50 max-h-96 overflow-y-auto">
                     <h3 className="font-bold text-white text-sm mb-4">Настройки затемнения</h3>
 
                     {/* Opacity */}
