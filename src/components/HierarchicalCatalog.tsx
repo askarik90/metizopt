@@ -19,7 +19,7 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
 };
 
 export default function HierarchicalCatalog() {
-  const [expandedGroup, setExpandedGroup] = useState<string>("krepezh");
+  const [expandedGroup, setExpandedGroup] = useState<string>(COMPANY.groups[0]?.slug || "");
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const sectionRef = useRef<HTMLDivElement | null>(null);
 
