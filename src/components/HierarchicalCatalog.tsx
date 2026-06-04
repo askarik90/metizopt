@@ -79,30 +79,37 @@ export default function HierarchicalCatalog() {
 
                 {/* Категории (потомки) */}
                 {isExpanded && (
-                  <div className="bg-slate-50 border-b border-slate-100">
-                    {groupCategories.map((cat, index) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/catalog/${cat.slug}`}
-                        className="flex items-start gap-4 px-6 py-3 hover:bg-white transition-colors border-b border-slate-100 last:border-b-0 group/cat"
-                      >
-                        {/* Индент */}
-                        <div className="w-8 flex-shrink-0 text-right text-xs text-slate-400 pt-1">
-                          {index + 1}.
-                        </div>
+                  <div className="bg-slate-50 border-b border-slate-100 p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {groupCategories.map((cat, index) => (
+                        <Link
+                          key={cat.slug}
+                          href={`/catalog/${cat.slug}`}
+                          className="flex flex-col p-4 bg-white border border-slate-200 hover:border-orange-400 hover:shadow-md transition-all group/cat rounded"
+                        >
+                          {/* Номер и стрелка */}
+                          <div className="flex items-start justify-between mb-3">
+                            <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                              {index + 1}
+                            </span>
+                            <span className="text-orange-600 font-bold text-lg group-hover/cat:translate-x-1 transition-transform">
+                              →
+                            </span>
+                          </div>
 
-                        {/* Содержимое категории */}
-                        <div className="flex-grow min-w-0">
-                          <h4 className="font-bold text-slate-900 text-sm uppercase group-hover/cat:text-orange-600 transition-colors">
+                          {/* Название */}
+                          <h4 className="font-bold text-slate-900 text-sm uppercase group-hover/cat:text-orange-600 transition-colors mb-2">
                             {cat.title}
                           </h4>
-                          <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+
+                          {/* Описание */}
+                          <p className="text-xs text-slate-500 line-clamp-2 mb-3 flex-grow">
                             {cat.desc}
                           </p>
 
                           {/* Стандарты */}
                           {cat.standards.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2">
+                            <div className="flex flex-wrap gap-1">
                               {cat.standards.slice(0, 2).map((s) => (
                                 <span
                                   key={s}
@@ -113,19 +120,14 @@ export default function HierarchicalCatalog() {
                               ))}
                               {cat.standards.length > 2 && (
                                 <span className="text-xs text-slate-500">
-                                  +{cat.standards.length - 2} еще
+                                  +{cat.standards.length - 2}
                                 </span>
                               )}
                             </div>
                           )}
-                        </div>
-
-                        {/* Стрелка */}
-                        <span className="text-orange-600 font-bold text-lg group-hover/cat:translate-x-1 transition-transform flex-shrink-0">
-                          →
-                        </span>
-                      </Link>
-                    ))}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
