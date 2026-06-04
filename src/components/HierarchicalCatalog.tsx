@@ -40,7 +40,7 @@ export default function HierarchicalCatalog() {
           // Когда раскрыта группа - sidebar + подгруппы
           <div className="flex gap-4 flex-col lg:flex-row">
             {/* Группы слева столбцом (фиксированная ширина на десктопе) */}
-            <div className="w-full lg:w-72 flex flex-col gap-3">
+            <div className="w-3/5 lg:w-72 flex flex-col gap-3">
               {COMPANY.groups.map((group) => {
                 const Icon = GROUP_ICONS[group.slug] || Wrench;
                 const isActive = expandedGroup === group.slug;
@@ -91,7 +91,7 @@ export default function HierarchicalCatalog() {
 
                     {/* Изображение справа с градиентом */}
                     <div
-                      className="absolute right-0 top-0 h-full w-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
+                      className="absolute right-0 top-0 h-full w-3/5 opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
                       style={{
                         backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.1) 70%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                         backgroundSize: 'cover',
@@ -220,11 +220,17 @@ export default function HierarchicalCatalog() {
                   </div>
 
                   {/* Правая часть - изображение с градиентом */}
-                  <div className="absolute right-0 top-0 h-full w-full opacity-50 group-hover/btn:opacity-70 transition-opacity"
+                  <div className="absolute right-0 top-0 h-full w-3/5 opacity-50 group-hover/btn:opacity-70 transition-opacity"
                     style={{
                       backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.1) 70%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'right center',
+                    }}
+                  />
+                  {/* Скрывает вертикальную линию в центре */}
+                  <div className="absolute top-0 left-1/3 h-full w-1/3 pointer-events-none"
+                    style={{
+                      backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
                     }}
                   />
                 </button>
