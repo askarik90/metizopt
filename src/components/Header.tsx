@@ -54,6 +54,14 @@ export default function Header({ onQuoteClick }: HeaderProps) {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-2">
             <a
+              href={`tel:${COMPANY.phoneRaw}`}
+              onClick={() => trackPhoneClick()}
+              className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 text-sm font-medium transition-colors"
+            >
+              <Phone size={16} />
+              {COMPANY.phone}
+            </a>
+            <a
               href={getWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
