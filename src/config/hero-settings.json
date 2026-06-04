@@ -1,0 +1,9 @@
+{
+  "bgColor": "rgb(123, 147, 204)",
+  "bgImage": null,
+  "overlayOpacity": 40,
+  "overlayColor": "#000000",
+  "overlayType": "solid",
+  "approved": false,
+  "approvedAt": null
+}

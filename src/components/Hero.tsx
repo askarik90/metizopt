@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, Upload, FileText, Phone, Palette, ImageIcon, X, Settings } from "lucide-react";
+import { MessageCircle, Upload, FileText, Phone, Palette, ImageIcon, X, Settings, Check } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -20,8 +20,34 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   const [overlayColor, setOverlayColor] = useState<string>("#000000");
   const [overlayType, setOverlayType] = useState<"solid" | "gradient">("solid");
   const [showOverlaySettings, setShowOverlaySettings] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   useEffect(() => {
+    // Сначала загружаем утвержденные настройки с сервера
+    const loadApprovedSettings = async () => {
+      try {
+        const response = await fetch("/api/approve-hero-settings");
+        if (response.ok) {
+          const settings = await response.json();
+          if (settings.approved) {
+            setIsApproved(true);
+            if (settings.bgColor) setBgColor(settings.bgColor);
+            if (settings.bgImage) setBgImage(settings.bgImage);
+            if (settings.overlayOpacity) setOverlayOpacity(settings.overlayOpacity);
+            if (settings.overlayColor) setOverlayColor(settings.overlayColor);
+            if (settings.overlayType) setOverlayType(settings.overlayType);
+          }
+        }
+      } catch (error) {
+        console.log("Could not load approved settings:", error);
+      }
+    };
+
+    loadApprovedSettings();
+
+    // Потом загружаем локальные настройки (dev переопределяет)
     const savedColor = localStorage.getItem("heroBgColor");
     if (savedColor) setBgColor(savedColor);
     const savedImage = localStorage.getItem("heroBgImage");
@@ -87,6 +113,39 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
   const handleOverlayTypeChange = (type: "solid" | "gradient") => {
     setOverlayType(type);
     localStorage.setItem("heroOverlayType", type);
+  };
+
+  const handleApproveSettings = async () => {
+    setIsSaving(true);
+    setSaveMessage("");
+
+    try {
+      const response = await fetch("/api/approve-hero-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bgColor,
+          bgImage, // Отправляем base64 если загружена картинка
+          overlayOpacity,
+          overlayColor,
+          overlayType,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsApproved(true);
+        setSaveMessage("✅ Настройки утверждены! Будут использованы при деплое.");
+        setTimeout(() => setSaveMessage(""), 5000);
+      } else {
+        setSaveMessage("❌ Ошибка при сохранении");
+      }
+    } catch (error) {
+      setSaveMessage("❌ Ошибка подключения");
+      console.error("Error approving settings:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const hexToRgb = (hex: string) => {
@@ -332,6 +391,37 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
                     <p className="text-xs text-slate-400 border-t border-slate-600 pt-3">
                       💡 Настройки сохраняются автоматически
                     </p>
+
+                    {/* Кнопка утверждения для production */}
+                    <button
+                      onClick={handleApproveSettings}
+                      disabled={isSaving}
+                      className={`w-full mt-4 px-4 py-2.5 rounded font-medium text-sm transition-colors flex items-center justify-center gap-2 ${
+                        isApproved
+                          ? "bg-green-600 text-white hover:bg-green-700"
+                          : "bg-orange-600 text-white hover:bg-orange-700"
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    >
+                      {isSaving ? (
+                        <>Сохраняю...</>
+                      ) : isApproved ? (
+                        <>
+                          <Check size={16} />
+                          Утверждено ✓
+                        </>
+                      ) : (
+                        <>
+                          <Check size={16} />
+                          Утвердить для production
+                        </>
+                      )}
+                    </button>
+
+                    {saveMessage && (
+                      <p className="text-xs mt-2 p-2 rounded bg-slate-700 text-slate-200 text-center">
+                        {saveMessage}
+                      </p>
+                    )}
                   </div>
                 )}
               </button>
