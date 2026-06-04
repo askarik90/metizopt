@@ -29,6 +29,35 @@ export default function CatalogList({ slug }: CatalogListProps) {
     return cat?.title || slug;
   };
 
+  // Структура иерархии: группа + подгруппы
+  const hierarchy = [
+    {
+      group: "Крепеж",
+      subgroups: ["bolty", "gayki", "shayby", "vinty", "ankera", "shplinty", "dyubelya", "shurupy", "shpilki", "zaklepki", "gvozdi"],
+    },
+    { group: "Комплектующие для вентиляции", subgroups: ["ventilatsiya"] },
+    { group: "Перфорированный крепеж", subgroups: ["perfo"] },
+    { group: "Нержавеющий крепеж", subgroups: ["nerzhaveyushchiy"] },
+    { group: "Такелаж", subgroups: ["takelazh"] },
+    { group: "Канаты", subgroups: ["kanaty"] },
+    { group: "Электроды и сварочная проволока", subgroups: ["elektrody"] },
+    { group: "Шланги", subgroups: ["shlangi"] },
+  ];
+
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
+    new Set(["Крепеж"]) // Крепеж раскрыт по умолчанию
+  );
+
+  const toggleGroup = (group: string) => {
+    const newExpanded = new Set(expandedGroups);
+    if (newExpanded.has(group)) {
+      newExpanded.delete(group);
+    } else {
+      newExpanded.add(group);
+    }
+    setExpandedGroups(newExpanded);
+  };
+
   // Все уникальные подкатегории
   const allCategories = Object.keys(catalogDb).sort();
 
@@ -60,31 +89,70 @@ export default function CatalogList({ slug }: CatalogListProps) {
     <div className="grid lg:grid-cols-4 gap-6 bg-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full lg:col-span-4">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* ── ЛЕВАЯ ПАНЕЛЬ: ФИЛЬТРЫ ── */}
+          {/* ── ЛЕВАЯ ПАНЕЛЬ: ИЕРАРХИЯ ── */}
           <div className="lg:col-span-1">
             <h3 className="font-black text-slate-900 uppercase text-sm mb-4">
               Категории
             </h3>
-            <div className="space-y-2 border-l-2 border-orange-500 pl-4">
-              {allCategories.map((cat) => {
-                const catData = (catalogDb as any)[cat];
-                const itemCount = catData.reduce(
-                  (sum: number, t: any) => sum + t.items.length,
-                  0
-                );
+            <div className="space-y-1 border-l-2 border-orange-500 pl-0">
+              {hierarchy.map(({ group, subgroups }) => {
+                const isExpanded = expandedGroups.has(group);
+                const hasSubgroups = subgroups.length > 1;
+
                 return (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`block w-full text-left text-sm py-2 px-0 transition-colors ${
-                      selectedCategory === cat
-                        ? "font-bold text-orange-600"
-                        : "text-slate-600 hover:text-slate-900"
-                    }`}
-                  >
-                    <div className="font-medium">{getCategoryName(cat)}</div>
-                    <div className="text-xs text-slate-500">{itemCount} товаров</div>
-                  </button>
+                  <div key={group}>
+                    {/* Группа */}
+                    {hasSubgroups ? (
+                      <button
+                        onClick={() => toggleGroup(group)}
+                        className="w-full flex items-center gap-1.5 px-4 py-2 text-left text-sm font-semibold text-slate-900 hover:bg-orange-50 transition-colors"
+                      >
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                        />
+                        {group}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setSelectedCategory(subgroups[0])}
+                        className={`w-full px-4 py-2 text-left text-sm font-semibold transition-colors ${
+                          selectedCategory === subgroups[0]
+                            ? "bg-orange-100 text-orange-600 border-l-2 border-orange-600"
+                            : "text-slate-900 hover:bg-orange-50"
+                        }`}
+                      >
+                        {group}
+                      </button>
+                    )}
+
+                    {/* Подгруппы */}
+                    {hasSubgroups && isExpanded && (
+                      <div className="pl-4 space-y-1">
+                        {subgroups.map((slug) => {
+                          const catData = (catalogDb as any)[slug];
+                          const itemCount = catData.reduce(
+                            (sum: number, t: any) => sum + t.items.length,
+                            0
+                          );
+                          return (
+                            <button
+                              key={slug}
+                              onClick={() => setSelectedCategory(slug)}
+                              className={`w-full text-left text-sm py-1.5 px-3 transition-colors ${
+                                selectedCategory === slug
+                                  ? "font-bold text-orange-600 bg-orange-50"
+                                  : "text-slate-600 hover:text-slate-900"
+                              }`}
+                            >
+                              <div>{getCategoryName(slug)}</div>
+                              <div className="text-xs text-slate-500">{itemCount} товаров</div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
