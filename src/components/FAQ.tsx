@@ -1,10 +1,16 @@
 "use client";
+
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { COMPANY } from "@/config/company";
+import { useFAQ } from "@/hooks/useFAQ";
 
 export default function FAQ() {
-  const [open, setOpen] = useState(0);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const { faqs, loading } = useFAQ();
+
+  // Fallback to company config if faqs not loaded
+  const faqItems = faqs && faqs.length > 0 ? faqs : COMPANY.faq;
 
   return (
     <section className="bg-white py-16">
@@ -16,23 +22,35 @@ export default function FAQ() {
         </div>
 
         <div className="divide-y divide-slate-200 border-y border-slate-200">
-          {COMPANY.faq.map((item, i) => (
-            <div key={i}>
-              <button
-                onClick={() => setOpen(open === i ? -1 : i)}
-                className="w-full flex items-center justify-between py-5 text-left gap-4"
-              >
-                <span className="font-medium text-slate-900 text-base">{item.q}</span>
-                <ChevronDown
-                  size={20}
-                  className={`flex-shrink-0 text-slate-400 transition-transform ${open === i ? "rotate-180" : ""}`}
-                />
-              </button>
-              {open === i && (
-                <div className="pb-5 text-slate-600 leading-relaxed">{item.a}</div>
-              )}
-            </div>
-          ))}
+          {faqItems.map((item: any, i: number) => {
+            const id = item.id || i;
+            const question = item.question || item.q;
+            const answer = item.answer || item.a;
+
+            return (
+              <div key={id}>
+                <button
+                  onClick={() => setOpenId(openId === id ? null : id)}
+                  className="w-full flex items-center justify-between py-5 text-left gap-4 hover:text-orange-600 transition"
+                >
+                  <span className="font-medium text-slate-900 text-base">
+                    {question}
+                  </span>
+                  <ChevronDown
+                    size={20}
+                    className={`flex-shrink-0 text-slate-400 transition-transform ${
+                      openId === id ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {openId === id && (
+                  <div className="pb-5 text-slate-600 leading-relaxed">
+                    {answer}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
