@@ -43,10 +43,13 @@ html[data-design-variant="2"] select:focus {
   outline: none !important;
 }
 
-/* 2️⃣ Растянутая начальная страница (Hero) — увеличено padding секции */
+/* 2️⃣ Растянутая начальная страница (Hero) — увеличено padding и центрирование */
 html[data-design-variant="2"] section:first-of-type {
   padding-top: 5rem !important;
   padding-bottom: 5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: auto !important;
 }
 
 @media (min-width: 640px) {
