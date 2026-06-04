@@ -35,6 +35,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         standards={cat.standards}
         classes={cat.classes}
         whatsappText={cat.whatsappText}
+        fullDescription={cat.fullDescription}
       />
       <TrustSection />
       <FAQ />

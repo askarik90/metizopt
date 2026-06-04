@@ -12,9 +12,10 @@ interface CategoryClientProps {
   standards: readonly string[];
   classes: readonly string[];
   whatsappText: string;
+  fullDescription?: string;
 }
 
-export default function CategoryClient({ title, desc, standards, classes, whatsappText }: CategoryClientProps) {
+export default function CategoryClient({ title, desc, standards, classes, whatsappText, fullDescription }: CategoryClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { trackWhatsAppClick } = useAnalytics();
 
@@ -64,6 +65,15 @@ export default function CategoryClient({ title, desc, standards, classes, whatsa
           </div>
         </div>
       </section>
+
+      {/* Full Description */}
+      {fullDescription && (
+        <section className="bg-white py-12 border-b border-slate-100">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-slate-600 text-base leading-relaxed whitespace-pre-wrap">{fullDescription}</p>
+          </div>
+        </section>
+      )}
 
       {/* Classes */}
       {classes.length > 0 && (
