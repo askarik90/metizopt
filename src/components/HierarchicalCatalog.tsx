@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { COMPANY } from "@/config/company";
 import { ChevronDown } from "lucide-react";
@@ -20,6 +20,7 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
 
 export default function HierarchicalCatalog() {
   const [expandedGroup, setExpandedGroup] = useState<string>("krepezh");
+  const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   return (
     <section className="bg-slate-50 py-16">
@@ -46,13 +47,27 @@ export default function HierarchicalCatalog() {
             return (
               <div
                 key={group.slug}
+                ref={(el) => {
+                  if (el) groupRefs.current[group.slug] = el;
+                }}
                 className={isExpanded ? "lg:col-span-3 md:col-span-2" : ""}
               >
                 {/* Группа (родитель) */}
                 <button
-                  onClick={() =>
-                    setExpandedGroup(isExpanded ? "" : group.slug)
-                  }
+                  onClick={() => {
+                    const newState = isExpanded ? "" : group.slug;
+                    setExpandedGroup(newState);
+
+                    // Скроллим к группе если открываем
+                    if (newState === group.slug) {
+                      setTimeout(() => {
+                        groupRefs.current[group.slug]?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        });
+                      }, 0);
+                    }
+                  }}
                   className={`w-full flex items-center gap-3 px-6 py-4 bg-white border transition-all hover:shadow-md group rounded-t-lg ${
                     isExpanded
                       ? "border-orange-400 shadow-md"
