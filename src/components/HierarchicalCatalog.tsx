@@ -70,14 +70,14 @@ export default function HierarchicalCatalog() {
                     }`}
                   >
                     {/* Текст */}
-                    <div className="flex items-center gap-3 flex-grow z-10">
+                    <div className="flex items-center gap-3 flex-grow z-10 min-w-0">
                       <div className={`w-6 h-6 flex-shrink-0 flex items-center justify-center rounded transition-colors ${
                         isActive ? "bg-orange-200" : "bg-orange-100 group-hover/sidebar:bg-orange-200"
                       }`}>
                         <Icon size={16} className="text-orange-600" />
                       </div>
                       <div className="text-left min-w-0">
-                        <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${
+                        <h3 className={`font-bold text-xs uppercase tracking-tight leading-snug break-words ${
                           isActive ? "text-orange-600" : "text-slate-900"
                         }`}>
                           {group.shortTitle}
@@ -202,13 +202,13 @@ export default function HierarchicalCatalog() {
                   className="relative overflow-hidden flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 hover:border-orange-400 transition-all rounded group/btn"
                 >
                   {/* Левая часть - текст */}
-                  <div className="flex items-center gap-3 flex-grow z-10">
+                  <div className="flex items-center gap-3 flex-grow z-10 min-w-0">
                     <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-orange-100 rounded group-hover/btn:bg-orange-200 transition-colors">
                       <Icon size={18} className="text-orange-600" />
                     </div>
-                    <div className="text-left">
-                      <h3 className="font-black text-slate-900 text-base uppercase tracking-tight">
-                        {group.shortTitle}
+                    <div className="text-left min-w-0">
+                      <h3 className="font-black text-slate-900 text-sm uppercase tracking-tight leading-tight break-words">
+                        {group.title.split(" оптом")[0]}
                       </h3>
                       <p className="text-xs text-slate-500">
                         {groupCategories.length}{" "}
