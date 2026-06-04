@@ -1,9 +1,13 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const CatalogList = dynamic(() => import("./CatalogList"), { ssr: false });
 import {
   Wrench, Settings, Circle, Anchor, Scissors, Package,
   Hammer, FileText, Wind, BarChart3, Star, Link2, Link,
   Zap, Droplet, Pin, ChevronDown, X, MessageCircle, Check,
+  Grid3x3, List,
 } from "lucide-react";
 import { COMPANY } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -27,6 +31,7 @@ const ICONS: Record<string, React.ElementType> = {
 
 export default function CategoryGrid({}: CategoryGridProps) {
   const [open, setOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Модалка выбора типов
   const [modalSlug, setModalSlug] = useState<string | null>(null);
@@ -64,15 +69,45 @@ export default function CategoryGrid({}: CategoryGridProps) {
     <section className="bg-slate-50 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="mb-10">
-          <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">
-            Каталог
-          </h2>
-          <p className="text-slate-500">
-            Выберите категорию — менеджер свяжется для уточнения деталей
-          </p>
+        <div className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">
+              Каталог
+            </h2>
+            <p className="text-slate-500">
+              Выберите категорию — менеджер свяжется для уточнения деталей
+            </p>
+          </div>
+
+          {/* Переключатель режимов */}
+          <div className="flex gap-2 border border-slate-300 rounded p-1">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors ${
+                viewMode === "grid"
+                  ? "bg-orange-600 text-white"
+                  : "bg-white text-slate-700 hover:text-slate-900"
+              }`}
+            >
+              <Grid3x3 size={16} />
+              Сетка
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors ${
+                viewMode === "list"
+                  ? "bg-orange-600 text-white"
+                  : "bg-white text-slate-700 hover:text-slate-900"
+              }`}
+            >
+              <List size={16} />
+              Список
+            </button>
+          </div>
         </div>
 
+        {/* Вид СЕТКА */}
+        {viewMode === "grid" && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200 border border-slate-200">
 
           {/* ── КРЕПЕЖ (аккордеон) ── */}
@@ -151,6 +186,12 @@ export default function CategoryGrid({}: CategoryGridProps) {
             );
           })}
         </div>
+        )}
+
+        {/* Вид СПИСОК */}
+        {viewMode === "list" && (
+          <CatalogList />
+        )}
       </div>
 
       {/* ════════ МОДАЛКА ВЫБОРА ТИПОВ ════════ */}
