@@ -63,28 +63,39 @@ export default function HierarchicalCatalog() {
                         }, 0);
                       }
                     }}
-                    className={`flex items-center gap-3 px-4 py-3 bg-white border transition-all rounded ${
+                    className={`relative overflow-hidden flex items-center gap-3 px-4 py-3 bg-white border transition-all rounded group/sidebar ${
                       isActive
                         ? "border-orange-400 bg-orange-50 shadow-md"
                         : "border-slate-200 hover:border-orange-400 hover:bg-slate-50"
                     }`}
                   >
-                    <div className={`w-6 h-6 flex-shrink-0 flex items-center justify-center rounded transition-colors ${
-                      isActive ? "bg-orange-200" : "bg-orange-100 group-hover:bg-orange-200"
-                    }`}>
-                      <Icon size={16} className="text-orange-600" />
-                    </div>
-                    <div className="flex-grow text-left min-w-0">
-                      <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${
-                        isActive ? "text-orange-600" : "text-slate-900"
+                    {/* Текст */}
+                    <div className="flex items-center gap-3 flex-grow z-10">
+                      <div className={`w-6 h-6 flex-shrink-0 flex items-center justify-center rounded transition-colors ${
+                        isActive ? "bg-orange-200" : "bg-orange-100 group-hover/sidebar:bg-orange-200"
                       }`}>
-                        {group.shortTitle}
-                      </h3>
-                      <p className="text-xs text-slate-500">
-                        {groupCategories.length}{" "}
-                        {groupCategories.length === 1 ? "кат." : "кат."}
-                      </p>
+                        <Icon size={16} className="text-orange-600" />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${
+                          isActive ? "text-orange-600" : "text-slate-900"
+                        }`}>
+                          {group.shortTitle}
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                          {groupCategories.length}{" "}
+                          {groupCategories.length === 1 ? "кат." : "кат."}
+                        </p>
+                      </div>
                     </div>
+
+                    {/* Градиент справа */}
+                    <div
+                      className="absolute right-0 top-0 w-16 h-full opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
+                      style={{
+                        background: group.image,
+                      }}
+                    />
                   </button>
                 );
               })}
@@ -188,20 +199,31 @@ export default function HierarchicalCatalog() {
                       });
                     }, 0);
                   }}
-                  className="flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 hover:border-orange-400 hover:bg-slate-50 transition-all rounded"
+                  className="relative overflow-hidden flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 hover:border-orange-400 transition-all rounded group/btn"
                 >
-                  <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-orange-100 rounded hover:bg-orange-200 transition-colors">
-                    <Icon size={18} className="text-orange-600" />
+                  {/* Левая часть - текст */}
+                  <div className="flex items-center gap-3 flex-grow z-10">
+                    <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-orange-100 rounded group-hover/btn:bg-orange-200 transition-colors">
+                      <Icon size={18} className="text-orange-600" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="font-black text-slate-900 text-base uppercase tracking-tight">
+                        {group.shortTitle}
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        {groupCategories.length}{" "}
+                        {groupCategories.length === 1 ? "категория" : "категорий"}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-grow text-left">
-                    <h3 className="font-black text-slate-900 text-base uppercase tracking-tight">
-                      {group.shortTitle}
-                    </h3>
-                    <p className="text-xs text-slate-500">
-                      {groupCategories.length}{" "}
-                      {groupCategories.length === 1 ? "категория" : "категорий"}
-                    </p>
-                  </div>
+
+                  {/* Правая часть - градиент картинка */}
+                  <div
+                    className="absolute right-0 top-0 w-32 h-full opacity-40 group-hover/btn:opacity-60 transition-opacity"
+                    style={{
+                      background: group.image,
+                    }}
+                  />
                 </button>
               );
             })}
