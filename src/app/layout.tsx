@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { COMPANY } from "@/config/company";
+import DesignToggle from "@/components/DesignToggle";
 
 const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
@@ -50,6 +51,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </head>
       <body className="font-sans bg-white text-slate-900 antialiased">
         {children}
+        <DesignToggle />
       </body>
     </html>
   );

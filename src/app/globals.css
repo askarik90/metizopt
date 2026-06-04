@@ -21,3 +21,164 @@ body {
     grid-row: span 4;
   }
 }
+
+/* ============================================
+   ВАРИАНТ 2: Emil Kovalski Design улучшения
+   ============================================ */
+html[data-design-variant="2"] {
+  /* Типографическая шкала */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Line heights для better readability */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+
+  /* Letter spacing для дыхания */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+}
+
+html[data-design-variant="2"] h1,
+html[data-design-variant="2"] h2,
+html[data-design-variant="2"] h3,
+html[data-design-variant="2"] h4,
+html[data-design-variant="2"] h5,
+html[data-design-variant="2"] h6 {
+  font-weight: 900 !important;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Улучшенная типографика параграфов */
+html[data-design-variant="2"] p,
+html[data-design-variant="2"] li {
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Улучшенные кнопки */
+html[data-design-variant="2"] button,
+html[data-design-variant="2"] a[role="button"] {
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+}
+
+html[data-design-variant="2"] button:hover:not(:disabled),
+html[data-design-variant="2"] a[role="button"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+html[data-design-variant="2"] button:active:not(:disabled),
+html[data-design-variant="2"] a[role="button"]:active {
+  transform: translateY(0);
+}
+
+/* Улучшенные карточки */
+html[data-design-variant="2"] [role="button"]:has(> *),
+html[data-design-variant="2"] .group/btn,
+html[data-design-variant="2"] .group/cat {
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html[data-design-variant="2"] [role="button"]:hover:has(> *),
+html[data-design-variant="2"] .group/btn:hover,
+html[data-design-variant="2"] .group/cat:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Улучшенный spacing */
+html[data-design-variant="2"] section {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+@media (min-width: 640px) {
+  html[data-design-variant="2"] section {
+    padding-top: 6rem !important;
+    padding-bottom: 6rem !important;
+  }
+}
+
+html[data-design-variant="2"] .max-w-7xl {
+  gap: 2rem !important;
+}
+
+/* Улучшенные цвета текста */
+html[data-design-variant="2"] p {
+  color: #475569 !important;
+}
+
+html[data-design-variant="2"] .text-slate-500 {
+  color: #64748b !important;
+}
+
+html[data-design-variant="2"] .text-slate-600 {
+  color: #475569 !important;
+}
+
+/* Улучшенные контрасты */
+html[data-design-variant="2"] h1,
+html[data-design-variant="2"] h2,
+html[data-design-variant="2"] h3 {
+  color: #0f172a !important;
+}
+
+/* Плавные переходы между секциями */
+html[data-design-variant="2"] section {
+  transition: all 300ms ease-in-out;
+}
+
+/* Улучшенные border-radius на всех элементах */
+html[data-design-variant="2"] [class*="rounded"] {
+  border-radius: 8px !important;
+}
+
+html[data-design-variant="2"] [class*="rounded-lg"] {
+  border-radius: 12px !important;
+}
+
+html[data-design-variant="2"] [class*="rounded-xl"] {
+  border-radius: 16px !important;
+}
+
+/* Улучшенные формы ввода */
+html[data-design-variant="2"] input,
+html[data-design-variant="2"] textarea,
+html[data-design-variant="2"] select {
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  transition: all 200ms ease-in-out !important;
+  line-height: var(--leading-normal);
+}
+
+html[data-design-variant="2"] input:focus,
+html[data-design-variant="2"] textarea:focus,
+html[data-design-variant="2"] select:focus {
+  border-color: var(--color-brand-orange) !important;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1) !important;
+  outline: none !important;
+}
+
+/* Улучшенные иконки */
+html[data-design-variant="2"] svg {
+  transition: all 200ms ease-in-out;
+}
+
+html[data-design-variant="2"] button:hover svg,
+html[data-design-variant="2"] a:hover svg {
+  transform: scale(1.1);
+}
