@@ -23,28 +23,28 @@ body {
 }
 
 /* ============================================
-   ВАРИАНТ 2: Избранные улучшения дизайна
+   УЛУЧШЕНИЯ ДИЗАЙНА (V2 - финальный вариант)
    ============================================ */
 
 /* 1️⃣ Подсветка "Поиск товаров" — улучшены focus-стили на inputs */
-html[data-design-variant="2"] input,
-html[data-design-variant="2"] textarea,
-html[data-design-variant="2"] select {
+input,
+textarea,
+select {
   border: 2px solid #e2e8f0 !important;
   border-radius: 8px !important;
   transition: all 200ms ease-in-out !important;
 }
 
-html[data-design-variant="2"] input:focus,
-html[data-design-variant="2"] textarea:focus,
-html[data-design-variant="2"] select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: var(--color-brand-orange) !important;
   box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1) !important;
   outline: none !important;
 }
 
 /* 2️⃣ Растянутая начальная страница (Hero) — автоцентрирование независимо от экрана */
-html[data-design-variant="2"] section:first-of-type {
+section:first-of-type {
   min-height: 80vh !important;
   display: flex !important;
   justify-content: center !important;
@@ -53,42 +53,39 @@ html[data-design-variant="2"] section:first-of-type {
 }
 
 /* 3️⃣ Hover-эффекты на кнопках (translateY, box-shadow) */
-html[data-design-variant="2"] button,
-html[data-design-variant="2"] a[role="button"] {
+button,
+a[role="button"] {
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-html[data-design-variant="2"] button:hover:not(:disabled),
-html[data-design-variant="2"] a[role="button"]:hover {
+button:hover:not(:disabled),
+a[role="button"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
-html[data-design-variant="2"] button:active:not(:disabled),
-html[data-design-variant="2"] a[role="button"]:active {
+button:active:not(:disabled),
+a[role="button"]:active {
   transform: translateY(0);
 }
 
 /* 4️⃣ Плавные transitions (250ms, 300ms анимации) */
-html[data-design-variant="2"] * {
+* {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html[data-design-variant="2"] button,
-html[data-design-variant="2"] a,
-html[data-design-variant="2"] [class*="group"] {
+button,
+a,
+[class*="group"] {
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* 5️⃣ Улучшенные form inputs (2px border, focus shadows) */
-/* Уже реализовано выше в пункте 1 */
-
 /* 6️⃣ Иконки с animations на hover */
-html[data-design-variant="2"] svg {
+svg {
   transition: all 200ms ease-in-out;
 }
 
-html[data-design-variant="2"] button:hover svg,
-html[data-design-variant="2"] a:hover svg {
+button:hover svg,
+a:hover svg {
   transform: scale(1.1);
 }
