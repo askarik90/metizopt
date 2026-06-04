@@ -66,7 +66,7 @@ export default function HierarchicalCatalog() {
                     className={`relative overflow-hidden flex items-center gap-3 px-4 py-3 bg-white border transition-all rounded group/sidebar ${
                       isActive
                         ? "border-orange-400 bg-orange-50 shadow-md"
-                        : "border-slate-200 hover:border-orange-400 hover:bg-slate-50"
+                        : "border-slate-100 hover:border-orange-400 hover:bg-slate-50"
                     }`}
                   >
                     {/* Текст */}
@@ -91,7 +91,7 @@ export default function HierarchicalCatalog() {
 
                     {/* Изображение справа с градиентом */}
                     <div
-                      className="absolute right-0 top-0 h-full w-4/5 opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
+                      className="absolute right-0 top-0 h-full w-3/5 opacity-30 group-hover/sidebar:opacity-50 transition-opacity"
                       style={{
                         backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.1) 70%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                         backgroundSize: 'cover',
@@ -201,7 +201,7 @@ export default function HierarchicalCatalog() {
                       });
                     }, 0);
                   }}
-                  className="relative overflow-hidden flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 hover:border-orange-400 transition-all rounded group/btn"
+                  className="relative overflow-hidden flex items-center gap-4 px-6 py-4 bg-white border border-slate-100 hover:border-orange-400 transition-all rounded group/btn"
                 >
                   {/* Левая часть - текст */}
                   <div className="flex items-center gap-3 flex-grow z-10 min-w-0">
@@ -220,7 +220,7 @@ export default function HierarchicalCatalog() {
                   </div>
 
                   {/* Правая часть - изображение с градиентом */}
-                  <div className="absolute right-0 top-0 h-full w-4/5 opacity-50 group-hover/btn:opacity-70 transition-opacity"
+                  <div className="absolute right-0 top-0 h-full w-3/5 opacity-50 group-hover/btn:opacity-70 transition-opacity"
                     style={{
                       backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.1) 70%, rgba(255,255,255,0) 100%), url('${group.image}')`,
                       backgroundSize: 'cover',
