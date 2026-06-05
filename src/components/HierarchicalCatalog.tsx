@@ -135,17 +135,15 @@ export default function HierarchicalCatalog() {
                             href={`/catalog/${cat.slug}`}
                             className="flex flex-col p-4 bg-white border border-slate-100 hover:border-orange-400 hover:shadow-md transition-all group/cat rounded"
                           >
-                            {/* Стрелка */}
-                            <div className="flex justify-end mb-2">
-                              <span className="text-orange-600 font-bold text-lg group-hover/cat:translate-x-1 transition-transform">
+                            {/* Название + стрелка */}
+                            <div className="flex items-start justify-between mb-2">
+                              <h4 className="font-black text-slate-900 text-sm uppercase group-hover/cat:text-orange-600 transition-colors leading-tight break-words flex-1 pr-2">
+                                {cat.title}
+                              </h4>
+                              <span className="text-orange-600 font-bold text-lg group-hover/cat:translate-x-1 transition-transform flex-shrink-0">
                                 →
                               </span>
                             </div>
-
-                            {/* Название */}
-                            <h4 className="font-black text-slate-900 text-sm uppercase group-hover/cat:text-orange-600 transition-colors mb-2 leading-tight break-words">
-                              {cat.title}
-                            </h4>
 
                             {/* Описание */}
                             <p className="text-xs text-slate-500 line-clamp-3 mb-3 flex-grow leading-relaxed">
