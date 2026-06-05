@@ -31,10 +31,9 @@ async function blobGet<T>(key: string, fallback: T): Promise<T> {
 
 async function blobSet<T>(key: string, value: T): Promise<void> {
   const { put } = await import("@vercel/blob");
-  const content = new Blob([JSON.stringify(value, null, 2)], {
-    type: "application/json; charset=utf-8",
-  });
-  await put(`krp/${key}.json`, content, {
+  // Use Buffer with explicit utf-8 encoding to preserve Cyrillic characters
+  const buf = Buffer.from(JSON.stringify(value, null, 2), "utf-8");
+  await put(`krp/${key}.json`, buf, {
     access: "private",
     addRandomSuffix: false,
     contentType: "application/json; charset=utf-8",
