@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { isAdminAuthenticated } from "@/utils/auth";
 import { Trash2, Plus, Edit2, ArrowLeft, Filter } from "lucide-react";
 
 interface Category {
@@ -22,7 +20,6 @@ interface Group {
 }
 
 export default function AdminCategoriesPage() {
-  const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,12 +36,6 @@ export default function AdminCategoriesPage() {
     standards: [],
   });
   const [standardsInput, setStandardsInput] = useState("");
-
-  useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      router.push("/admin/login");
-    }
-  }, [router]);
 
   useEffect(() => {
     fetchData();

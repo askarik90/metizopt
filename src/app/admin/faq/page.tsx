@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { isAdminAuthenticated } from "@/utils/auth";
 import { Trash2, Plus, Edit2 } from "lucide-react";
 
 interface FAQItem {
@@ -12,18 +10,11 @@ interface FAQItem {
 }
 
 export default function AdminFAQPage() {
-  const router = useRouter();
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ question: "", answer: "" });
-
-  useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      router.push("/admin/login");
-    }
-  }, [router]);
 
   useEffect(() => {
     fetchFAQ();

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { isAdminAuthenticated } from "@/utils/auth";
 import { Trash2, Download, LogOut, Eye } from "lucide-react";
 
 interface Lead {
@@ -23,13 +22,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showDetail, setShowDetail] = useState(false);
-
-  // Check authentication
-  useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      router.push("/admin/login");
-    }
-  }, [router]);
 
   // Load leads
   useEffect(() => {

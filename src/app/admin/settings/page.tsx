@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { isAdminAuthenticated } from "@/utils/auth";
 import { Save, AlertCircle } from "lucide-react";
 
 interface Settings {
@@ -15,17 +13,10 @@ interface Settings {
 }
 
 export default function AdminSettingsPage() {
-  const router = useRouter();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      router.push("/admin/login");
-    }
-  }, [router]);
 
   useEffect(() => {
     fetchSettings();

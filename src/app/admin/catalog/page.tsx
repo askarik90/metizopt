@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { isAdminAuthenticated } from "@/utils/auth";
 import { Trash2, Plus, Edit2, ArrowLeft } from "lucide-react";
 
 interface Group {
@@ -18,7 +16,6 @@ interface Group {
 }
 
 export default function AdminCatalogPage() {
-  const router = useRouter();
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -34,12 +31,6 @@ export default function AdminCatalogPage() {
     image: "",
     categories: [],
   });
-
-  useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      router.push("/admin/login");
-    }
-  }, [router]);
 
   useEffect(() => {
     fetchGroups();
