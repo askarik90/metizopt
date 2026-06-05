@@ -3,6 +3,11 @@ import { checkPassword, getSessionToken, COOKIE_NAME, COOKIE_MAX_AGE } from "@/l
 
 export async function POST(request: NextRequest) {
   try {
+    // Use the Host header so redirects go to localhost, not 0.0.0.0
+    const host = request.headers.get("host") ?? "localhost:3000";
+    const proto = process.env.NODE_ENV === "production" ? "https" : "http";
+    const origin = `${proto}://${host}`;
+
     let password: string | null = null;
 
     const contentType = request.headers.get("content-type");
@@ -19,7 +24,7 @@ export async function POST(request: NextRequest) {
 
       // Redirect to login page with error if it's a form submission
       if (!contentType?.includes("application/json")) {
-        return NextResponse.redirect(new URL("/admin/login?error=1", request.url), { status: 303 });
+        return NextResponse.redirect(`${origin}/admin/login?error=1`, { status: 303 });
       }
       return NextResponse.json({ error: "Неверный пароль" }, { status: 401 });
     }
@@ -36,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Redirect to dashboard if it's a form submission
     if (!contentType?.includes("application/json")) {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url), { status: 303 });
+      return NextResponse.redirect(`${origin}/admin/dashboard`, { status: 303 });
     }
 
     return response;
