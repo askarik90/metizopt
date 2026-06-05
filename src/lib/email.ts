@@ -1,10 +1,10 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Получатель уведомлений — из настроек или fallback
+const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
+const SMTP_USER = process.env.SMTP_USER || "";
+const SMTP_PASS = process.env.SMTP_PASS || "";
 const NOTIFY_TO = process.env.NOTIFY_EMAIL || "140@bugel.kz";
-const FROM = process.env.RESEND_FROM || "KRP.kz <onboarding@resend.dev>";
 
 export interface LeadEmailData {
   name: string;
@@ -19,10 +19,17 @@ export interface LeadEmailData {
 }
 
 export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
-  if (!process.env.RESEND_API_KEY) {
-    console.log("⚠️  RESEND_API_KEY not set — email skipped");
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("⚠️  SMTP_USER/SMTP_PASS not set — email skipped");
     return;
   }
+
+  const transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
 
   const source = lead.utm_source
     ? `${lead.utm_source}${lead.utm_campaign ? ` / ${lead.utm_campaign}` : ""}`
@@ -71,15 +78,15 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
           </tr>
         </table>
         <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:12px;color:#94a3b8">
-          Все заявки: <a href="https://krp.kz/admin/leads" style="color:#ea580c">krp.kz/admin/leads</a>
+          Все заявки: <a href="https://krp.kz/admin/dashboard" style="color:#ea580c">krp.kz/admin/dashboard</a>
         </div>
       </div>
     </div>
   `;
 
-  await resend.emails.send({
-    from: FROM,
-    to: [NOTIFY_TO],
+  await transporter.sendMail({
+    from: `KRP.kz <${SMTP_USER}>`,
+    to: NOTIFY_TO,
     subject: `📦 Новая заявка: ${lead.name} — ${lead.phone}`,
     html,
   });

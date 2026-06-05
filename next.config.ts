@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["sanitize-html"],
+  serverExternalPackages: ["sanitize-html", "nodemailer"],
   async redirects() {
     return [
       {
