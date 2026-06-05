@@ -68,12 +68,23 @@ export async function generateMetadata({
   const { slug } = await params;
   const groups = getGroups();
   const categories = getCategories();
+  const canonical = `https://${COMPANY.domain}/catalog/${slug}`;
 
-  const group = groups.find((g) => g.slug === slug);
-  if (group) return { title: group.metaTitle, description: group.metaDesc };
+  const group = groups.find((g: Group) => g.slug === slug);
+  if (group) return {
+    title: group.metaTitle,
+    description: group.metaDesc,
+    alternates: { canonical },
+    openGraph: { title: group.metaTitle, description: group.metaDesc, url: canonical, type: "website" },
+  };
 
-  const cat = categories.find((c) => c.slug === slug);
-  if (cat) return { title: cat.metaTitle, description: cat.metaDesc };
+  const cat = categories.find((c: Category) => c.slug === slug);
+  if (cat) return {
+    title: cat.metaTitle,
+    description: cat.metaDesc,
+    alternates: { canonical },
+    openGraph: { title: cat.metaTitle, description: cat.metaDesc, url: canonical, type: "website" },
+  };
 
   return {};
 }
@@ -87,16 +98,40 @@ export default async function CatalogPage({
   const groups = getGroups();
   const categories = getCategories();
 
+  const pageUrl = `https://${COMPANY.domain}/catalog/${slug}`;
+
   // ── Страница группы ──────────────────────────────────────────────
-  const group = groups.find((g) => g.slug === slug);
+  const group = groups.find((g: Group) => g.slug === slug);
   if (group) {
     const groupSlugs = new Set(group.categories);
     const groupCategories = categories.filter((cat) =>
       groupSlugs.has(cat.slug)
     );
 
+    const groupJsonLd = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Главная", "item": `https://${COMPANY.domain}` },
+            { "@type": "ListItem", "position": 2, "name": "Каталог", "item": `https://${COMPANY.domain}/catalog` },
+            { "@type": "ListItem", "position": 3, "name": group.title, "item": pageUrl },
+          ],
+        },
+        {
+          "@type": "Organization",
+          "name": COMPANY.name,
+          "url": `https://${COMPANY.domain}`,
+          "telephone": COMPANY.phone,
+          "address": { "@type": "PostalAddress", "addressLocality": "Алматы", "addressCountry": "KZ" },
+        },
+      ],
+    };
+
     return (
       <main className="pb-20 lg:pb-0">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(groupJsonLd) }} />
         <Header />
 
         {/* Hero */}
@@ -209,11 +244,38 @@ export default async function CatalogPage({
   }
 
   // ── Страница категории ────────────────────────────────────────────
-  const cat = categories.find((c) => c.slug === slug);
+  const cat = categories.find((c: Category) => c.slug === slug);
   if (!cat) notFound();
+
+  const catJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Главная", "item": `https://${COMPANY.domain}` },
+          { "@type": "ListItem", "position": 2, "name": "Каталог", "item": `https://${COMPANY.domain}/catalog` },
+          { "@type": "ListItem", "position": 3, "name": cat.title, "item": pageUrl },
+        ],
+      },
+      {
+        "@type": "Product",
+        "name": cat.title,
+        "description": cat.desc,
+        "brand": { "@type": "Brand", "name": COMPANY.name },
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "priceCurrency": "KZT",
+          "seller": { "@type": "Organization", "name": COMPANY.name },
+        },
+      },
+    ],
+  };
 
   return (
     <main className="pb-20 lg:pb-0">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(catJsonLd) }} />
       <Header />
       <CategoryClient
         title={cat.title}

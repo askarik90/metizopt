@@ -9,18 +9,26 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const BASE_URL = `https://${COMPANY.domain}`;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
-    default: `Крепеж оптом в Алматы — ${COMPANY.name}`,
+    default: `Крепеж оптом в Алматы — болты, гайки, анкера | ${COMPANY.name}`,
     template: `%s | ${COMPANY.name}`,
   },
   description:
     "Оптовые поставки крепежа, метизов и такелажа в Казахстане. Болты, гайки, анкера, шайбы, шпильки. Пришлите список — подготовим КП за 30 минут.",
+  alternates: {
+    canonical: BASE_URL,
+  },
   openGraph: {
     title: `Крепеж оптом в Алматы — ${COMPANY.name}`,
     description: "Оптовые поставки крепежа для компаний в Казахстане. Работаем с юрлицами.",
     locale: "ru_KZ",
     type: "website",
+    url: BASE_URL,
+    siteName: COMPANY.name,
   },
   keywords: [
     "крепеж оптом Алматы",
@@ -29,7 +37,14 @@ export const metadata: Metadata = {
     "метизы Казахстан",
     "анкера оптом",
     "крепеж для строительства",
+    "такелаж оптом",
+    "нержавеющий крепеж",
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
