@@ -118,6 +118,40 @@ export interface CategoryItem {
   whatsappText?: string;
 }
 
+// ── ANALYTICS ─────────────────────────────────────────────────────────
+
+export interface DayStats {
+  whatsappClicks: number;
+  phoneClicks: number;
+  formOpens: number;
+  formSubmits: number;
+  fileUploads: number;
+}
+
+export type AnalyticsData = Record<string, DayStats>; // key = YYYY-MM-DD
+
+const EMPTY_DAY: DayStats = {
+  whatsappClicks: 0, phoneClicks: 0,
+  formOpens: 0, formSubmits: 0, fileUploads: 0,
+};
+
+export async function getAnalytics(): Promise<AnalyticsData> {
+  if (useBlob()) return blobGet<AnalyticsData>("analytics", {});
+  return fsRead<AnalyticsData>("analytics.json", {});
+}
+
+export async function trackEvent(
+  type: keyof DayStats,
+  date?: string,
+): Promise<void> {
+  const day = date ?? new Date().toISOString().slice(0, 10);
+  const data = await getAnalytics();
+  const prev = data[day] ?? { ...EMPTY_DAY };
+  const updated: AnalyticsData = { ...data, [day]: { ...prev, [type]: prev[type] + 1 } };
+  if (useBlob()) { await blobSet("analytics", updated); return; }
+  fsWrite("analytics.json", updated);
+}
+
 // ── LEADS ─────────────────────────────────────────────────────────────
 
 export interface Lead {

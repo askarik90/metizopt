@@ -9,6 +9,15 @@ declare global {
   }
 }
 
+// fire-and-forget — не блокируем UI
+function track(type: string) {
+  fetch("/api/analytics", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type }),
+  }).catch(() => {});
+}
+
 export function useAnalytics() {
   const push = useCallback((event: string, params?: Record<string, unknown>) => {
     if (typeof window === "undefined") return;
@@ -17,11 +26,26 @@ export function useAnalytics() {
   }, []);
 
   return {
-    trackLeadFormOpen: () => push("lead_form_open"),
-    trackLeadFormSubmit: (category?: string) => push("lead_form_submit", { category }),
-    trackWhatsAppClick: (category?: string) => push("whatsapp_click", { category }),
-    trackPhoneClick: () => push("phone_click"),
-    trackFileUpload: () => push("file_upload"),
+    trackLeadFormOpen: () => {
+      push("lead_form_open");
+      track("formOpens");
+    },
+    trackLeadFormSubmit: (category?: string) => {
+      push("lead_form_submit", { category });
+      track("formSubmits");
+    },
+    trackWhatsAppClick: (category?: string) => {
+      push("whatsapp_click", { category });
+      track("whatsappClicks");
+    },
+    trackPhoneClick: () => {
+      push("phone_click");
+      track("phoneClicks");
+    },
+    trackFileUpload: () => {
+      push("file_upload");
+      track("fileUploads");
+    },
     trackCategoryClick: (category: string) => push("category_click", { category }),
     trackQuoteRequestClick: () => push("quote_request_click"),
   };

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Lead, LeadResponse } from "@/types/lead";
+import { sendLeadNotification } from "@/lib/email";
 
 export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>> {
   try {
@@ -59,15 +60,22 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       // Continue anyway - lead is logged
     }
 
-    // --- CRM WEBHOOK ---
+    // --- EMAIL NOTIFICATION ---
+    sendLeadNotification({
+      name: lead.name,
+      phone: lead.phone,
+      company: lead.company,
+      city: lead.city,
+      message: lead.message,
+      category: lead.category,
+      pageUrl: lead.page_url,
+      utm_source: lead.utm_source,
+      utm_campaign: lead.utm_campaign,
+    }).catch((e) => console.error("Email send error:", e));
+
+    // --- CRM WEBHOOK (подключить позже) ---
     // const webhookUrl = process.env.CRM_WEBHOOK_URL;
-    // if (webhookUrl) {
-    //   await fetch(webhookUrl, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(lead),
-    //   });
-    // }
+    // if (webhookUrl) { await fetch(webhookUrl, { ... }); }
 
     return NextResponse.json({
       success: true,

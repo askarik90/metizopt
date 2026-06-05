@@ -4,6 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, Download, LogOut, Eye } from "lucide-react";
 
+interface DayStats {
+  whatsappClicks: number;
+  phoneClicks: number;
+  formOpens: number;
+  formSubmits: number;
+  fileUploads: number;
+}
+type AnalyticsData = Record<string, DayStats>;
+
 interface Lead {
   id: string;
   name: string;
@@ -23,12 +32,45 @@ export default function AdminDashboard() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [analyticsDays, setAnalyticsDays] = useState<7 | 30>(7);
 
   useEffect(() => {
     fetchLeads();
+    fetchAnalytics();
     const params = new URLSearchParams(window.location.search);
     setImportStatus(params.get("import"));
   }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      const res = await fetch("/api/analytics");
+      if (res.ok) {
+        const data = await res.json();
+        setAnalytics(data.analytics ?? {});
+      }
+    } catch {
+      // analytics not critical
+    }
+  };
+
+  // Aggregate last N days from analytics data
+  const getAggregated = (days: number) => {
+    const result: DayStats = { whatsappClicks: 0, phoneClicks: 0, formOpens: 0, formSubmits: 0, fileUploads: 0 };
+    if (!analytics) return result;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    for (const [date, stats] of Object.entries(analytics)) {
+      if (new Date(date) >= cutoff) {
+        result.whatsappClicks += stats.whatsappClicks ?? 0;
+        result.phoneClicks += stats.phoneClicks ?? 0;
+        result.formOpens += stats.formOpens ?? 0;
+        result.formSubmits += stats.formSubmits ?? 0;
+        result.fileUploads += stats.fileUploads ?? 0;
+      }
+    }
+    return result;
+  };
 
   const fetchLeads = async () => {
     try {
@@ -255,6 +297,82 @@ export default function AdminDashboard() {
             🔄 Обновить
           </button>
         </div>
+
+        {/* ── FUNNEL ANALYTICS ──────────────────────────────────────── */}
+        {analytics !== null && (() => {
+          const stats = getAggregated(analyticsDays);
+          const totalContacts = stats.whatsappClicks + stats.phoneClicks + stats.formSubmits;
+          const convRate = stats.formOpens > 0
+            ? Math.round((stats.formSubmits / stats.formOpens) * 100)
+            : 0;
+          const maxVal = Math.max(stats.formOpens, stats.whatsappClicks, stats.phoneClicks, stats.formSubmits, 1);
+          const bar = (val: number, color: string) => (
+            <div className="mt-1 h-2 w-full rounded-full bg-slate-100">
+              <div
+                className={`h-2 rounded-full ${color} transition-all duration-500`}
+                style={{ width: `${Math.round((val / maxVal) * 100)}%` }}
+              />
+            </div>
+          );
+          return (
+            <div className="mb-6 rounded-lg border border-slate-200 bg-white p-5">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-black text-slate-900">📊 Воронка продаж</h2>
+                <div className="flex rounded-lg border border-slate-200 text-xs font-bold overflow-hidden">
+                  <button
+                    onClick={() => setAnalyticsDays(7)}
+                    className={`px-3 py-1.5 transition ${analyticsDays === 7 ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-50"}`}
+                  >7 дней</button>
+                  <button
+                    onClick={() => setAnalyticsDays(30)}
+                    className={`px-3 py-1.5 transition ${analyticsDays === 30 ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-50"}`}
+                  >30 дней</button>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-5">
+                <div className="rounded-lg bg-blue-50 p-3">
+                  <p className="text-xs font-bold text-blue-700 uppercase">Открыли форму</p>
+                  <p className="mt-1 text-2xl font-black text-blue-800">{stats.formOpens}</p>
+                  {bar(stats.formOpens, "bg-blue-500")}
+                </div>
+                <div className="rounded-lg bg-green-50 p-3">
+                  <p className="text-xs font-bold text-green-700 uppercase">WhatsApp</p>
+                  <p className="mt-1 text-2xl font-black text-green-800">{stats.whatsappClicks}</p>
+                  {bar(stats.whatsappClicks, "bg-green-500")}
+                </div>
+                <div className="rounded-lg bg-purple-50 p-3">
+                  <p className="text-xs font-bold text-purple-700 uppercase">Звонки</p>
+                  <p className="mt-1 text-2xl font-black text-purple-800">{stats.phoneClicks}</p>
+                  {bar(stats.phoneClicks, "bg-purple-500")}
+                </div>
+                <div className="rounded-lg bg-orange-50 p-3">
+                  <p className="text-xs font-bold text-orange-700 uppercase">Заявки с формы</p>
+                  <p className="mt-1 text-2xl font-black text-orange-800">{stats.formSubmits}</p>
+                  {bar(stats.formSubmits, "bg-orange-500")}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-4 border-t border-slate-100 pt-4 text-sm">
+                <div>
+                  <span className="text-slate-500">Всего обращений: </span>
+                  <span className="font-black text-slate-900">{totalContacts}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500">Конверсия формы: </span>
+                  <span className={`font-black ${convRate >= 20 ? "text-green-600" : convRate >= 10 ? "text-orange-600" : "text-red-600"}`}>
+                    {convRate}%
+                  </span>
+                  <span className="text-xs text-slate-400 ml-1">(открыли → отправили)</span>
+                </div>
+                {stats.fileUploads > 0 && (
+                  <div>
+                    <span className="text-slate-500">Загрузок файлов: </span>
+                    <span className="font-black text-slate-900">{stats.fileUploads}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
           {loading ? (
