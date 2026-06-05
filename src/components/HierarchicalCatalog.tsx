@@ -17,98 +17,97 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
   elektrody: Zap,
 };
 
-const U = (id: string) =>
-  `https://images.unsplash.com/photo-${id}?w=240&h=140&fit=crop&auto=format&q=75`;
+// Локальные фото для категорий (скачаны из Pexels)
+const C = (name: string) => `/images/categories/${name}.jpg`;
 
-// Реалистичные фото для каждой категории (Unsplash)
 const CATEGORY_IMAGES: Record<string, string> = {
   // Крепеж
-  "krepezh-bolty":    U("FDTEzCJ11fk"),  // bolts
-  "krepezh-gayki":    U("p_hO3NOs9MI"),  // nuts pile
-  "krepezh-shayby":   U("c71yQepDEjo"),  // washers/round metal
-  "krepezh-vintyi":   U("wwZYL4BYFto"),  // screws on wood
-  "krepezh-ankera":   U("rbRdQkD0qNI"),  // bolts on ground
-  "krepezh-shplinty": U("b-x9iFcCkb8"),  // screw close-up
-  "krepezh-dyubela":  U("yCyPRNLnFMM"),  // screws pile
-  "krepezh-samorezi": U("TLAQRGh5kEY"),  // screw macro
-  "krepezh-shpilki":  U("pvm5QvjFrJ8"),  // threaded rods
-  "krepezh-zaklepki": U("CTcSmNvp7nM"),  // nuts/rivets box
-  "krepezh-gvozdi":   U("JALUvPLUde8"),  // nails on yellow
+  "krepezh-bolty":    C("bolty"),
+  "krepezh-gayki":    C("gayki"),
+  "krepezh-shayby":   C("shayby"),
+  "krepezh-vintyi":   C("vintyi"),
+  "krepezh-ankera":   C("ankera"),
+  "krepezh-shplinty": C("shplinty"),
+  "krepezh-dyubela":  C("dyubela"),
+  "krepezh-samorezi": C("samorezi"),
+  "krepezh-shpilki":  C("shpilki"),
+  "krepezh-zaklepki": C("zaklepki"),
+  "krepezh-gvozdi":   C("gvozdi"),
 
   // Нержавейка
-  "nerzhav-bolty":    U("1OpKbuJv1Wg"),  // stainless bolts
-  "nerzhav-gayki":    U("SJNicnSjI-o"),  // metal objects
-  "nerzhav-shayby":   U("wYKgV2SZMc8"),  // screws/washers
-  "nerzhav-vintyi":   U("qHhJkxare7A"),  // silver tools
-  "nerzhav-shpilki":  U("cMS2npIGV_g"),  // screw lot silver
+  "nerzhav-bolty":    C("nerzhav"),
+  "nerzhav-gayki":    C("gayki"),
+  "nerzhav-shayby":   C("shayby"),
+  "nerzhav-vintyi":   C("vintyi"),
+  "nerzhav-shpilki":  C("shpilki"),
 
   // Такелаж
-  "takelazh-vertlyug":           U("YLUfVCk8ac4"),  // metal object on chain
-  "takelazh-zazim-din741":       U("uf8ZcJi2TeY"),  // clamp on chain
-  "takelazh-zazim-din3093":      U("t_Husb-EHyU"),  // chain with wrench
-  "takelazh-zazim-dvoinoi":      U("uNoLmIjZaps"),  // chains bunch
-  "takelazh-zazim-odinarnyi":    U("9GSIp9QU5R0"),  // gray chain
-  "takelazh-karabin-5299c":      U("GZgsM-7MGgU"),  // carabiners
-  "takelazh-karabin-5299d":      U("GZgsM-7MGgU"),
-  "takelazh-koush-6899b":        U("0xT8SmrL-hc"),  // machinery close-up
-  "takelazh-kryuk-320a":         U("ok905IdYhOE"),  // black hook
-  "takelazh-kryuk-s":            U("M_EKk0FRIew"),  // metal hook
-  "takelazh-rym-bolt":           U("Pptvfqdo_G0"),  // hook on rope
-  "takelazh-rym-gayka":          U("h6E97ppQmaI"),  // trailer hook
-  "takelazh-skoba-g209":         U("SQc0cSHruRY"),  // red metal hook
-  "takelazh-skoba-g2130":        U("dTi44UH9MdY"),  // hook and chain
-  "takelazh-skoba-g2150":        U("_vVqIVDzJ44"),  // metal bar
-  "takelazh-soedinitel-tsepi":   U("OKe9eWEm3F8"),  // rusty chains
-  "takelazh-talrep-1478":        U("vqEP1_mB0UE"),  // worker with chains
-  "takelazh-talrep-1480-kk":     U("rW00Wu_CeYA"),  // hanging metal
-  "takelazh-talrep-1480-kryuk-k": U("L62cy4YFoAM"), // cable grip
-  "takelazh-talrep-1480-kryuk-kryuk": U("L62cy4YFoAM"),
-  "takelazh-tros-din3055":       U("LMTyPzondZQ"),  // coil of wire
-  "takelazh-tros-din3055-pvkh":  U("iKo_fTD5tMk"),  // brown rope close-up
-  "takelazh-tsep-din763":        U("9GSIp9QU5R0"),
-  "takelazh-tsep-din766":        U("uNoLmIjZaps"),
+  "takelazh-vertlyug":              C("kryuk"),
+  "takelazh-zazim-din741":          C("tros"),
+  "takelazh-zazim-din3093":         C("tros"),
+  "takelazh-zazim-dvoinoi":         C("tsep"),
+  "takelazh-zazim-odinarnyi":       C("tsep"),
+  "takelazh-karabin-5299c":         C("karabin"),
+  "takelazh-karabin-5299d":         C("karabin"),
+  "takelazh-koush-6899b":           C("tros"),
+  "takelazh-kryuk-320a":            C("kryuk"),
+  "takelazh-kryuk-s":               C("kryuk"),
+  "takelazh-rym-bolt":              C("kryuk"),
+  "takelazh-rym-gayka":             C("kryuk"),
+  "takelazh-skoba-g209":            C("zaklepki"),
+  "takelazh-skoba-g2130":           C("zaklepki"),
+  "takelazh-skoba-g2150":           C("zaklepki"),
+  "takelazh-soedinitel-tsepi":      C("tsep"),
+  "takelazh-talrep-1478":           C("talrep"),
+  "takelazh-talrep-1480-kk":        C("talrep"),
+  "takelazh-talrep-1480-kryuk-k":   C("talrep"),
+  "takelazh-talrep-1480-kryuk-kryuk": C("talrep"),
+  "takelazh-tros-din3055":          C("tros"),
+  "takelazh-tros-din3055-pvkh":     C("tros"),
+  "takelazh-tsep-din763":           C("tsep"),
+  "takelazh-tsep-din766":           C("tsep"),
 
   // Канаты
-  "kanat-din3059":  U("L62cy4YFoAM"),
-  "kanat-gost2688": U("YGqDAQMVor0"),   // coils of wire on table
-  "kanat-gost7668": U("iKo_fTD5tMk"),
+  "kanat-din3059":  C("kanat"),
+  "kanat-gost2688": C("tros"),
+  "kanat-gost7668": C("kanat"),
 
   // Вентиляция
-  "ventil-profil-l":       U("HBx7ix32U4o"),  // metal with holes
-  "ventil-profil-u":       U("XI4m_uzRqXE"),  // metal pieces
-  "ventil-skoba-flantsev": U("3175DpLKSus"),  // rusty metal pattern
-  "ventil-strubtsiny":     U("FDTEzCJ11fk"),
-  "ventil-traversa":       U("HBx7ix32U4o"),
-  "ventil-trubki-kflex":   U("LMTyPzondZQ"),
-  "ventil-ugolok":         U("XI4m_uzRqXE"),
-  "ventil-khomut":         U("uf8ZcJi2TeY"),
-  "ventil-shina":          U("3175DpLKSus"),
-  "ventil-shpilka":        U("pvm5QvjFrJ8"),
+  "ventil-profil-l":       C("ventil"),
+  "ventil-profil-u":       C("ventil"),
+  "ventil-skoba-flantsev": C("perfo"),
+  "ventil-strubtsiny":     C("perfo"),
+  "ventil-traversa":       C("ventil"),
+  "ventil-trubki-kflex":   C("ventil"),
+  "ventil-ugolok":         C("ventil"),
+  "ventil-khomut":         C("ventil"),
+  "ventil-shina":          C("ventil"),
+  "ventil-shpilka":        C("shpilki"),
 
   // Перфо
-  "perfo-derzhatel-balki":     U("XI4m_uzRqXE"),
-  "perfo-plastina-kp":         U("3175DpLKSus"),
-  "perfo-ankernyi-ugol-kau":   U("HBx7ix32U4o"),
-  "perfo-ugol-ku":             U("XI4m_uzRqXE"),
-  "perfo-ugol-kuas":           U("HBx7ix32U4o"),
-  "perfo-ugol-kus":            U("3175DpLKSus"),
-  "perfo-ugol-kur":            U("XI4m_uzRqXE"),
-  "perfo-ugol-kuu":            U("HBx7ix32U4o"),
-  "perfo-ugol-kur-us":         U("3175DpLKSus"),
-  "perfo-lenta":               U("vwHncGwScQc"),  // perforated pattern
-  "perfo-opora-balki":         U("XI4m_uzRqXE"),
-  "perfo-lenta-lm":            U("vwHncGwScQc"),
-  "perfo-plastina-ps":         U("3175DpLKSus"),
-  "perfo-prushina-pzp":        U("HBx7ix32U4o"),
-  "perfo-uglovoy-soedinitel":  U("XI4m_uzRqXE"),
-  "perfo-ugol-mebelnyi":       U("3175DpLKSus"),
+  "perfo-derzhatel-balki":    C("perfo"),
+  "perfo-plastina-kp":        C("perfo"),
+  "perfo-ankernyi-ugol-kau":  C("perfo"),
+  "perfo-ugol-ku":            C("perfo"),
+  "perfo-ugol-kuas":          C("perfo"),
+  "perfo-ugol-kus":           C("perfo"),
+  "perfo-ugol-kur":           C("perfo"),
+  "perfo-ugol-kuu":           C("perfo"),
+  "perfo-ugol-kur-us":        C("perfo"),
+  "perfo-lenta":              C("perfo"),
+  "perfo-opora-balki":        C("perfo"),
+  "perfo-lenta-lm":           C("perfo"),
+  "perfo-plastina-ps":        C("perfo"),
+  "perfo-prushina-pzp":       C("perfo"),
+  "perfo-uglovoy-soedinitel": C("perfo"),
+  "perfo-ugol-mebelnyi":      C("perfo"),
 
   // Электроды
-  "svarka-lez":     U("Wiu3w-99tNg"),  // welding in action
-  "svarka-monolith": U("ZkvJnta6bAI"), // welder metalwork
-  "svarka-rossiya": U("CrTTr9xF-w4"),  // welding sparks
-  "svarka-kitay":   U("VW4xiLRr-do"),  // welding time-lapse
-  "svarka-crown":   U("n1RJ7pXgGTE"),  // welder with helmet
+  "svarka-lez":      C("elektrody"),
+  "svarka-monolith": C("svarka"),
+  "svarka-rossiya":  C("svarka"),
+  "svarka-kitay":    C("elektrody"),
+  "svarka-crown":    C("svarka"),
 };
 
 // Убираем SEO-суффиксы из названия для отображения в каталоге
@@ -238,9 +237,9 @@ export default function HierarchicalCatalog() {
                               {/* Фото справа с градиентом */}
                               {imgUrl && (
                                 <div
-                                  className="absolute inset-0 opacity-20 group-hover/cat:opacity-35 transition-opacity"
+                                  className="absolute inset-0 opacity-100 group-hover/cat:opacity-100 transition-opacity"
                                   style={{
-                                    backgroundImage: `linear-gradient(to right, rgba(248,250,252,1) 0%, rgba(248,250,252,0.85) 30%, rgba(248,250,252,0.3) 65%, rgba(248,250,252,0) 100%), url('${imgUrl}')`,
+                                    backgroundImage: `linear-gradient(to right, rgba(248,250,252,1) 0%, rgba(248,250,252,1) 40%, rgba(248,250,252,0.5) 65%, rgba(248,250,252,0) 100%), url('${imgUrl}')`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "right center",
                                   }}
