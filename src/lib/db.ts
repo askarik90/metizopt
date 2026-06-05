@@ -31,10 +31,13 @@ async function blobGet<T>(key: string, fallback: T): Promise<T> {
 
 async function blobSet<T>(key: string, value: T): Promise<void> {
   const { put } = await import("@vercel/blob");
-  await put(`krp/${key}.json`, JSON.stringify(value), {
+  const content = new Blob([JSON.stringify(value, null, 2)], {
+    type: "application/json; charset=utf-8",
+  });
+  await put(`krp/${key}.json`, content, {
     access: "private",
     addRandomSuffix: false,
-    contentType: "application/json",
+    contentType: "application/json; charset=utf-8",
   });
 }
 
