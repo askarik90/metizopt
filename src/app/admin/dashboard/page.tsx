@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { isAdminAuthenticated, clearAdminSession } from "@/utils/auth";
+import { isAdminAuthenticated } from "@/utils/auth";
 import { Trash2, Download, LogOut, Eye } from "lucide-react";
 
 interface Lead {
@@ -110,8 +110,8 @@ export default function AdminDashboard() {
     document.body.removeChild(a);
   };
 
-  const handleLogout = () => {
-    clearAdminSession();
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
     router.push("/admin/login");
   };
 
