@@ -5,12 +5,12 @@ const PROTECTED_ADMIN = /^\/admin(\/|$)(?!login)/;
 const PROTECTED_API = ["/api/leads", "/api/faq", "/api/settings", "/api/groups", "/api/categories"];
 const WRITE_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
   const method = request.method;
 
   const token = request.cookies.get(COOKIE_NAME)?.value ?? "";
-  const isAuth = token ? await validateToken(token) : false;
+  const isAuth = validateToken(token);
 
   // Защита /admin/* (кроме /admin/login)
   if (PROTECTED_ADMIN.test(pathname)) {
