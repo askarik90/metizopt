@@ -17,13 +17,16 @@ function useBlob(): boolean {
 
 async function blobGet<T>(key: string, fallback: T): Promise<T> {
   try {
-    const { head, getDownloadUrl } = await import("@vercel/blob");
-    const blob = await head(`krp/${key}.json`);
-    if (!blob) return fallback;
-    const downloadUrl = getDownloadUrl(blob.url);
-    const res = await fetch(downloadUrl);
-    if (!res.ok) return fallback;
-    return (await res.json()) as T;
+    const { get } = await import("@vercel/blob");
+    // Private store: read with access:"private". useCache:false → always the
+    // freshest version right after a save (no CDN staleness).
+    const result = await get(`krp/${key}.json`, {
+      access: "private",
+      useCache: false,
+    });
+    if (!result || result.statusCode !== 200 || !result.stream) return fallback;
+    const text = await new Response(result.stream).text();
+    return JSON.parse(text) as T;
   } catch {
     return fallback;
   }
@@ -31,11 +34,12 @@ async function blobGet<T>(key: string, fallback: T): Promise<T> {
 
 async function blobSet<T>(key: string, value: T): Promise<void> {
   const { put } = await import("@vercel/blob");
-  // Use Buffer with explicit utf-8 encoding to preserve Cyrillic characters
-  const buf = Buffer.from(JSON.stringify(value, null, 2), "utf-8");
-  await put(`krp/${key}.json`, buf, {
+  // Pass a plain string — the SDK encodes it as UTF-8 (TextEncoder).
+  // Passing a Node Buffer here corrupts multibyte (Cyrillic) characters.
+  await put(`krp/${key}.json`, JSON.stringify(value, null, 2), {
     access: "private",
     addRandomSuffix: false,
+    allowOverwrite: true,
     contentType: "application/json; charset=utf-8",
   });
 }
@@ -90,6 +94,30 @@ export async function saveFAQ(data: FAQItem[]) {
   fsWrite("faq.json", data);
 }
 
+export interface GroupItem {
+  slug: string;
+  title: string;
+  shortTitle: string;
+  desc: string;
+  metaTitle: string;
+  metaDesc: string;
+  fullDescription: string;
+  image: string;
+  categories: string[];
+}
+
+export interface CategoryItem {
+  slug: string;
+  title: string;
+  desc: string;
+  metaTitle: string;
+  metaDesc: string;
+  fullDescription: string;
+  standards: string[];
+  classes?: string[];
+  whatsappText?: string;
+}
+
 // ── LEADS ─────────────────────────────────────────────────────────────
 
 export interface Lead {
@@ -110,30 +138,131 @@ export async function saveLeads(data: Lead[]) {
 
 // ── GROUPS ────────────────────────────────────────────────────────────
 
-export async function getGroups(): Promise<unknown[]> {
+export async function getGroups(): Promise<GroupItem[]> {
   if (useBlob()) {
-    const data = await blobGet<unknown[]>("groups", []);
+    const data = await blobGet<GroupItem[]>("groups", []);
     if (data.length > 0) return data;
   }
-  return fsRead<unknown[]>("groups.json", []);
+  return fsRead<GroupItem[]>("groups.json", []);
 }
 
-export async function saveGroups(data: unknown[]) {
+export async function saveGroups(data: GroupItem[]) {
   if (useBlob()) { await blobSet("groups", data); return; }
   fsWrite("groups.json", data);
 }
 
 // ── CATEGORIES ────────────────────────────────────────────────────────
 
-export async function getCategories(): Promise<unknown[]> {
+export async function getCategories(): Promise<CategoryItem[]> {
   if (useBlob()) {
-    const data = await blobGet<unknown[]>("categories", []);
+    const data = await blobGet<CategoryItem[]>("categories", []);
     if (data.length > 0) return data;
   }
-  return fsRead<unknown[]>("categories.json", []);
+  return fsRead<CategoryItem[]>("categories.json", []);
 }
 
-export async function saveCategories(data: unknown[]) {
+export async function saveCategories(data: CategoryItem[]) {
   if (useBlob()) { await blobSet("categories", data); return; }
   fsWrite("categories.json", data);
+}
+
+export interface DataSnapshot {
+  version: 1;
+  exportedAt: string;
+  source: "blob" | "fs";
+  data: {
+    settings: typeof DEFAULT_SETTINGS;
+    faq: FAQItem[];
+    leads: Lead[];
+    groups: GroupItem[];
+    categories: CategoryItem[];
+  };
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+export async function exportDataSnapshot(): Promise<DataSnapshot> {
+  const [settings, faq, leads, groups, categories] = await Promise.all([
+    getSettings(),
+    getFAQ(),
+    getLeads(),
+    getGroups(),
+    getCategories(),
+  ]);
+
+  return {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    source: useBlob() ? "blob" : "fs",
+    data: {
+      settings,
+      faq,
+      leads,
+      groups,
+      categories,
+    },
+  };
+}
+
+export function isDataSnapshot(value: unknown): value is DataSnapshot {
+  if (!value || typeof value !== "object") return false;
+  const snapshot = value as Partial<DataSnapshot>;
+
+  return (
+    snapshot.version === 1 &&
+    !!snapshot.data &&
+    typeof snapshot.data === "object" &&
+    Array.isArray(snapshot.data.faq) &&
+    Array.isArray(snapshot.data.leads) &&
+    Array.isArray(snapshot.data.groups) &&
+    Array.isArray(snapshot.data.categories) &&
+    !!snapshot.data.settings
+  );
+}
+
+export function normalizeDataSnapshot(value: unknown): DataSnapshot | null {
+  if (!isPlainObject(value)) return null;
+
+  const root = value as Record<string, unknown>;
+  const data = isPlainObject(root.data) ? root.data : null;
+  if (!data) return null;
+
+  const faq = Array.isArray(data.faq) ? data.faq : [];
+  const leads = Array.isArray(data.leads) ? data.leads : [];
+  const groups = Array.isArray(data.groups) ? data.groups : [];
+  const categories = Array.isArray(data.categories) ? data.categories : [];
+  const settings = isPlainObject(data.settings)
+    ? {
+        ...DEFAULT_SETTINGS,
+        ...data.settings,
+      }
+    : DEFAULT_SETTINGS;
+
+  return {
+    version: 1,
+    exportedAt:
+      typeof root.exportedAt === "string" && root.exportedAt
+        ? root.exportedAt
+        : new Date().toISOString(),
+    source: root.source === "blob" ? "blob" : "fs",
+    data: {
+      settings,
+      faq: faq as FAQItem[],
+      leads: leads as Lead[],
+      groups: groups as GroupItem[],
+      categories: categories as CategoryItem[],
+    },
+  };
+}
+
+export async function importDataSnapshot(snapshot: DataSnapshot): Promise<void> {
+  await Promise.all([
+    saveSettings(snapshot.data.settings),
+    saveFAQ(snapshot.data.faq),
+    saveLeads(snapshot.data.leads),
+    saveGroups(snapshot.data.groups),
+    saveCategories(snapshot.data.categories),
+  ]);
 }

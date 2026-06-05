@@ -13,15 +13,24 @@ interface CategoryClientProps {
   classes: readonly string[];
   whatsappText: string;
   fullDescription?: string;
+  sidebar?: React.ReactNode;
 }
 
-export default function CategoryClient({ title, desc, standards, classes, whatsappText, fullDescription }: CategoryClientProps) {
+export default function CategoryClient({
+  title,
+  desc,
+  standards,
+  classes,
+  whatsappText,
+  fullDescription,
+  sidebar,
+}: CategoryClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { trackWhatsAppClick } = useAnalytics();
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero — full width */}
       <section
         className="bg-slate-900 py-16"
         style={{
@@ -66,35 +75,54 @@ export default function CategoryClient({ title, desc, standards, classes, whatsa
         </div>
       </section>
 
-      {/* Full Description */}
-      {fullDescription && (
-        <section className="bg-white py-12 border-b border-slate-100">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-slate-600 text-base leading-relaxed whitespace-pre-wrap">{fullDescription}</p>
-          </div>
-        </section>
-      )}
-
-      {/* Classes */}
-      {classes.length > 0 && (
-        <section className="bg-white py-12 border-b border-slate-100">
+      {/* Content area: sidebar + description + classes */}
+      {(fullDescription || classes.length > 0 || sidebar) && (
+        <div className="bg-slate-50 py-8 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-6">
-              Классы прочности
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {classes.map((cls) => (
-                <div key={cls} className="border border-slate-200 px-6 py-4 text-center">
-                  <div className="text-2xl font-black text-orange-600">{cls}</div>
-                  <div className="text-slate-500 text-xs mt-1">класс прочности</div>
-                </div>
-              ))}
+            <div className="flex items-start gap-8">
+
+              {/* Left sidebar — desktop only */}
+              {sidebar && (
+                <aside className="hidden lg:block w-52 flex-shrink-0">
+                  {sidebar}
+                </aside>
+              )}
+
+              {/* Main column */}
+              <div className="flex-1 min-w-0 space-y-6">
+                {/* Full Description */}
+                {fullDescription && (
+                  <div className="rounded-lg border border-slate-200 bg-white p-8">
+                    <div
+                      className="prose prose-slate max-w-none text-slate-600"
+                      dangerouslySetInnerHTML={{ __html: fullDescription }}
+                    />
+                  </div>
+                )}
+
+                {/* Strength Classes */}
+                {classes.length > 0 && (
+                  <div className="rounded-lg border border-slate-200 bg-white p-8">
+                    <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-6">
+                      Классы прочности
+                    </h2>
+                    <div className="flex flex-wrap gap-3">
+                      {classes.map((cls) => (
+                        <div key={cls} className="border border-slate-200 px-6 py-4 text-center">
+                          <div className="text-2xl font-black text-orange-600">{cls}</div>
+                          <div className="text-slate-500 text-xs mt-1">класс прочности</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </section>
+        </div>
       )}
 
-      {/* Analogue */}
+      {/* Analogue — full width */}
       <section className="bg-orange-50 border-y border-orange-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>

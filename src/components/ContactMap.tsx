@@ -1,16 +1,25 @@
-"use client";
-
 import { COMPANY } from "@/config/company";
 
-export default function ContactMap() {
+interface ContactMapProps {
+  settings: {
+    address: string;
+    phone: string;
+    email: string;
+    whatsapp: string;
+    workingHours: string;
+    workingHoursSat: string;
+  };
+}
+
+export default function ContactMap({ settings }: ContactMapProps) {
   const { lat, lng } = COMPANY.coordinates;
   const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.755917768508!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38a68%3A0x0!2zTWFyaw!5e0!3m2!1sru!2skz!4v1234567890`;
+  const phoneRaw = settings.phone.replace(/\D/g, "");
 
   return (
     <section className="bg-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Контактная информация слева */}
           <div className="lg:col-span-1">
             <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-6">
               Наш адрес
@@ -20,9 +29,7 @@ export default function ContactMap() {
                 <p className="text-sm font-bold text-slate-600 uppercase tracking-tight mb-2">
                   Адрес
                 </p>
-                <p className="text-lg text-slate-900">
-                  {COMPANY.address}
-                </p>
+                <p className="text-lg text-slate-900">{settings.address}</p>
               </div>
 
               <div>
@@ -30,10 +37,10 @@ export default function ContactMap() {
                   Телефон
                 </p>
                 <a
-                  href={`tel:${COMPANY.phoneRaw}`}
+                  href={`tel:+${phoneRaw}`}
                   className="text-lg text-orange-600 hover:text-orange-700 transition-colors font-semibold"
                 >
-                  {COMPANY.phone}
+                  {settings.phone}
                 </a>
               </div>
 
@@ -42,10 +49,10 @@ export default function ContactMap() {
                   Email
                 </p>
                 <a
-                  href={`mailto:${COMPANY.email}`}
+                  href={`mailto:${settings.email}`}
                   className="text-lg text-orange-600 hover:text-orange-700 transition-colors font-semibold"
                 >
-                  {COMPANY.email}
+                  {settings.email}
                 </a>
               </div>
 
@@ -54,14 +61,13 @@ export default function ContactMap() {
                   Время работы
                 </p>
                 <div className="text-slate-900">
-                  <p>{COMPANY.workingHours}</p>
-                  <p>{COMPANY.workingHoursSat}</p>
+                  <p>{settings.workingHours}</p>
+                  <p>{settings.workingHoursSat}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Карта справа */}
           <div className="lg:col-span-2">
             <div className="rounded-lg overflow-hidden shadow-lg h-96 lg:h-full">
               <iframe

@@ -24,7 +24,7 @@ export default function AdminFAQPage() {
     try {
       const res = await fetch("/api/faq");
       const data = await res.json();
-      setFaqs(data.faq);
+      setFaqs(data.faqs || data.faq || []);
     } catch (error) {
       console.error("Error fetching FAQ:", error);
     } finally {
@@ -74,7 +74,7 @@ export default function AdminFAQPage() {
 
         if (res.ok) {
           const data = await res.json();
-          setFaqs([...faqs, data.item]);
+          setFaqs([...faqs, data.item || data.faq]);
         }
       }
 

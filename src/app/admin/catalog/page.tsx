@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Trash2, Plus, Edit2, ArrowLeft } from "lucide-react";
+import RichTextEditor from "@/components/RichTextEditor";
 
 interface Group {
   slug: string;
@@ -272,18 +273,15 @@ export default function AdminCatalogPage() {
                 <label className="block text-sm font-bold text-slate-900 mb-2">
                   Полное описание
                 </label>
-                <textarea
+                <RichTextEditor
                   value={formData.fullDescription || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      fullDescription: e.target.value,
-                    })
+                  onChange={(html) =>
+                    setFormData({ ...formData, fullDescription: html })
                   }
-                  placeholder="Подробное описание для страницы каталога..."
-                  rows={4}
-                  className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
                 />
+                <p className="text-xs text-slate-500 mt-1">
+                  Используйте панель для форматирования: жирный, списки, заголовки, ссылки.
+                </p>
               </div>
 
               <div>

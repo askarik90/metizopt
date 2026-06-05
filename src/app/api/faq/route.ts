@@ -4,7 +4,7 @@ import { getFAQ, saveFAQ, FAQItem } from "@/lib/db";
 export async function GET() {
   try {
     const faqs = await getFAQ();
-    return NextResponse.json({ faqs });
+    return NextResponse.json({ faqs, faq: faqs });
   } catch (error) {
     console.error("Error reading FAQ:", error);
     return NextResponse.json({ error: "Failed to read FAQ" }, { status: 500 });
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const newItem: FAQItem = { id: Date.now().toString(), question, answer };
     faqs.push(newItem);
     await saveFAQ(faqs);
-    return NextResponse.json({ success: true, faq: newItem });
+    return NextResponse.json({ success: true, faq: newItem, item: newItem });
   } catch (error) {
     console.error("Error creating FAQ:", error);
     return NextResponse.json({ error: "Failed to create FAQ" }, { status: 500 });
@@ -39,7 +39,7 @@ export async function PUT(request: NextRequest) {
     if (index === -1) return NextResponse.json({ error: "Not found" }, { status: 404 });
     faqs[index] = { id, question, answer };
     await saveFAQ(faqs);
-    return NextResponse.json({ success: true, faq: faqs[index] });
+    return NextResponse.json({ success: true, faq: faqs[index], item: faqs[index] });
   } catch (error) {
     console.error("Error updating FAQ:", error);
     return NextResponse.json({ error: "Failed to update FAQ" }, { status: 500 });

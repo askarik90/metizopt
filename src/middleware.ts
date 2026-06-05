@@ -2,7 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAME, validateToken } from "@/lib/auth";
 
 const PROTECTED_ADMIN = /^\/admin(\/|$)(?!login)/;
-const PROTECTED_API = ["/api/leads", "/api/faq", "/api/settings", "/api/groups", "/api/categories"];
+const PROTECTED_API = [
+  "/api/leads",
+  "/api/faq",
+  "/api/settings",
+  "/api/groups",
+  "/api/categories",
+  "/api/admin",
+];
+const ALWAYS_AUTH_API = ["/api/leads", "/api/admin"];
 const WRITE_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);
 
 export function middleware(request: NextRequest) {
@@ -12,23 +20,22 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value ?? "";
   const isAuth = validateToken(token);
 
-  // Защита /admin/* (кроме /admin/login)
-  if (PROTECTED_ADMIN.test(pathname)) {
-    if (!isAuth) {
-      const loginUrl = new URL("/admin/login", origin);
-      loginUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  if (PROTECTED_ADMIN.test(pathname) && !isAuth) {
+    const loginUrl = new URL("/admin/login", origin);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Защита write-операций на API
+  if (ALWAYS_AUTH_API.some((route) => pathname.startsWith(route)) && !isAuth) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   if (
     WRITE_METHODS.has(method) &&
-    PROTECTED_API.some((r) => pathname.startsWith(r))
+    PROTECTED_API.some((route) => pathname.startsWith(route)) &&
+    !isAuth
   ) {
-    if (!isAuth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   return NextResponse.next();
@@ -42,5 +49,6 @@ export const config = {
     "/api/settings/:path*",
     "/api/groups/:path*",
     "/api/categories/:path*",
+    "/api/admin/:path*",
   ],
 };

@@ -11,6 +11,33 @@ export async function GET() {
   }
 }
 
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    const address = formData.get("address");
+    const phone = formData.get("phone");
+    const email = formData.get("email");
+    const whatsapp = formData.get("whatsapp");
+    const workingHours = formData.get("workingHours");
+    const workingHoursSat = formData.get("workingHoursSat");
+
+    const settings = {
+      address: address?.toString() || "",
+      phone: phone?.toString() || "",
+      email: email?.toString() || "",
+      whatsapp: whatsapp?.toString() || "",
+      workingHours: workingHours?.toString() || "",
+      workingHoursSat: workingHoursSat?.toString() || "",
+    };
+
+    await saveSettings(settings);
+    return NextResponse.redirect(new URL("/admin/settings?saved=true", request.url), { status: 303 });
+  } catch (error) {
+    console.error("Error updating settings:", error);
+    return NextResponse.redirect(new URL("/admin/settings?error=true", request.url), { status: 303 });
+  }
+}
+
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();

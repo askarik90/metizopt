@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getGroups, saveGroups } from "@/lib/db";
+import { getGroups, saveGroups, type GroupItem } from "@/lib/db";
 
 export async function GET() {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     if (!body.slug || !body.title) {
       return NextResponse.json({ error: "Slug and title required" }, { status: 400 });
     }
-    const groups = await getGroups() as Record<string, unknown>[];
+    const groups = await getGroups();
     if (groups.some((g) => g.slug === body.slug)) {
       return NextResponse.json({ error: "Slug already exists" }, { status: 400 });
     }
@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
     if (!body.slug) return NextResponse.json({ error: "Slug required" }, { status: 400 });
-    const groups = await getGroups() as Record<string, unknown>[];
+    const groups = await getGroups();
     const index = groups.findIndex((g) => g.slug === body.slug);
     if (index === -1) return NextResponse.json({ error: "Not found" }, { status: 404 });
     groups[index] = body;
@@ -51,7 +51,7 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");
     if (!slug) return NextResponse.json({ error: "Slug required" }, { status: 400 });
-    const groups = await getGroups() as Record<string, unknown>[];
+    const groups = await getGroups();
     await saveGroups(groups.filter((g) => g.slug !== slug));
     return NextResponse.json({ success: true });
   } catch (error) {

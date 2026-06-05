@@ -20,7 +20,7 @@ export function useFAQ() {
       const res = await fetch("/api/faq", { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch FAQ");
       const data = await res.json();
-      setFaqs(data.faq || []);
+      setFaqs(data.faqs || data.faq || []);
     } catch (err) {
       console.error("Error fetching FAQ:", err);
       setError(err instanceof Error ? err.message : "Unknown error");

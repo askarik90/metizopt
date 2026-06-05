@@ -1,45 +1,6 @@
-"use client";
-
-import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Lock } from "lucide-react";
 
-function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const from = searchParams.get("from") || "/admin/dashboard";
-
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-
-      if (res.ok) {
-        router.push(from);
-        router.refresh();
-      } else {
-        const data = await res.json();
-        setError(data.error || "Неверный пароль");
-        setPassword("");
-      }
-    } catch {
-      setError("Ошибка соединения с сервером");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
@@ -54,34 +15,27 @@ function LoginForm() {
             <p className="text-slate-500 text-sm mt-2">Панель администратора</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form method="POST" action="/api/auth/login" className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-900 mb-2">
+              <label htmlFor="password" className="block text-sm font-bold text-slate-900 mb-2">
                 Пароль
               </label>
               <input
+                id="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
                 placeholder="Введите пароль"
                 autoComplete="current-password"
                 className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 focus:outline-none transition"
-                disabled={loading}
+                required
               />
             </div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
-
             <button
               type="submit"
-              disabled={loading || !password}
-              className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-slate-300 text-white font-bold py-2 px-4 rounded-lg transition-all"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
             >
-              {loading ? "Проверка..." : "Войти"}
+              Войти
             </button>
           </form>
 
@@ -91,13 +45,5 @@ function LoginForm() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function AdminLoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
   );
 }

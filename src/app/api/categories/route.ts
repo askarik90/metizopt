@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCategories, saveCategories } from "@/lib/db";
+import { getCategories, saveCategories, type CategoryItem } from "@/lib/db";
 
 export async function GET() {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     if (!body.slug || !body.title) {
       return NextResponse.json({ error: "Slug and title required" }, { status: 400 });
     }
-    const categories = await getCategories() as Record<string, unknown>[];
+    const categories = await getCategories();
     if (categories.some((c) => c.slug === body.slug)) {
       return NextResponse.json({ error: "Slug already exists" }, { status: 400 });
     }
@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
     if (!body.slug) return NextResponse.json({ error: "Slug required" }, { status: 400 });
-    const categories = await getCategories() as Record<string, unknown>[];
+    const categories = await getCategories();
     const index = categories.findIndex((c) => c.slug === body.slug);
     if (index === -1) return NextResponse.json({ error: "Not found" }, { status: 404 });
     categories[index] = body;
@@ -51,7 +51,7 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");
     if (!slug) return NextResponse.json({ error: "Slug required" }, { status: 400 });
-    const categories = await getCategories() as Record<string, unknown>[];
+    const categories = await getCategories();
     await saveCategories(categories.filter((c) => c.slug !== slug));
     return NextResponse.json({ success: true });
   } catch (error) {

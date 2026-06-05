@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -8,57 +6,18 @@ import Footer from "@/components/Footer";
 import TrustSection from "@/components/TrustSection";
 import FAQ from "@/components/FAQ";
 import CategoryClient from "./CategoryClient";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import CatalogSidebar from "@/components/CatalogSidebar";
 import { COMPANY } from "@/config/company";
+import {
+  getCategories,
+  getGroups,
+  type CategoryItem,
+  type GroupItem,
+} from "@/lib/db";
+import { sanitizeRichText } from "@/lib/sanitize";
 
-interface Category {
-  slug: string;
-  title: string;
-  desc: string;
-  metaTitle: string;
-  metaDesc: string;
-  fullDescription: string;
-  standards: string[];
-  classes?: string[];
-  whatsappText?: string;
-}
-
-interface Group {
-  slug: string;
-  title: string;
-  shortTitle: string;
-  desc: string;
-  metaTitle: string;
-  metaDesc: string;
-  fullDescription: string;
-  image: string;
-  categories: string[];
-}
-
-function getCategories(): Category[] {
-  try {
-    const file = path.join(process.cwd(), "data", "categories.json");
-    if (fs.existsSync(file)) {
-      return JSON.parse(fs.readFileSync(file, "utf-8")) as Category[];
-    }
-  } catch {}
-  return COMPANY.categories as unknown as Category[];
-}
-
-function getGroups(): Group[] {
-  try {
-    const file = path.join(process.cwd(), "data", "groups.json");
-    if (fs.existsSync(file)) {
-      return JSON.parse(fs.readFileSync(file, "utf-8")) as Group[];
-    }
-  } catch {}
-  return COMPANY.groups as unknown as Group[];
-}
-
-export function generateStaticParams() {
-  const categories = getCategories().map((cat) => ({ slug: cat.slug }));
-  const groups = getGroups().map((group) => ({ slug: group.slug }));
-  return [...categories, ...groups];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -66,25 +25,38 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const groups = getGroups();
-  const categories = getCategories();
+  const [groups, categories] = await Promise.all([getGroups(), getCategories()]);
   const canonical = `https://${COMPANY.domain}/catalog/${slug}`;
 
-  const group = groups.find((g: Group) => g.slug === slug);
-  if (group) return {
-    title: group.metaTitle,
-    description: group.metaDesc,
-    alternates: { canonical },
-    openGraph: { title: group.metaTitle, description: group.metaDesc, url: canonical, type: "website" },
-  };
+  const group = groups.find((item: GroupItem) => item.slug === slug);
+  if (group) {
+    return {
+      title: group.metaTitle,
+      description: group.metaDesc,
+      alternates: { canonical },
+      openGraph: {
+        title: group.metaTitle,
+        description: group.metaDesc,
+        url: canonical,
+        type: "website",
+      },
+    };
+  }
 
-  const cat = categories.find((c: Category) => c.slug === slug);
-  if (cat) return {
-    title: cat.metaTitle,
-    description: cat.metaDesc,
-    alternates: { canonical },
-    openGraph: { title: cat.metaTitle, description: cat.metaDesc, url: canonical, type: "website" },
-  };
+  const category = categories.find((item: CategoryItem) => item.slug === slug);
+  if (category) {
+    return {
+      title: category.metaTitle,
+      description: category.metaDesc,
+      alternates: { canonical },
+      openGraph: {
+        title: category.metaTitle,
+        description: category.metaDesc,
+        url: canonical,
+        type: "website",
+      },
+    };
+  }
 
   return {};
 }
@@ -95,79 +67,90 @@ export default async function CatalogPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const groups = getGroups();
-  const categories = getCategories();
-
+  const [groups, categories] = await Promise.all([getGroups(), getCategories()]);
   const pageUrl = `https://${COMPANY.domain}/catalog/${slug}`;
 
-  // ── Страница группы ──────────────────────────────────────────────
-  const group = groups.find((g: Group) => g.slug === slug);
+  // ── GROUP PAGE ─────────────────────────────────────────────────────────
+  const group = groups.find((item: GroupItem) => item.slug === slug);
   if (group) {
     const groupSlugs = new Set(group.categories);
-    const groupCategories = categories.filter((cat) =>
-      groupSlugs.has(cat.slug)
-    );
+    const groupCategories = categories.filter((item) => groupSlugs.has(item.slug));
 
     const groupJsonLd = {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "BreadcrumbList",
-          "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Главная", "item": `https://${COMPANY.domain}` },
-            { "@type": "ListItem", "position": 2, "name": "Каталог", "item": `https://${COMPANY.domain}/catalog` },
-            { "@type": "ListItem", "position": 3, "name": group.title, "item": pageUrl },
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Главная", item: `https://${COMPANY.domain}` },
+            { "@type": "ListItem", position: 2, name: "Каталог", item: `https://${COMPANY.domain}/catalog` },
+            { "@type": "ListItem", position: 3, name: group.title, item: pageUrl },
           ],
         },
         {
           "@type": "Organization",
-          "name": COMPANY.name,
-          "url": `https://${COMPANY.domain}`,
-          "telephone": COMPANY.phone,
-          "address": { "@type": "PostalAddress", "addressLocality": "Алматы", "addressCountry": "KZ" },
+          name: COMPANY.name,
+          url: `https://${COMPANY.domain}`,
+          telephone: COMPANY.phone,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Алматы",
+            addressCountry: "KZ",
+          },
         },
       ],
     };
 
     return (
       <main className="pb-20 lg:pb-0">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(groupJsonLd) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(groupJsonLd) }}
+        />
         <Header />
+
+        {/* Breadcrumbs */}
+        <BreadcrumbNav
+          crumbs={[
+            { label: "Каталог", href: "/catalog" },
+            { label: group.title },
+          ]}
+        />
 
         {/* Hero */}
         <section
-          className="bg-slate-900 py-16 relative overflow-hidden"
+          className="relative overflow-hidden bg-slate-900 py-16"
           style={{
             backgroundImage:
               "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
             backgroundSize: "28px 28px",
           }}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 bg-orange-600/20 border border-orange-600/30 text-orange-400 text-xs font-medium px-3 py-1.5 mb-6">
+              <div className="mb-6 inline-flex items-center gap-2 border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
                 Оптовые поставки по всему Казахстану
               </div>
-              <h1 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-6">
+              <h1 className="mb-6 text-4xl font-black uppercase tracking-tighter text-white lg:text-5xl">
                 {group.title}
               </h1>
-              <p className="text-slate-300 text-lg leading-relaxed mb-8">
+              <p className="mb-8 text-lg leading-relaxed text-slate-300">
                 {group.desc}
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(
-                    `Здравствуйте! Интересует ${group.shortTitle}. Подскажите наличие и цену.`
+                    `Здравствуйте! Интересует ${group.shortTitle}. Подскажите наличие и цену.`,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors"
+                  className="flex items-center gap-2 bg-green-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-green-700"
                 >
                   💬 Написать в WhatsApp
                 </a>
                 <a
                   href={`tel:${COMPANY.phoneRaw}`}
-                  className="flex items-center gap-2 border border-slate-500 text-slate-300 hover:border-slate-300 hover:text-white px-6 py-3.5 font-medium transition-colors"
+                  className="flex items-center gap-2 border border-slate-500 px-6 py-3.5 font-medium text-slate-300 transition-colors hover:border-slate-300 hover:text-white"
                 >
                   📞 Позвонить
                 </a>
@@ -176,65 +159,81 @@ export default async function CatalogPage({
           </div>
         </section>
 
-        {/* Описание */}
-        {group.fullDescription && (
-          <section className="bg-white py-12 border-b border-slate-100">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-              <p className="text-slate-600 text-base leading-relaxed">
-                {group.fullDescription}
-              </p>
-            </div>
-          </section>
-        )}
+        {/* Main content: sidebar + categories + description */}
+        <div className="bg-slate-50 py-8 lg:py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-start gap-8">
 
-        {/* Подкатегории */}
-        {groupCategories.length > 0 && (
-          <section className="bg-slate-50 py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-10">
-                Категории
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {groupCategories.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/catalog/${cat.slug}`}
-                    className="group flex flex-col p-5 bg-white border border-slate-200 hover:border-orange-400 hover:shadow-lg transition-all duration-200 rounded"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-black text-slate-900 text-sm uppercase group-hover:text-orange-600 transition-colors leading-tight flex-1 pr-2">
-                        {cat.title}
-                      </h3>
-                      <span className="text-orange-600 font-bold text-lg group-hover:translate-x-1 transition-transform flex-shrink-0">
-                        →
-                      </span>
+              {/* Left sidebar — desktop only */}
+              <aside className="hidden lg:block w-52 flex-shrink-0">
+                <CatalogSidebar groups={groups} categories={categories} currentSlug={slug} />
+              </aside>
+
+              {/* Main column */}
+              <div className="flex-1 min-w-0">
+
+                {/* 1. CATEGORIES FIRST */}
+                {groupCategories.length > 0 && (
+                  <div className="mb-8">
+                    <h2 className="mb-6 text-2xl font-black uppercase tracking-tight text-slate-900">
+                      Категории
+                    </h2>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                      {groupCategories.map((category) => (
+                        <Link
+                          key={category.slug}
+                          href={`/catalog/${category.slug}`}
+                          className="group flex flex-col rounded border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-orange-400 hover:shadow-lg"
+                        >
+                          <div className="mb-3 flex items-start justify-between">
+                            <h3 className="flex-1 pr-2 text-sm font-black uppercase leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
+                              {category.title}
+                            </h3>
+                            <span className="flex-shrink-0 text-lg font-bold text-orange-600 transition-transform group-hover:translate-x-1">
+                              →
+                            </span>
+                          </div>
+                          <p className="mb-3 line-clamp-3 flex-grow text-xs leading-relaxed text-slate-500">
+                            {category.desc}
+                          </p>
+                          {category.standards && category.standards.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {category.standards.slice(0, 2).map((standard) => (
+                                <span
+                                  key={standard}
+                                  className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600"
+                                >
+                                  {standard}
+                                </span>
+                              ))}
+                              {category.standards.length > 2 && (
+                                <span className="text-xs text-slate-400">
+                                  +{category.standards.length - 2}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </Link>
+                      ))}
                     </div>
-                    <p className="text-slate-500 text-xs leading-relaxed mb-3 flex-grow line-clamp-3">
-                      {cat.desc}
-                    </p>
-                    {cat.standards && cat.standards.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {cat.standards.slice(0, 2).map((s) => (
-                          <span
-                            key={s}
-                            className="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded"
-                          >
-                            {s}
-                          </span>
-                        ))}
-                        {cat.standards.length > 2 && (
-                          <span className="text-xs text-slate-400">
-                            +{cat.standards.length - 2}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </Link>
-                ))}
+                  </div>
+                )}
+
+                {/* 2. FULL DESCRIPTION AFTER categories */}
+                {group.fullDescription && (
+                  <div className="rounded-lg border border-slate-200 bg-white p-8">
+                    <div
+                      className="prose prose-slate max-w-none text-slate-600"
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeRichText(group.fullDescription),
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </div>
 
         <TrustSection />
         <FAQ />
@@ -243,31 +242,41 @@ export default async function CatalogPage({
     );
   }
 
-  // ── Страница категории ────────────────────────────────────────────
-  const cat = categories.find((c: Category) => c.slug === slug);
-  if (!cat) notFound();
+  // ── CATEGORY PAGE ──────────────────────────────────────────────────────
+  const category = categories.find((item: CategoryItem) => item.slug === slug);
+  if (!category) notFound();
 
-  const catJsonLd = {
+  const parentGroup = groups.find((g: GroupItem) => g.categories.includes(slug));
+
+  const categoryJsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Главная", "item": `https://${COMPANY.domain}` },
-          { "@type": "ListItem", "position": 2, "name": "Каталог", "item": `https://${COMPANY.domain}/catalog` },
-          { "@type": "ListItem", "position": 3, "name": cat.title, "item": pageUrl },
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Главная", item: `https://${COMPANY.domain}` },
+          { "@type": "ListItem", position: 2, name: "Каталог", item: `https://${COMPANY.domain}/catalog` },
+          ...(parentGroup
+            ? [{ "@type": "ListItem", position: 3, name: parentGroup.title, item: `https://${COMPANY.domain}/catalog/${parentGroup.slug}` }]
+            : []),
+          {
+            "@type": "ListItem",
+            position: parentGroup ? 4 : 3,
+            name: category.title,
+            item: pageUrl,
+          },
         ],
       },
       {
         "@type": "Product",
-        "name": cat.title,
-        "description": cat.desc,
-        "brand": { "@type": "Brand", "name": COMPANY.name },
-        "offers": {
+        name: category.title,
+        description: category.desc,
+        brand: { "@type": "Brand", name: COMPANY.name },
+        offers: {
           "@type": "Offer",
-          "availability": "https://schema.org/InStock",
-          "priceCurrency": "KZT",
-          "seller": { "@type": "Organization", "name": COMPANY.name },
+          availability: "https://schema.org/InStock",
+          priceCurrency: "KZT",
+          seller: { "@type": "Organization", name: COMPANY.name },
         },
       },
     ],
@@ -275,15 +284,33 @@ export default async function CatalogPage({
 
   return (
     <main className="pb-20 lg:pb-0">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(catJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(categoryJsonLd) }}
+      />
       <Header />
+
+      {/* Breadcrumbs */}
+      <BreadcrumbNav
+        crumbs={[
+          { label: "Каталог", href: "/catalog" },
+          ...(parentGroup
+            ? [{ label: parentGroup.shortTitle || parentGroup.title.split(" оптом")[0], href: `/catalog/${parentGroup.slug}` }]
+            : []),
+          { label: category.title },
+        ]}
+      />
+
       <CategoryClient
-        title={cat.title}
-        desc={cat.desc}
-        standards={(cat.standards ?? []) as readonly string[]}
-        classes={(cat.classes ?? []) as readonly string[]}
-        whatsappText={cat.whatsappText ?? ""}
-        fullDescription={cat.fullDescription}
+        title={category.title}
+        desc={category.desc}
+        standards={(category.standards ?? []) as readonly string[]}
+        classes={(category.classes ?? []) as readonly string[]}
+        whatsappText={category.whatsappText ?? ""}
+        fullDescription={sanitizeRichText(category.fullDescription)}
+        sidebar={
+          <CatalogSidebar groups={groups} categories={categories} currentSlug={slug} />
+        }
       />
       <TrustSection />
       <FAQ />

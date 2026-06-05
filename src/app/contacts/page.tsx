@@ -1,20 +1,27 @@
 import { Metadata } from "next";
-import { COMPANY } from "@/config/company";
 import ContactMap from "@/components/ContactMap";
+import { getSettings } from "@/lib/db";
 
-export const metadata: Metadata = {
-  title: "Контакты | KRP.kz",
-  description: `Контактная информация ТОО Bugel. Адрес: ${COMPANY.address}. Телефон: ${COMPANY.phone}`,
-  openGraph: {
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+
+  return {
     title: "Контакты | KRP.kz",
-    description: `Контактная информация ТОО Bugel. Адрес: ${COMPANY.address}. Телефон: ${COMPANY.phone}`,
-  },
-};
+    description: `Контактная информация ТОО Bugel. Адрес: ${settings.address}. Телефон: ${settings.phone}`,
+    openGraph: {
+      title: "Контакты | KRP.kz",
+      description: `Контактная информация ТОО Bugel. Адрес: ${settings.address}. Телефон: ${settings.phone}`,
+    },
+  };
+}
 
-export default function ContactsPage() {
+export default async function ContactsPage() {
+  const settings = await getSettings();
+
   return (
     <main>
-      {/* Героическая секция */}
       <section className="bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900 py-20 sm:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tighter mb-4">
@@ -26,10 +33,8 @@ export default function ContactsPage() {
         </div>
       </section>
 
-      {/* Карта и контакты */}
-      <ContactMap />
+      <ContactMap settings={settings} />
 
-      {/* CTA секция */}
       <section className="bg-orange-50 py-12 border-t border-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">

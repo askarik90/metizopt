@@ -1,83 +1,15 @@
-"use client";
+import { Save } from "lucide-react";
+import { getSettings } from "@/lib/db";
 
-import { useEffect, useState } from "react";
-import { Save, AlertCircle } from "lucide-react";
+export const dynamic = "force-dynamic";
 
-interface Settings {
-  address: string;
-  phone: string;
-  email: string;
-  whatsapp: string;
-  workingHours: string;
-  workingHoursSat: string;
-}
-
-export default function AdminSettingsPage() {
-  const [settings, setSettings] = useState<Settings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
-    try {
-      const res = await fetch("/api/settings");
-      const data = await res.json();
-      setSettings(data.settings);
-    } catch (err) {
-      console.error("Error fetching settings:", err);
-      setError("Ошибка при загрузке настроек");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (field: keyof Settings, value: string) => {
-    if (settings) {
-      setSettings({ ...settings, [field]: value });
-      setSaved(false);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!settings) return;
-
-    try {
-      setError("");
-      const res = await fetch("/api/settings", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settings),
-      });
-
-      if (res.ok) {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
-      } else {
-        setError("Ошибка при сохранении");
-      }
-    } catch (err) {
-      console.error("Error saving settings:", err);
-      setError("Ошибка при сохранении");
-    }
-  };
-
-  if (loading)
-    return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <p className="text-slate-600">Загрузка настроек...</p>
-      </div>
-    );
-
-  if (!settings)
-    return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <p className="text-red-600">Ошибка при загрузке настроек</p>
-      </div>
-    );
+export default async function AdminSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string; error?: string }>;
+}) {
+  const params = await searchParams;
+  const settings = await getSettings();
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -89,10 +21,7 @@ export default function AdminSettingsPage() {
               <h1 className="text-2xl font-black text-slate-900">Контакты</h1>
               <p className="text-xs text-slate-500">Управление контактной информацией</p>
             </div>
-            <a
-              href="/admin/dashboard"
-              className="text-slate-600 hover:text-slate-900 font-bold"
-            >
+            <a href="/admin/dashboard" className="text-slate-600 hover:text-slate-900 font-bold">
               ← Назад
             </a>
           </div>
@@ -101,23 +30,20 @@ export default function AdminSettingsPage() {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Success Message */}
-        {saved && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+
+        {params.saved && (
+          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
             ✅ Настройки сохранены успешно!
           </div>
         )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
-            <AlertCircle size={18} />
-            {error}
+        {params.error && (
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            ⚠️ Ошибка при сохранении. Попробуйте ещё раз.
           </div>
         )}
 
         {/* Form */}
-        <div className="bg-white rounded-lg border border-slate-200 p-6 space-y-6">
+        <form method="POST" action="/api/settings" className="bg-white rounded-lg border border-slate-200 p-6 space-y-6">
           {/* Address */}
           <div>
             <label className="block text-sm font-bold text-slate-900 mb-2">
@@ -125,9 +51,10 @@ export default function AdminSettingsPage() {
             </label>
             <input
               type="text"
-              value={settings.address}
-              onChange={(e) => handleChange("address", e.target.value)}
+              name="address"
+              defaultValue={settings.address}
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
+              required
             />
             <p className="text-xs text-slate-500 mt-1">
               Полный адрес с городом и страной
@@ -141,10 +68,11 @@ export default function AdminSettingsPage() {
             </label>
             <input
               type="tel"
-              value={settings.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
+              name="phone"
+              defaultValue={settings.phone}
               placeholder="+7 (XXX) XXX-XX-XX"
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
+              required
             />
           </div>
 
@@ -155,10 +83,11 @@ export default function AdminSettingsPage() {
             </label>
             <input
               type="tel"
-              value={settings.whatsapp}
-              onChange={(e) => handleChange("whatsapp", e.target.value)}
+              name="whatsapp"
+              defaultValue={settings.whatsapp}
               placeholder="+7 (XXX) XXX-XX-XX"
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
+              required
             />
           </div>
 
@@ -169,10 +98,11 @@ export default function AdminSettingsPage() {
             </label>
             <input
               type="email"
-              value={settings.email}
-              onChange={(e) => handleChange("email", e.target.value)}
+              name="email"
+              defaultValue={settings.email}
               placeholder="info@example.com"
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
+              required
             />
           </div>
 
@@ -183,10 +113,11 @@ export default function AdminSettingsPage() {
             </label>
             <input
               type="text"
-              value={settings.workingHours}
-              onChange={(e) => handleChange("workingHours", e.target.value)}
+              name="workingHours"
+              defaultValue={settings.workingHours}
               placeholder="Пн–Пт: 09:00–18:00"
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
+              required
             />
           </div>
 
@@ -197,26 +128,25 @@ export default function AdminSettingsPage() {
             </label>
             <input
               type="text"
-              value={settings.workingHoursSat}
-              onChange={(e) =>
-                handleChange("workingHoursSat", e.target.value)
-              }
+              name="workingHoursSat"
+              defaultValue={settings.workingHoursSat}
               placeholder="Сб: 09:00–14:00"
               className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-orange-600 outline-none"
+              required
             />
           </div>
 
           {/* Save Button */}
           <div className="pt-4 border-t border-slate-200">
             <button
-              onClick={handleSave}
+              type="submit"
               className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg transition transform hover:-translate-y-0.5"
             >
               <Save size={20} />
               Сохранить изменения
             </button>
           </div>
-        </div>
+        </form>
 
         {/* Info Box */}
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
