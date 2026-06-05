@@ -29,21 +29,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Неверный пароль" }, { status: 401 });
     }
 
-    // Set cookie
-    const response = NextResponse.json({ success: true });
-    response.cookies.set(COOKIE_NAME, getSessionToken(), {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "strict" as const,
       maxAge: COOKIE_MAX_AGE,
       path: "/",
-    });
+    };
 
-    // Redirect to dashboard if it's a form submission
+    // Form submission → redirect with cookie
     if (!contentType?.includes("application/json")) {
-      return NextResponse.redirect(`${origin}/admin/dashboard`, { status: 303 });
+      const redirectResponse = NextResponse.redirect(`${origin}/admin/dashboard`, { status: 303 });
+      redirectResponse.cookies.set(COOKIE_NAME, getSessionToken(), cookieOptions);
+      return redirectResponse;
     }
 
+    // JSON request → return JSON with cookie
+    const response = NextResponse.json({ success: true });
+    response.cookies.set(COOKIE_NAME, getSessionToken(), cookieOptions);
     return response;
   } catch (err) {
     console.error("Login error:", err);
