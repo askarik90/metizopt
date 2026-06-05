@@ -1,6 +1,6 @@
 /**
  * Unified data layer:
- * - Production (Vercel): uses @vercel/kv (Redis)
+ * - Production (Vercel): uses @vercel/blob
  * - Development (local): uses filesystem JSON files
  */
 
@@ -9,28 +9,40 @@ import path from "path";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
-// ── helpers ──────────────────────────────────────────────────────────
-
-function useKV(): boolean {
-  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+function useBlob(): boolean {
+  return !!process.env.BLOB_READ_WRITE_TOKEN;
 }
 
-async function kvGet<T>(key: string): Promise<T | null> {
-  const { kv } = await import("@vercel/kv");
-  return kv.get<T>(key);
+// ── Blob helpers ──────────────────────────────────────────────────────
+
+async function blobGet<T>(key: string, fallback: T): Promise<T> {
+  try {
+    const { list } = await import("@vercel/blob");
+    const { blobs } = await list({ prefix: `krp/${key}.json` });
+    if (blobs.length === 0) return fallback;
+    const res = await fetch(blobs[0].url);
+    if (!res.ok) return fallback;
+    return (await res.json()) as T;
+  } catch {
+    return fallback;
+  }
 }
 
-async function kvSet<T>(key: string, value: T): Promise<void> {
-  const { kv } = await import("@vercel/kv");
-  await kv.set(key, value);
+async function blobSet<T>(key: string, value: T): Promise<void> {
+  const { put } = await import("@vercel/blob");
+  await put(`krp/${key}.json`, JSON.stringify(value), {
+    access: "public",
+    addRandomSuffix: false,
+    contentType: "application/json",
+  });
 }
+
+// ── FS helpers ────────────────────────────────────────────────────────
 
 function fsRead<T>(filename: string, fallback: T): T {
   try {
     const file = path.join(DATA_DIR, filename);
-    if (fs.existsSync(file)) {
-      return JSON.parse(fs.readFileSync(file, "utf-8")) as T;
-    }
+    if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, "utf-8")) as T;
   } catch {}
   return fallback;
 }
@@ -40,7 +52,7 @@ function fsWrite<T>(filename: string, data: T): void {
   fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2));
 }
 
-// ── SETTINGS ─────────────────────────────────────────────────────────
+// ── SETTINGS ──────────────────────────────────────────────────────────
 
 const DEFAULT_SETTINGS = {
   address: "Республика Казахстан, г. Алматы, ул. Нарынкольская, 1А",
@@ -52,18 +64,13 @@ const DEFAULT_SETTINGS = {
 };
 
 export async function getSettings() {
-  if (useKV()) {
-    return (await kvGet<typeof DEFAULT_SETTINGS>("settings")) ?? DEFAULT_SETTINGS;
-  }
+  if (useBlob()) return blobGet("settings", DEFAULT_SETTINGS);
   return fsRead("settings.json", DEFAULT_SETTINGS);
 }
 
 export async function saveSettings(data: typeof DEFAULT_SETTINGS) {
-  if (useKV()) {
-    await kvSet("settings", data);
-  } else {
-    fsWrite("settings.json", data);
-  }
+  if (useBlob()) { await blobSet("settings", data); return; }
+  fsWrite("settings.json", data);
 }
 
 // ── FAQ ───────────────────────────────────────────────────────────────
@@ -71,18 +78,13 @@ export async function saveSettings(data: typeof DEFAULT_SETTINGS) {
 export interface FAQItem { id: string; question: string; answer: string }
 
 export async function getFAQ(): Promise<FAQItem[]> {
-  if (useKV()) {
-    return (await kvGet<FAQItem[]>("faq")) ?? [];
-  }
+  if (useBlob()) return blobGet<FAQItem[]>("faq", []);
   return fsRead<FAQItem[]>("faq.json", []);
 }
 
 export async function saveFAQ(data: FAQItem[]) {
-  if (useKV()) {
-    await kvSet("faq", data);
-  } else {
-    fsWrite("faq.json", data);
-  }
+  if (useBlob()) { await blobSet("faq", data); return; }
+  fsWrite("faq.json", data);
 }
 
 // ── LEADS ─────────────────────────────────────────────────────────────
@@ -94,52 +96,41 @@ export interface Lead {
 }
 
 export async function getLeads(): Promise<Lead[]> {
-  if (useKV()) {
-    return (await kvGet<Lead[]>("leads")) ?? [];
-  }
+  if (useBlob()) return blobGet<Lead[]>("leads", []);
   return fsRead<Lead[]>("leads.json", []);
 }
 
 export async function saveLeads(data: Lead[]) {
-  if (useKV()) {
-    await kvSet("leads", data);
-  } else {
-    fsWrite("leads.json", data);
-  }
+  if (useBlob()) { await blobSet("leads", data); return; }
+  fsWrite("leads.json", data);
 }
 
 // ── GROUPS ────────────────────────────────────────────────────────────
 
-export async function getGroups() {
-  if (useKV()) {
-    const kv = await kvGet<unknown[]>("groups");
-    if (kv && kv.length > 0) return kv;
+export async function getGroups(): Promise<unknown[]> {
+  if (useBlob()) {
+    const kvData = await blobGet<unknown[]>("groups", []);
+    if (kvData.length > 0) return kvData;
   }
   return fsRead<unknown[]>("groups.json", []);
 }
 
 export async function saveGroups(data: unknown[]) {
-  if (useKV()) {
-    await kvSet("groups", data);
-  } else {
-    fsWrite("groups.json", data);
-  }
+  if (useBlob()) { await blobSet("groups", data); return; }
+  fsWrite("groups.json", data);
 }
 
 // ── CATEGORIES ────────────────────────────────────────────────────────
 
-export async function getCategories() {
-  if (useKV()) {
-    const kv = await kvGet<unknown[]>("categories");
-    if (kv && kv.length > 0) return kv;
+export async function getCategories(): Promise<unknown[]> {
+  if (useBlob()) {
+    const kvData = await blobGet<unknown[]>("categories", []);
+    if (kvData.length > 0) return kvData;
   }
   return fsRead<unknown[]>("categories.json", []);
 }
 
 export async function saveCategories(data: unknown[]) {
-  if (useKV()) {
-    await kvSet("categories", data);
-  } else {
-    fsWrite("categories.json", data);
-  }
+  if (useBlob()) { await blobSet("categories", data); return; }
+  fsWrite("categories.json", data);
 }
