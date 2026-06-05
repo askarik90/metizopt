@@ -1,6 +1,6 @@
 /**
  * Unified data layer:
- * - Production (Vercel): uses @vercel/blob
+ * - Production (Vercel): uses @vercel/blob (private store)
  * - Development (local): uses filesystem JSON files
  */
 
@@ -17,10 +17,11 @@ function useBlob(): boolean {
 
 async function blobGet<T>(key: string, fallback: T): Promise<T> {
   try {
-    const { list } = await import("@vercel/blob");
-    const { blobs } = await list({ prefix: `krp/${key}.json` });
-    if (blobs.length === 0) return fallback;
-    const res = await fetch(blobs[0].url);
+    const { head, getDownloadUrl } = await import("@vercel/blob");
+    const blob = await head(`krp/${key}.json`);
+    if (!blob) return fallback;
+    const downloadUrl = getDownloadUrl(blob.url);
+    const res = await fetch(downloadUrl);
     if (!res.ok) return fallback;
     return (await res.json()) as T;
   } catch {
@@ -31,7 +32,7 @@ async function blobGet<T>(key: string, fallback: T): Promise<T> {
 async function blobSet<T>(key: string, value: T): Promise<void> {
   const { put } = await import("@vercel/blob");
   await put(`krp/${key}.json`, JSON.stringify(value), {
-    access: "public",
+    access: "private",
     addRandomSuffix: false,
     contentType: "application/json",
   });
@@ -109,8 +110,8 @@ export async function saveLeads(data: Lead[]) {
 
 export async function getGroups(): Promise<unknown[]> {
   if (useBlob()) {
-    const kvData = await blobGet<unknown[]>("groups", []);
-    if (kvData.length > 0) return kvData;
+    const data = await blobGet<unknown[]>("groups", []);
+    if (data.length > 0) return data;
   }
   return fsRead<unknown[]>("groups.json", []);
 }
@@ -124,8 +125,8 @@ export async function saveGroups(data: unknown[]) {
 
 export async function getCategories(): Promise<unknown[]> {
   if (useBlob()) {
-    const kvData = await blobGet<unknown[]>("categories", []);
-    if (kvData.length > 0) return kvData;
+    const data = await blobGet<unknown[]>("categories", []);
+    if (data.length > 0) return data;
   }
   return fsRead<unknown[]>("categories.json", []);
 }
