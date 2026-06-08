@@ -44,14 +44,6 @@ select:focus {
   outline: none !important;
 }
 
-/* 2️⃣ Растянутая начальная страница (Hero) — автоцентрирование независимо от экрана */
-section:first-of-type {
-  min-height: 80vh !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 2rem !important;
-}
 
 /* 3️⃣ Hover-эффекты на кнопках (translateY, box-shadow) */
 button,
