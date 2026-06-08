@@ -157,7 +157,7 @@ export async function trackEvent(
 export interface Lead {
   id: string; name: string; company: string; phone: string;
   whatsapp?: string; city?: string; message?: string;
-  category?: string; createdAt: string;
+  category?: string; searchQuery?: string; createdAt: string;
 }
 
 export async function getLeads(): Promise<Lead[]> {

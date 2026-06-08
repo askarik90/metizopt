@@ -8,6 +8,7 @@ export interface Lead {
   category?: string;
   fileUrl?: string;
 
+  search_query?: string;
   page_url: string;
   utm_source?: string;
   utm_medium?: string;

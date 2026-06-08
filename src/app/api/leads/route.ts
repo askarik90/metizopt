@@ -14,7 +14,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, company, phone, whatsapp, city, message, category } = body;
+    const { name, company, phone, whatsapp, city, message, category, searchQuery } = body;
     if (!name || !phone) {
       return NextResponse.json({ error: "Name and phone required" }, { status: 400 });
     }
@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
       name, company: company || "", phone,
       whatsapp: whatsapp || "", city: city || "",
       message: message || "", category: category || "",
+      searchQuery: searchQuery || "",
       createdAt: new Date().toISOString(),
     };
     leads.push(newLead);

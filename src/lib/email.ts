@@ -13,6 +13,7 @@ export interface LeadEmailData {
   city?: string;
   message?: string;
   category?: string;
+  searchQuery?: string;
   pageUrl?: string;
   utm_source?: string;
   utm_campaign?: string;
@@ -66,6 +67,11 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Интерес</td>
             <td style="padding:8px 0;color:#0f172a">${lead.category}</td>
+          </tr>` : ""}
+          ${lead.searchQuery ? `
+          <tr>
+            <td style="padding:8px 0;color:#64748b;vertical-align:top">Искал на сайте</td>
+            <td style="padding:8px 0;color:#0f172a;font-style:italic">"${lead.searchQuery}"</td>
           </tr>` : ""}
           ${lead.message ? `
           <tr>

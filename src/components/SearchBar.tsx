@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import catalogDb from "@/data/catalog-db.json";
 import characteristicsIndex from "@/data/characteristics-index.json";
@@ -136,6 +136,7 @@ export default function SearchBar() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { trackSearch, trackSearchResultClick } = useAnalytics();
 
   // Сохраняем поисковый запрос — форма заявки подхватит его
@@ -145,16 +146,21 @@ export default function SearchBar() {
     }
   };
 
-  useEffect(() => {
-    if (!query.trim()) { setResults([]); return; }
+  // Поиск вынесен в отдельную функцию — вызывается с дебаунсом
+  const runSearch = useCallback((rawQuery: string) => {
+    const trimmed = rawQuery.trim();
 
-    const q = query.toLowerCase().trim();
+    // Минимум 3 символа для запуска поиска и аналитики
+    if (!trimmed || trimmed.length < 3) {
+      setResults([]);
+      return;
+    }
+
+    const q = trimmed.toLowerCase();
     const seen = new Set<string>();
     const all: SearchResult[] = [];
 
-    // Расширяем запрос синонимами
     const queries = expandQuery(q);
-
     const matchesAny = (text: string) => queries.some((qv) => text.toLowerCase().includes(qv));
 
     // 1. Поиск по характеристикам (DIN, ГОСТ, размер, покрытие, класс прочности, синонимы)
@@ -172,12 +178,7 @@ export default function SearchBar() {
         const matchedStd = data.standards.find((s) => matchesAny(s));
         const matchedSize = data.sizes.find((s) => matchesAny(s));
         const hint = matchedStd ?? matchedSize ?? `${data.inStockCount} в наличии`;
-        all.push({
-          slug,
-          label: CATEGORY_LABELS[slug] ?? slug,
-          hint,
-          source: "category",
-        });
+        all.push({ slug, label: CATEGORY_LABELS[slug] ?? slug, hint, source: "category" });
       }
     });
 
@@ -186,10 +187,7 @@ export default function SearchBar() {
       const slug = SLUG_MAP[oldSlug] ?? oldSlug;
       types.forEach((typeObj: any) => {
         typeObj.items.forEach((item: any) => {
-          if (
-            matchesAny(item.name) ||
-            matchesAny(item.code)
-          ) {
+          if (matchesAny(item.name) || matchesAny(item.code)) {
             if (!seen.has(slug)) {
               seen.add(slug);
               all.push({
@@ -207,10 +205,38 @@ export default function SearchBar() {
     const final = all.slice(0, 8);
     setResults(final);
     setOpen(true);
-    // Трекаем поиск если есть результаты
-    if (final.length > 0) trackSearch(query.trim(), final.length);
-    saveSearchQuery(query.trim());
-  }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Аналитика — один раз после дебаунса (не на каждый символ)
+    if (final.length > 0) {
+      trackSearch(trimmed, final.length);
+    } else {
+      // search_no_results — отдельное событие для анализа пробелов
+      if (typeof window !== "undefined" && typeof window.gtag === "function") {
+        window.gtag("event", "search_no_results", { search_term: trimmed });
+      }
+    }
+
+    saveSearchQuery(trimmed);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    // Сбрасываем старый таймер при каждом нажатии
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+
+    // 500мс дебаунс — аналитика и поиск срабатывают только когда пользователь остановился
+    debounceRef.current = setTimeout(() => {
+      runSearch(query);
+    }, 500);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [query, runSearch]);
 
   const clearSearch = () => {
     setQuery("");
@@ -261,7 +287,7 @@ export default function SearchBar() {
         </div>
       )}
 
-      {open && query && results.length === 0 && (
+      {open && query.trim().length >= 3 && results.length === 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded-sm z-50 px-3 py-2 text-sm text-slate-400">
           Ничего не найдено
         </div>
