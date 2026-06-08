@@ -3,6 +3,28 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import catalogDb from "@/data/catalog-db.json";
 
+// Маппинг старых slug из catalog-db → актуальные slug каталога
+const SLUG_MAP: Record<string, string> = {
+  ankera:           "krepezh-ankera",
+  dyubelya:         "krepezh-dyubela",
+  zaklepki:         "krepezh-zaklepki",
+  shpilki:          "krepezh-shpilki",
+  shurupy:          "krepezh-samorezi",
+  vinty:            "krepezh-vintyi",
+  bolty:            "krepezh-bolty",
+  gayki:            "krepezh-gayki",
+  shayby:           "krepezh-shayby",
+  shplinty:         "krepezh-shplinty",
+  gvozdi:           "krepezh-gvozdi",
+  kanaty:           "kanaty",
+  nerzhaveyushchiy: "nerzhaveyushchiy",
+  perfo:            "perfo",
+  takelazh:         "takelazh",
+  ventilatsiya:     "ventilatsiya",
+  shlangi:          "ventilatsiya",
+  elektrody:        "elektrody",
+};
+
 interface SearchResult {
   slug: string;
   type: string;
@@ -25,7 +47,8 @@ export default function SearchBar() {
     const q = query.toLowerCase();
     const all: SearchResult[] = [];
 
-    Object.entries(catalogDb).forEach(([slug, types]) => {
+    Object.entries(catalogDb).forEach(([oldSlug, types]) => {
+      const slug = SLUG_MAP[oldSlug] ?? oldSlug;
       types.forEach((typeObj: any) => {
         typeObj.items.forEach((item: any) => {
           if (
@@ -44,7 +67,7 @@ export default function SearchBar() {
       });
     });
 
-    setResults(all.slice(0, 8)); // макс 8 результатов
+    setResults(all.slice(0, 8));
     setOpen(true);
   }, [query]);
 
