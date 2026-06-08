@@ -304,6 +304,7 @@ export default async function CatalogPage({
       <CategoryClient
         title={category.title}
         desc={category.desc}
+        slug={slug}
         standards={(category.standards ?? []) as readonly string[]}
         classes={(category.classes ?? []) as readonly string[]}
         whatsappText={category.whatsappText ?? ""}

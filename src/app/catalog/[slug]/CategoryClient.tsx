@@ -3,12 +3,14 @@ import { useState } from "react";
 import { MessageCircle } from "lucide-react";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import LeadFormModal from "@/components/LeadFormModal";
+import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 interface CategoryClientProps {
   title: string;
   desc: string;
+  slug: string;
   standards: readonly string[];
   classes: readonly string[];
   whatsappText: string;
@@ -19,6 +21,7 @@ interface CategoryClientProps {
 export default function CategoryClient({
   title,
   desc,
+  slug,
   standards,
   classes,
   whatsappText,
@@ -90,6 +93,9 @@ export default function CategoryClient({
 
               {/* Main column */}
               <div className="flex-1 min-w-0 space-y-6">
+                {/* Characteristics from index */}
+                <CategoryCharacteristics slug={slug} />
+
                 {/* Full Description */}
                 {fullDescription && (
                   <div className="rounded-lg border border-slate-200 bg-white p-8">
