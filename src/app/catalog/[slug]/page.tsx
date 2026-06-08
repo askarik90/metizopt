@@ -119,7 +119,7 @@ export default async function CatalogPage({
 
         {/* Hero */}
         <section
-          className="relative overflow-hidden bg-slate-900 py-8"
+          className="relative overflow-hidden bg-slate-900 py-16"
           style={{
             backgroundImage:
               "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
@@ -128,10 +128,13 @@ export default async function CatalogPage({
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
-              <h1 className="mb-3 text-3xl font-black uppercase tracking-tighter text-white lg:text-4xl">
+              <div className="mb-6 inline-flex items-center gap-2 border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
+                Оптовые поставки по всему Казахстану
+              </div>
+              <h1 className="mb-6 text-4xl font-black uppercase tracking-tighter text-white lg:text-5xl">
                 {group.title}
               </h1>
-              <p className="mb-5 text-base leading-relaxed text-slate-300">
+              <p className="mb-8 text-lg leading-relaxed text-slate-300">
                 {group.desc}
               </p>
               <div className="flex flex-wrap gap-3">
@@ -141,13 +144,13 @@ export default async function CatalogPage({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-700"
+                  className="flex items-center gap-2 bg-green-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-green-700"
                 >
                   💬 Написать в WhatsApp
                 </a>
                 <a
                   href={`tel:${COMPANY.phoneRaw}`}
-                  className="flex items-center gap-2 border border-slate-500 px-5 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:border-slate-300 hover:text-white"
+                  className="flex items-center gap-2 border border-slate-500 px-6 py-3.5 font-medium text-slate-300 transition-colors hover:border-slate-300 hover:text-white"
                 >
                   📞 Позвонить
                 </a>

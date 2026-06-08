@@ -32,7 +32,7 @@ export default function CategoryClient({
     <>
       {/* Hero — full width */}
       <section
-        className="bg-slate-900 py-8"
+        className="bg-slate-900 py-16"
         style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
           backgroundSize: "28px 28px",
@@ -40,14 +40,14 @@ export default function CategoryClient({
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-3xl lg:text-4xl font-black text-white uppercase tracking-tighter mb-2">
+            <h1 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4">
               {title}
             </h1>
-            <p className="text-slate-300 text-base mb-3">{desc}</p>
+            <p className="text-slate-300 text-lg mb-4">{desc}</p>
             {standards.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-6">
                 {standards.map((s) => (
-                  <span key={s} className="bg-slate-800 border border-slate-600 text-slate-300 text-xs px-2.5 py-0.5">
+                  <span key={s} className="bg-slate-800 border border-slate-600 text-slate-300 text-sm px-3 py-1">
                     {s}
                   </span>
                 ))}
@@ -59,14 +59,14 @@ export default function CategoryClient({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackWhatsAppClick(title)}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 text-sm font-medium transition-colors"
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors"
               >
-                <MessageCircle size={18} />
+                <MessageCircle size={20} />
                 Запросить в WhatsApp
               </a>
               <button
                 onClick={() => setModalOpen(true)}
-                className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 text-sm font-medium transition-colors"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 font-medium transition-colors"
               >
                 Запросить наличие и цену
               </button>
