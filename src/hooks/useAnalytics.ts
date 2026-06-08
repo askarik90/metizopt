@@ -18,6 +18,14 @@ function track(type: string) {
   }).catch(() => {});
 }
 
+// GA4 / Google Ads событие через gtag
+function gtagEvent(eventName: string, params?: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+  if (typeof window.gtag === "function") {
+    window.gtag("event", eventName, params ?? {});
+  }
+}
+
 export function useAnalytics() {
   const push = useCallback((event: string, params?: Record<string, unknown>) => {
     if (typeof window === "undefined") return;
@@ -26,25 +34,52 @@ export function useAnalytics() {
   }, []);
 
   return {
-    trackLeadFormOpen: () => {
-      push("lead_form_open");
+    trackLeadFormOpen: (category?: string) => {
+      push("lead_form_open", { category });
+      gtagEvent("lead_form_open", { event_category: "engagement", event_label: category });
       track("formOpens");
     },
-    trackLeadFormSubmit: (category?: string) => {
-      push("lead_form_submit", { category });
+    trackLeadFormSubmit: (category?: string, searchQuery?: string) => {
+      push("lead_form_submit", { category, search_query: searchQuery });
+      gtagEvent("generate_lead", {
+        event_category: "lead",
+        event_label: category,
+        search_query: searchQuery,
+        currency: "KZT",
+        value: 0,
+      });
       track("formSubmits");
     },
     trackWhatsAppClick: (category?: string) => {
       push("whatsapp_click", { category });
+      gtagEvent("whatsapp_click", { event_category: "contact", event_label: category });
       track("whatsappClicks");
     },
     trackPhoneClick: () => {
       push("phone_click");
+      gtagEvent("phone_click", { event_category: "contact" });
       track("phoneClicks");
     },
     trackFileUpload: () => {
       push("file_upload");
+      gtagEvent("file_upload", { event_category: "engagement" });
       track("fileUploads");
+    },
+    trackSearch: (searchTerm: string, resultsCount: number) => {
+      push("search", { search_term: searchTerm, results_count: resultsCount });
+      gtagEvent("search", { search_term: searchTerm, results_count: resultsCount });
+    },
+    trackSearchResultClick: (searchTerm: string, targetSlug: string) => {
+      push("search_result_click", { search_term: searchTerm, target: targetSlug });
+      gtagEvent("select_content", {
+        content_type: "category",
+        item_id: targetSlug,
+        search_term: searchTerm,
+      });
+    },
+    trackCategoryView: (category: string) => {
+      push("category_view", { category });
+      gtagEvent("view_item_list", { item_list_id: category, item_list_name: category });
     },
     trackCategoryClick: (category: string) => push("category_click", { category }),
     trackQuoteRequestClick: () => push("quote_request_click"),

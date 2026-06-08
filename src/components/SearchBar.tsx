@@ -3,6 +3,63 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import catalogDb from "@/data/catalog-db.json";
 import characteristicsIndex from "@/data/characteristics-index.json";
+import { useAnalytics } from "@/hooks/useAnalytics";
+
+// Словарь синонимов: что пишет клиент → что ищем
+const SYNONYMS: Record<string, string[]> = {
+  // Нержавейка
+  "нерж":         ["нержавейка", "нержав", "a2", "а2"],
+  "нержавейка":   ["нержав", "a2", "а2", "nerzhav"],
+  "а2":           ["a2", "нержавейка", "нержав"],
+  "a2":           ["а2", "нержавейка", "нержав"],
+  "а4":           ["a4", "нержавейка"],
+  "a4":           ["а4", "нержавейка"],
+  // Покрытия
+  "оц":           ["оцинков", "цинк", "zinc"],
+  "цинк":         ["оцинков", "zinc"],
+  "оцинковка":    ["оцинков", "цинк"],
+  "гц":           ["горячий цинк", "горяч"],
+  // Типы крепежа
+  "саморез":      ["шуруп"],
+  "шуруп":        ["саморез"],
+  "болт":         ["болты"],
+  "гайка":        ["гайки"],
+  "шайба":        ["шайбы"],
+  "анкер":        ["анкера"],
+  "дюбель":       ["дюбеля"],
+  // Стандарты (латиница ↔ кириллица)
+  "гост":         ["gost", "гост"],
+  "gost":         ["гост"],
+  "дин":          ["din", "DIN"],
+  "din":          ["дин", "DIN"],
+  // Размеры — м/M → числа
+  "м6":           ["m6", "6мм"],
+  "м8":           ["m8", "8мм"],
+  "м10":          ["m10", "10мм", "10*"],
+  "м12":          ["m12", "12мм", "12*"],
+  "м16":          ["m16", "16*"],
+  "м20":          ["m20", "20*"],
+  "м24":          ["m24", "24*"],
+  "m6":           ["м6"],
+  "m8":           ["м8"],
+  "m10":          ["м10", "10*"],
+  "m12":          ["м12", "12*"],
+  // Такелаж
+  "трос":         ["канат", "трос"],
+  "канат":        ["трос"],
+  "строп":        ["стропы", "такелаж"],
+  // Инструмент
+  "сверло":       ["бур", "перфо"],
+  "бур":          ["сверло"],
+};
+
+// Расширяет запрос синонимами, возвращает массив вариантов для поиска
+function expandQuery(q: string): string[] {
+  const terms = new Set<string>([q]);
+  const syns = SYNONYMS[q.toLowerCase()];
+  if (syns) syns.forEach((s) => terms.add(s.toLowerCase()));
+  return Array.from(terms);
+}
 
 // Маппинг старых slug из catalog-db → актуальные slug каталога
 const SLUG_MAP: Record<string, string> = {
@@ -79,6 +136,14 @@ export default function SearchBar() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { trackSearch, trackSearchResultClick } = useAnalytics();
+
+  // Сохраняем поисковый запрос — форма заявки подхватит его
+  const saveSearchQuery = (q: string) => {
+    if (typeof window !== "undefined" && q.trim()) {
+      sessionStorage.setItem("lastSearchQuery", q.trim());
+    }
+  };
 
   useEffect(() => {
     if (!query.trim()) { setResults([]); return; }
@@ -87,20 +152,25 @@ export default function SearchBar() {
     const seen = new Set<string>();
     const all: SearchResult[] = [];
 
-    // 1. Поиск по характеристикам (DIN, ГОСТ, размер, покрытие, класс прочности)
+    // Расширяем запрос синонимами
+    const queries = expandQuery(q);
+
+    const matchesAny = (text: string) => queries.some((qv) => text.toLowerCase().includes(qv));
+
+    // 1. Поиск по характеристикам (DIN, ГОСТ, размер, покрытие, класс прочности, синонимы)
     Object.entries(charIndex).forEach(([slug, data]) => {
       const matched =
-        data.standards.some((s) => s.toLowerCase().includes(q)) ||
-        data.sizes.some((s) => s.toLowerCase().includes(q)) ||
-        data.coatings.some((s) => s.toLowerCase().includes(q)) ||
-        data.strengthClasses.some((s) => s.toLowerCase().includes(q)) ||
-        data.searchTerms.some((s) => s.toLowerCase().includes(q)) ||
-        (CATEGORY_LABELS[slug] ?? "").toLowerCase().includes(q);
+        data.standards.some((s) => matchesAny(s)) ||
+        data.sizes.some((s) => matchesAny(s)) ||
+        data.coatings.some((s) => matchesAny(s)) ||
+        data.strengthClasses.some((s) => matchesAny(s)) ||
+        data.searchTerms.some((s) => matchesAny(s)) ||
+        matchesAny(CATEGORY_LABELS[slug] ?? "");
 
       if (matched && !seen.has(slug)) {
         seen.add(slug);
-        const matchedStd = data.standards.find((s) => s.toLowerCase().includes(q));
-        const matchedSize = data.sizes.find((s) => s.toLowerCase().includes(q));
+        const matchedStd = data.standards.find((s) => matchesAny(s));
+        const matchedSize = data.sizes.find((s) => matchesAny(s));
         const hint = matchedStd ?? matchedSize ?? `${data.inStockCount} в наличии`;
         all.push({
           slug,
@@ -117,8 +187,8 @@ export default function SearchBar() {
       types.forEach((typeObj: any) => {
         typeObj.items.forEach((item: any) => {
           if (
-            item.name.toLowerCase().includes(q) ||
-            item.code.toLowerCase().includes(q)
+            matchesAny(item.name) ||
+            matchesAny(item.code)
           ) {
             if (!seen.has(slug)) {
               seen.add(slug);
@@ -134,9 +204,13 @@ export default function SearchBar() {
       });
     });
 
-    setResults(all.slice(0, 8));
+    const final = all.slice(0, 8);
+    setResults(final);
     setOpen(true);
-  }, [query]);
+    // Трекаем поиск если есть результаты
+    if (final.length > 0) trackSearch(query.trim(), final.length);
+    saveSearchQuery(query.trim());
+  }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const clearSearch = () => {
     setQuery("");
@@ -170,6 +244,7 @@ export default function SearchBar() {
             <a
               key={i}
               href={`/catalog/${r.slug}`}
+              onClick={() => trackSearchResultClick(query.trim(), r.slug)}
               className="flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
             >
               <div className="flex-1 min-w-0">

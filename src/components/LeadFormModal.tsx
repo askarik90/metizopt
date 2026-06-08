@@ -50,19 +50,22 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
     setLoading(true);
     setError("");
     try {
+      // Подхватываем последний поисковый запрос — менеджеру виднее что искал клиент
+      const searchQuery = sessionStorage.getItem("lastSearchQuery") || "";
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
           category: category || "",
+          search_query: searchQuery,
           page_url: window.location.href,
           ...getUtmParams(),
         }),
       });
       const data = await res.json();
       if (data.success) {
-        trackLeadFormSubmit(category);
+        trackLeadFormSubmit(category, searchQuery);
         router.push("/thanks");
       } else {
         setError(data.message || "Ошибка при отправке");
