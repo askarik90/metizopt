@@ -22,14 +22,14 @@ export default function CatalogPage() {
       <Header onQuoteClick={() => openModal()} />
 
       {/* Hero section для каталога */}
-      <section className="bg-slate-900 py-12 border-b border-slate-700">
+      <section className="bg-slate-900 py-6 border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4">
+            <h1 className="text-3xl lg:text-4xl font-black text-white uppercase tracking-tighter mb-2">
               Каталог товаров
             </h1>
-            <p className="text-slate-300 text-lg leading-relaxed">
-              Полный каталог крепежа, комплектующих и материалов для строительства и производства. Выберите нужную категорию и ознакомьтесь со всеми товарами и ценами.
+            <p className="text-slate-400 text-base leading-relaxed">
+              Полный каталог крепежа, комплектующих и материалов для строительства и производства.
             </p>
           </div>
         </div>
