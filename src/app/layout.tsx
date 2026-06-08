@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { COMPANY } from "@/config/company";
 
@@ -69,6 +70,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <body className="font-sans bg-white text-slate-900 antialiased">
         {children}
       </body>
+
+      {/* Google Ads conversion tracking */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-949552136"
+        strategy="afterInteractive"
+      />
+      <Script id="google-ads-config" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-949552136');
+        `}
+      </Script>
     </html>
   );
 }
