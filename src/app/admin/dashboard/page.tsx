@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, Download, LogOut, Eye } from "lucide-react";
+import * as XLSX from "xlsx";
 
 interface DayStats {
   whatsappClicks: number;
@@ -101,50 +102,33 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleExportCSV = () => {
+  const handleExportXLSX = () => {
     if (leads.length === 0) {
       alert("Нет заявок для экспорта");
       return;
     }
 
-    const headers = [
-      "ID",
-      "Дата",
-      "Имя",
-      "Компания",
-      "Телефон",
-      "WhatsApp",
-      "Город",
-      "Категория",
+    const rows = leads.map((lead) => ({
+      "Дата": new Date(lead.createdAt).toLocaleString("ru-RU"),
+      "Имя": lead.name,
+      "Компания": lead.company || "",
+      "Телефон": lead.phone,
+      "WhatsApp": lead.whatsapp || "",
+      "Город": lead.city || "",
+      "Категория": lead.category || "",
+      "Сообщение": (lead as Lead & { message?: string; searchQuery?: string }).message || "",
+      "Искал на сайте": (lead as Lead & { searchQuery?: string }).searchQuery || "",
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    // Ширина колонок
+    ws["!cols"] = [
+      { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 18 },
+      { wch: 18 }, { wch: 14 }, { wch: 20 }, { wch: 30 }, { wch: 25 },
     ];
-
-    const rows = leads.map((lead) => [
-      lead.id,
-      new Date(lead.createdAt).toLocaleString("ru-RU"),
-      lead.name,
-      lead.company || "-",
-      lead.phone,
-      lead.whatsapp || "-",
-      lead.city || "-",
-      lead.category || "-",
-    ]);
-
-    const csv = [
-      headers.join(","),
-      ...rows.map((row) =>
-        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","),
-      ),
-    ].join("\n");
-
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `krp_leads_${new Date().toISOString().split("T")[0]}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Заявки");
+    XLSX.writeFile(wb, `krp_leads_${new Date().toISOString().split("T")[0]}.xlsx`);
   };
 
   const handleLogout = async () => {
@@ -257,11 +241,11 @@ export default function AdminDashboard() {
 
         <div className="mb-6 flex flex-wrap gap-3">
           <button
-            onClick={handleExportCSV}
+            onClick={handleExportXLSX}
             className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 font-bold text-white transition hover:bg-green-700"
           >
             <Download size={18} />
-            Экспорт CSV
+            Экспорт XLSX
           </button>
           <a
             href="/api/admin/data"
