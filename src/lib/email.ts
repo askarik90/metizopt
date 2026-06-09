@@ -36,7 +36,8 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     ? `${lead.utm_source}${lead.utm_campaign ? ` / ${lead.utm_campaign}` : ""}`
     : lead.pageUrl || "прямой переход";
 
-  const html = `
+  const html = `<!DOCTYPE html>
+    <html><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
       <div style="background:#ea580c;padding:20px 24px;border-radius:8px 8px 0 0">
         <h1 style="color:#fff;margin:0;font-size:20px">🔔 Новая заявка — KRP.kz</h1>
@@ -88,6 +89,7 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
         </div>
       </div>
     </div>
+    </body></html>
   `;
 
   await transporter.sendMail({
@@ -95,5 +97,6 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     to: NOTIFY_TO,
     subject: `📦 Новая заявка: ${lead.name} — ${lead.phone}`,
     html,
+    encoding: "utf8",
   });
 }
