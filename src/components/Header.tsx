@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu, X, MessageCircle, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -12,7 +13,14 @@ interface HeaderProps {
 
 export default function Header({ onQuoteClick }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
   const { trackWhatsAppClick, trackPhoneClick } = useAnalytics();
+
+  // Если страница не передала обработчик — открываем /quote
+  const handleQuote = () => {
+    if (onQuoteClick) onQuoteClick();
+    else router.push("/quote");
+  };
 
   const nav = [
     { href: "/catalog", label: "Каталог" },
@@ -72,7 +80,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
               WhatsApp
             </a>
             <button
-              onClick={onQuoteClick}
+              onClick={handleQuote}
               className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 text-sm font-medium transition-colors"
             >
               Оставить заявку
@@ -123,7 +131,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
               WhatsApp
             </a>
             <button
-              onClick={() => { setMenuOpen(false); onQuoteClick?.(); }}
+              onClick={() => { setMenuOpen(false); handleQuote(); }}
               className="flex-1 bg-orange-600 text-white py-2.5 text-sm font-medium"
             >
               Оставить заявку
