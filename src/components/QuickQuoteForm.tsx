@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Upload, CheckCircle } from "lucide-react";
 import { useAnalytics, getUtmParams } from "@/hooks/useAnalytics";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,13 @@ interface QuickQuoteFormProps {
 
 export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
   const router = useRouter();
-  const { trackLeadFormSubmit, trackFileUpload } = useAnalytics();
+  const { trackLeadFormSubmit, trackFileUpload, trackLeadFormOpen } = useAnalytics();
+
+  // Отслеживаем открытие страницы /quote как form_open
+  useEffect(() => {
+    trackLeadFormOpen(category || "quote");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
