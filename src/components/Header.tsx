@@ -91,7 +91,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
           <div className="flex lg:hidden items-center gap-2">
             <a
               href={`tel:${COMPANY.phoneRaw}`}
-              onClick={trackPhoneClick}
+              onClick={() => trackPhoneClick()}
               className="text-slate-300 hover:text-white p-2"
             >
               <Phone size={20} />

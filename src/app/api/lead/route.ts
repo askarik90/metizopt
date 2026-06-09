@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Lead, LeadResponse } from "@/types/lead";
 import { sendLeadNotification } from "@/lib/email";
-import { getLeads, saveLeads } from "@/lib/db";
+import { getLeads, saveLeads, addEvent } from "@/lib/db";
 
 export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>> {
   try {
@@ -53,6 +53,12 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       leads.push(newEntry);
       await saveLeads(leads);
       console.log("✅ Lead saved to Blob:", newEntry.id);
+      await addEvent({
+        type: "form_submit",
+        timestamp: lead.created_at,
+        category: lead.category || undefined,
+        page: lead.page_url || undefined,
+      });
     } catch (storageError) {
       console.error("Warning: Could not save to Blob:", storageError);
     }

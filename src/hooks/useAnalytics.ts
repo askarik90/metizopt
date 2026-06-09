@@ -10,11 +10,12 @@ declare global {
 }
 
 // fire-and-forget — не блокируем UI
-function track(type: string) {
+function track(type: string, meta?: { category?: string; page?: string }) {
+  const page = typeof window !== "undefined" ? window.location.pathname : undefined;
   fetch("/api/analytics", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ type }),
+    body: JSON.stringify({ type, page, ...meta }),
   }).catch(() => {});
 }
 
@@ -37,7 +38,7 @@ export function useAnalytics() {
     trackLeadFormOpen: (category?: string) => {
       push("lead_form_open", { category });
       gtagEvent("lead_form_open", { event_category: "engagement", event_label: category });
-      track("formOpens");
+      track("formOpens", { category });
     },
     trackLeadFormSubmit: (category?: string, searchQuery?: string) => {
       push("lead_form_submit", { category, search_query: searchQuery });
@@ -48,17 +49,17 @@ export function useAnalytics() {
         currency: "KZT",
         value: 0,
       });
-      track("formSubmits");
+      track("formSubmits", { category });
     },
     trackWhatsAppClick: (category?: string) => {
       push("whatsapp_click", { category });
       gtagEvent("whatsapp_click", { event_category: "contact", event_label: category });
-      track("whatsappClicks");
+      track("whatsappClicks", { category });
     },
-    trackPhoneClick: () => {
-      push("phone_click");
+    trackPhoneClick: (category?: string) => {
+      push("phone_click", { category });
       gtagEvent("phone_click", { event_category: "contact" });
-      track("phoneClicks");
+      track("phoneClicks", { category });
     },
     trackFileUpload: () => {
       push("file_upload");

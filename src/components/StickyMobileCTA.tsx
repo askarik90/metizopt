@@ -25,7 +25,7 @@ export default function StickyMobileCTA({ onQuoteClick }: StickyMobileCTAProps) 
         </a>
         <a
           href={`tel:${COMPANY.phoneRaw}`}
-          onClick={trackPhoneClick}
+          onClick={() => trackPhoneClick()}
           className="flex flex-col items-center justify-center gap-1 bg-slate-800 hover:bg-slate-700 text-white py-3.5 transition-colors"
         >
           <Phone size={20} />

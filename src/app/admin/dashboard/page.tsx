@@ -23,7 +23,16 @@ interface Lead {
   city?: string;
   message?: string;
   category?: string;
+  searchQuery?: string;
   createdAt: string;
+}
+
+interface EventLog {
+  id: string;
+  type: "whatsapp" | "phone" | "form_open" | "form_submit";
+  timestamp: string;
+  category?: string;
+  page?: string;
 }
 
 export default function AdminDashboard() {
@@ -35,10 +44,13 @@ export default function AdminDashboard() {
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [analyticsDays, setAnalyticsDays] = useState<7 | 30>(7);
+  const [events, setEvents] = useState<EventLog[]>([]);
+  const [activeTab, setActiveTab] = useState<"leads" | "activity">("leads");
 
   useEffect(() => {
     fetchLeads();
     fetchAnalytics();
+    fetchEvents();
     const params = new URLSearchParams(window.location.search);
     setImportStatus(params.get("import"));
   }, []);
@@ -53,6 +65,16 @@ export default function AdminDashboard() {
     } catch {
       // analytics not critical
     }
+  };
+
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch("/api/events");
+      if (res.ok) {
+        const data = await res.json();
+        setEvents([...(data.events || [])].reverse());
+      }
+    } catch {}
   };
 
   // Aggregate last N days from analytics data
@@ -358,8 +380,116 @@ export default function AdminDashboard() {
           );
         })()}
 
+        {/* ── TABS ──────────────────────────────────────────────────────── */}
+        <div className="mb-4 flex gap-2 border-b border-slate-200">
+          <button
+            onClick={() => setActiveTab("leads")}
+            className={`px-4 py-2 text-sm font-bold transition border-b-2 -mb-px ${activeTab === "leads" ? "border-orange-600 text-orange-600" : "border-transparent text-slate-500 hover:text-slate-900"}`}
+          >📋 Заявки ({leads.length})</button>
+          <button
+            onClick={() => setActiveTab("activity")}
+            className={`px-4 py-2 text-sm font-bold transition border-b-2 -mb-px ${activeTab === "activity" ? "border-orange-600 text-orange-600" : "border-transparent text-slate-500 hover:text-slate-900"}`}
+          >⚡ Активность ({events.length})</button>
+        </div>
+
+        {/* ── CATEGORY CONVERSION ───────────────────────────────────────── */}
+        {activeTab === "activity" && events.length > 0 && (() => {
+          // Группируем по категории: сколько form_open и form_submit
+          const catMap: Record<string, { opens: number; submits: number; whatsapp: number; phone: number }> = {};
+          events.forEach(e => {
+            const key = e.category || "(без категории)";
+            if (!catMap[key]) catMap[key] = { opens: 0, submits: 0, whatsapp: 0, phone: 0 };
+            if (e.type === "form_open") catMap[key].opens++;
+            if (e.type === "form_submit") catMap[key].submits++;
+            if (e.type === "whatsapp") catMap[key].whatsapp++;
+            if (e.type === "phone") catMap[key].phone++;
+          });
+          const rows = Object.entries(catMap).sort((a, b) => (b[1].submits + b[1].whatsapp + b[1].phone) - (a[1].submits + a[1].whatsapp + a[1].phone));
+          return (
+            <div className="mb-4 overflow-hidden rounded-lg border border-slate-200 bg-white">
+              <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
+                <h3 className="font-black text-slate-900 text-sm">📈 Конверсия по категориям</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b border-slate-200 bg-slate-50">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-xs font-bold uppercase text-slate-600">Категория / Страница</th>
+                      <th className="px-4 py-2 text-center text-xs font-bold uppercase text-slate-600">Открыли форму</th>
+                      <th className="px-4 py-2 text-center text-xs font-bold uppercase text-slate-600">Заявки</th>
+                      <th className="px-4 py-2 text-center text-xs font-bold uppercase text-slate-600">WhatsApp</th>
+                      <th className="px-4 py-2 text-center text-xs font-bold uppercase text-slate-600">Звонки</th>
+                      <th className="px-4 py-2 text-center text-xs font-bold uppercase text-slate-600">Конверсия</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map(([cat, s]) => {
+                      const conv = s.opens > 0 ? Math.round((s.submits / s.opens) * 100) : null;
+                      return (
+                        <tr key={cat} className="border-b border-slate-100 hover:bg-slate-50">
+                          <td className="px-4 py-2 font-medium text-slate-900">{cat}</td>
+                          <td className="px-4 py-2 text-center text-blue-700">{s.opens || "—"}</td>
+                          <td className="px-4 py-2 text-center text-orange-700 font-bold">{s.submits || "—"}</td>
+                          <td className="px-4 py-2 text-center text-green-700">{s.whatsapp || "—"}</td>
+                          <td className="px-4 py-2 text-center text-purple-700">{s.phone || "—"}</td>
+                          <td className="px-4 py-2 text-center">
+                            {conv !== null ? (
+                              <span className={`font-bold ${conv >= 30 ? "text-green-600" : conv >= 10 ? "text-orange-600" : "text-red-500"}`}>{conv}%</span>
+                            ) : "—"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })()}
+
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-          {loading ? (
+          {activeTab === "activity" ? (
+            events.length === 0 ? (
+              <div className="p-8 text-center text-slate-500">Нет событий. Активность появится после первых кликов.</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="border-b border-slate-200 bg-slate-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-600">Время</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-600">Тип</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-600">Категория</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-600">Страница</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {events.map((e, i) => {
+                      const typeLabel: Record<EventLog["type"], { label: string; color: string }> = {
+                        form_open:   { label: "Открыл форму",  color: "bg-blue-100 text-blue-700" },
+                        form_submit: { label: "Заявка",         color: "bg-orange-100 text-orange-700" },
+                        whatsapp:    { label: "WhatsApp",        color: "bg-green-100 text-green-700" },
+                        phone:       { label: "Звонок",          color: "bg-purple-100 text-purple-700" },
+                      };
+                      const { label, color } = typeLabel[e.type];
+                      return (
+                        <tr key={e.id} className={`border-b border-slate-200 transition hover:bg-slate-50 ${i % 2 === 0 ? "bg-white" : "bg-slate-50"}`}>
+                          <td className="px-4 py-3 text-xs text-slate-600 whitespace-nowrap">
+                            {new Date(e.timestamp).toLocaleString("ru-RU")}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${color}`}>{label}</span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-slate-700">{e.category || "—"}</td>
+                          <td className="px-4 py-3 text-xs text-slate-400 truncate max-w-xs">{e.page || "—"}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )
+          ) : null}
+          {activeTab === "leads" && (loading ? (
             <div className="p-8 text-center text-slate-500">Загрузка leads...</div>
           ) : leads.length === 0 ? (
             <div className="p-8 text-center text-slate-500">
@@ -437,7 +567,7 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
-          )}
+          ))}
         </div>
       </main>
 

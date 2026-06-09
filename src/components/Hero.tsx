@@ -254,7 +254,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
               </button>
               <a
                 href={`tel:${COMPANY.phoneRaw}`}
-                onClick={trackPhoneClick}
+                onClick={() => trackPhoneClick()}
                 className="flex items-center gap-2 border border-slate-500 text-slate-300 hover:border-slate-300 hover:text-white px-6 py-3.5 font-medium text-base transition-colors min-h-[48px]"
               >
                 <Phone size={20} />

@@ -152,6 +152,30 @@ export async function trackEvent(
   fsWrite("analytics.json", updated);
 }
 
+// ── EVENT LOG ─────────────────────────────────────────────────────────
+
+export interface EventLog {
+  id: string;
+  type: "whatsapp" | "phone" | "form_open" | "form_submit";
+  timestamp: string;
+  category?: string;
+  page?: string;
+}
+
+export async function getEvents(): Promise<EventLog[]> {
+  if (useBlob()) return blobGet<EventLog[]>("events", []);
+  return fsRead<EventLog[]>("events.json", []);
+}
+
+export async function addEvent(event: Omit<EventLog, "id">): Promise<void> {
+  const events = await getEvents();
+  events.push({ id: Date.now().toString(), ...event });
+  // Храним последние 1000 событий
+  const trimmed = events.slice(-1000);
+  if (useBlob()) { await blobSet("events", trimmed); return; }
+  fsWrite("events.json", trimmed);
+}
+
 // ── LEADS ─────────────────────────────────────────────────────────────
 
 export interface Lead {
