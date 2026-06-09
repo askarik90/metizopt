@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Lead, LeadResponse } from "@/types/lead";
 import { sendLeadNotification } from "@/lib/email";
+import { getLeads, saveLeads } from "@/lib/db";
 
 export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>> {
   try {
@@ -34,32 +35,26 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
 
     console.log("NEW LEAD:", JSON.stringify(lead, null, 2));
 
-    // Save to leads storage
+    // Сохраняем напрямую через db — без внутреннего HTTP-запроса
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/leads`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: lead.name,
-            company: lead.company,
-            phone: lead.phone,
-            whatsapp: lead.whatsapp,
-            city: lead.city,
-            message: lead.message,
-            category: lead.category,
-            searchQuery: lead.search_query,
-            fileUrl: lead.fileUrl,
-            pageUrl: lead.page_url,
-          }),
-        }
-      );
-      const savedLead = await response.json();
-      console.log("✅ Lead saved to storage:", savedLead.lead?.id);
+      const leads = await getLeads();
+      const newEntry = {
+        id: Date.now().toString(),
+        name: lead.name,
+        company: lead.company || "",
+        phone: lead.phone,
+        whatsapp: lead.whatsapp || "",
+        city: lead.city || "",
+        message: lead.message || "",
+        category: lead.category || "",
+        searchQuery: lead.search_query || "",
+        createdAt: lead.created_at,
+      };
+      leads.push(newEntry);
+      await saveLeads(leads);
+      console.log("✅ Lead saved to Blob:", newEntry.id);
     } catch (storageError) {
-      console.error("Warning: Could not save to storage:", storageError);
-      // Continue anyway - lead is logged
+      console.error("Warning: Could not save to Blob:", storageError);
     }
 
     // --- EMAIL NOTIFICATION ---
@@ -75,10 +70,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       utm_source: lead.utm_source,
       utm_campaign: lead.utm_campaign,
     }).catch((e) => console.error("Email send error:", e));
-
-    // --- CRM WEBHOOK (подключить позже) ---
-    // const webhookUrl = process.env.CRM_WEBHOOK_URL;
-    // if (webhookUrl) { await fetch(webhookUrl, { ... }); }
 
     return NextResponse.json({
       success: true,
