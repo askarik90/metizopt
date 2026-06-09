@@ -5,6 +5,7 @@ const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
 const SMTP_USER = process.env.SMTP_USER || "";
 const SMTP_PASS = process.env.SMTP_PASS || "";
 const NOTIFY_TO = process.env.NOTIFY_EMAIL || "140@bugel.kz";
+const NOTIFY_CC = process.env.NOTIFY_EMAIL_CC || "marketingbugel1@gmail.com";
 
 export interface LeadEmailData {
   name: string;
@@ -95,6 +96,7 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
   await transporter.sendMail({
     from: `KRP.kz <${SMTP_USER}>`,
     to: NOTIFY_TO,
+    cc: NOTIFY_CC,
     subject: `📦 Новая заявка: ${lead.name} — ${lead.phone}`,
     html,
     encoding: "utf8",
