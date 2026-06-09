@@ -7,14 +7,17 @@ import TrustSection from "@/components/TrustSection";
 import Footer from "@/components/Footer";
 import { useState, Suspense } from "react";
 import LeadFormModal from "@/components/LeadFormModal";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function CatalogPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalCategory, setModalCategory] = useState<string | undefined>();
+  const { trackLeadFormOpen } = useAnalytics();
 
   const openModal = (category?: string) => {
     setModalCategory(category);
     setModalOpen(true);
+    trackLeadFormOpen(category);
   };
 
   return (

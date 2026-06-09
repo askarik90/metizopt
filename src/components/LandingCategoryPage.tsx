@@ -20,7 +20,12 @@ export default function LandingCategoryPage({
   h1, description, category, whatsappText, usp,
 }: LandingCategoryPageProps) {
   const [modalOpen, setModalOpen] = useState(false);
-  const { trackWhatsAppClick } = useAnalytics();
+  const { trackWhatsAppClick, trackLeadFormOpen } = useAnalytics();
+
+  const openModal = () => {
+    setModalOpen(true);
+    trackLeadFormOpen(category);
+  };
 
   return (
     <main className="pb-20 lg:pb-0">
@@ -50,7 +55,7 @@ export default function LandingCategoryPage({
                 Написать в WhatsApp
               </a>
               <button
-                onClick={() => setModalOpen(true)}
+                onClick={openModal}
                 className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 font-medium transition-colors"
               >
                 <Upload size={20} />
@@ -85,7 +90,7 @@ export default function LandingCategoryPage({
             Пришлите список — менеджер проверит наличие и свяжется за 30 минут.
           </p>
           <button
-            onClick={() => setModalOpen(true)}
+            onClick={openModal}
             className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 font-medium text-base transition-colors w-full sm:w-auto"
           >
             Отправить заявку

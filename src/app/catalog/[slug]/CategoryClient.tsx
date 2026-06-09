@@ -29,7 +29,12 @@ export default function CategoryClient({
   sidebar,
 }: CategoryClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
-  const { trackWhatsAppClick } = useAnalytics();
+  const { trackWhatsAppClick, trackLeadFormOpen } = useAnalytics();
+
+  const openModal = () => {
+    setModalOpen(true);
+    trackLeadFormOpen(title);
+  };
 
   return (
     <>
@@ -68,7 +73,7 @@ export default function CategoryClient({
                 Запросить в WhatsApp
               </a>
               <button
-                onClick={() => setModalOpen(true)}
+                onClick={openModal}
                 className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 font-medium transition-colors"
               >
                 Запросить наличие и цену
@@ -136,7 +141,7 @@ export default function CategoryClient({
             <div className="text-slate-600">Подберём аналог по ГОСТ/DIN/ISO без потери характеристик</div>
           </div>
           <button
-            onClick={() => setModalOpen(true)}
+            onClick={openModal}
             className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 font-medium transition-colors whitespace-nowrap"
           >
             Запросить подбор аналога

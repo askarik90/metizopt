@@ -13,14 +13,17 @@ import StickyMobileCTA from "@/components/StickyMobileCTA";
 import LeadFormModal from "@/components/LeadFormModal";
 import { MessageCircle, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalCategory, setModalCategory] = useState<string | undefined>();
+  const { trackLeadFormOpen } = useAnalytics();
 
   const openModal = (category?: string) => {
     setModalCategory(category);
     setModalOpen(true);
+    trackLeadFormOpen(category);
   };
 
   return (
