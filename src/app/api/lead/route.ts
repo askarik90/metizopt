@@ -58,18 +58,23 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
     }
 
     // --- EMAIL NOTIFICATION ---
-    sendLeadNotification({
-      name: lead.name,
-      phone: lead.phone,
-      company: lead.company,
-      city: lead.city,
-      message: lead.message,
-      category: lead.category,
-      searchQuery: lead.search_query,
-      pageUrl: lead.page_url,
-      utm_source: lead.utm_source,
-      utm_campaign: lead.utm_campaign,
-    }).catch((e) => console.error("Email send error:", e));
+    try {
+      await sendLeadNotification({
+        name: lead.name,
+        phone: lead.phone,
+        company: lead.company,
+        city: lead.city,
+        message: lead.message,
+        category: lead.category,
+        searchQuery: lead.search_query,
+        pageUrl: lead.page_url,
+        utm_source: lead.utm_source,
+        utm_campaign: lead.utm_campaign,
+      });
+      console.log("✅ Email sent successfully");
+    } catch (e) {
+      console.error("Email send error:", e);
+    }
 
     return NextResponse.json({
       success: true,
