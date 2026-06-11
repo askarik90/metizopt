@@ -9,6 +9,7 @@ interface DayStats {
   whatsappClicks: number;
   phoneClicks: number;
   formOpens: number;
+  formOpenSessions: number;
   formSubmits: number;
   fileUploads: number;
 }
@@ -79,7 +80,7 @@ export default function AdminDashboard() {
 
   // Aggregate last N days from analytics data
   const getAggregated = (days: number) => {
-    const result: DayStats = { whatsappClicks: 0, phoneClicks: 0, formOpens: 0, formSubmits: 0, fileUploads: 0 };
+    const result: DayStats = { whatsappClicks: 0, phoneClicks: 0, formOpens: 0, formOpenSessions: 0, formSubmits: 0, fileUploads: 0 };
     if (!analytics) return result;
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - days);
@@ -88,6 +89,7 @@ export default function AdminDashboard() {
         result.whatsappClicks += stats.whatsappClicks ?? 0;
         result.phoneClicks += stats.phoneClicks ?? 0;
         result.formOpens += stats.formOpens ?? 0;
+        result.formOpenSessions += stats.formOpenSessions ?? 0;
         result.formSubmits += stats.formSubmits ?? 0;
         result.fileUploads += stats.fileUploads ?? 0;
       }
@@ -308,8 +310,10 @@ export default function AdminDashboard() {
         {analytics !== null && (() => {
           const stats = getAggregated(analyticsDays);
           const totalContacts = stats.whatsappClicks + stats.phoneClicks + stats.formSubmits;
-          const convRate = stats.formOpens > 0
-            ? Math.round((stats.formSubmits / stats.formOpens) * 100)
+          // знаменатель конверсии — уникальные сессии; на старых днях fallback на сырые открытия
+          const uniqueOpens = stats.formOpenSessions || stats.formOpens;
+          const convRate = uniqueOpens > 0
+            ? Math.round((stats.formSubmits / uniqueOpens) * 100)
             : 0;
           const maxVal = Math.max(stats.formOpens, stats.whatsappClicks, stats.phoneClicks, stats.formSubmits, 1);
           const bar = (val: number, color: string) => (
@@ -339,6 +343,7 @@ export default function AdminDashboard() {
                 <div className="rounded-lg bg-blue-50 p-3">
                   <p className="text-xs font-bold text-blue-700 uppercase">Открыли форму</p>
                   <p className="mt-1 text-2xl font-black text-blue-800">{stats.formOpens}</p>
+                  <p className="text-xs text-blue-600">уник. сессий: {uniqueOpens}</p>
                   {bar(stats.formOpens, "bg-blue-500")}
                 </div>
                 <div className="rounded-lg bg-green-50 p-3">
@@ -367,7 +372,7 @@ export default function AdminDashboard() {
                   <span className={`font-black ${convRate >= 20 ? "text-green-600" : convRate >= 10 ? "text-orange-600" : "text-red-600"}`}>
                     {convRate}%
                   </span>
-                  <span className="text-xs text-slate-400 ml-1">(открыли → отправили)</span>
+                  <span className="text-xs text-slate-400 ml-1">(уник. сессии → заявки)</span>
                 </div>
                 {stats.fileUploads > 0 && (
                   <div>

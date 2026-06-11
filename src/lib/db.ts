@@ -124,6 +124,7 @@ export interface DayStats {
   whatsappClicks: number;
   phoneClicks: number;
   formOpens: number;
+  formOpenSessions: number; // уникальные сессии, открывшие форму (для конверсии)
   formSubmits: number;
   fileUploads: number;
 }
@@ -132,7 +133,7 @@ export type AnalyticsData = Record<string, DayStats>; // key = YYYY-MM-DD
 
 const EMPTY_DAY: DayStats = {
   whatsappClicks: 0, phoneClicks: 0,
-  formOpens: 0, formSubmits: 0, fileUploads: 0,
+  formOpens: 0, formOpenSessions: 0, formSubmits: 0, fileUploads: 0,
 };
 
 export async function getAnalytics(): Promise<AnalyticsData> {
@@ -146,7 +147,8 @@ export async function trackEvent(
 ): Promise<void> {
   const day = date ?? new Date().toISOString().slice(0, 10);
   const data = await getAnalytics();
-  const prev = data[day] ?? { ...EMPTY_DAY };
+  // merge with EMPTY_DAY so newly-added counters default to 0 on existing days (no NaN)
+  const prev: DayStats = { ...EMPTY_DAY, ...data[day] };
   const updated: AnalyticsData = { ...data, [day]: { ...prev, [type]: prev[type] + 1 } };
   if (useBlob()) { await blobSet("analytics", updated); return; }
   fsWrite("analytics.json", updated);

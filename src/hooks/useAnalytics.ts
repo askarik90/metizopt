@@ -9,13 +9,41 @@ declare global {
   }
 }
 
+// один идентификатор на вкладку-сессию (sessionStorage живёт до закрытия вкладки)
+function getSessionId(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    let id = sessionStorage.getItem("krp_sid");
+    if (!id) {
+      id = crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      sessionStorage.setItem("krp_sid", id);
+    }
+    return id;
+  } catch {
+    return "";
+  }
+}
+
+// true только при ПЕРВОМ вызове за сессию для данного ключа — для дедупликации
+function firstInSession(key: string): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const k = `krp_once_${key}`;
+    if (sessionStorage.getItem(k)) return false;
+    sessionStorage.setItem(k, "1");
+    return true;
+  } catch {
+    return true;
+  }
+}
+
 // fire-and-forget — не блокируем UI
 function track(type: string, meta?: { category?: string; page?: string }) {
   const page = typeof window !== "undefined" ? window.location.pathname : undefined;
   fetch("/api/analytics", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ type, page, ...meta }),
+    body: JSON.stringify({ type, page, sessionId: getSessionId(), ...meta }),
   }).catch(() => {});
 }
 
@@ -38,7 +66,9 @@ export function useAnalytics() {
     trackLeadFormOpen: (category?: string) => {
       push("lead_form_open", { category });
       gtagEvent("lead_form_open", { event_category: "engagement", event_label: category });
-      track("formOpens", { category });
+      track("formOpens", { category }); // сырой счётчик — каждое открытие
+      // уникальное открытие: 1 на сессию (знаменатель конверсии)
+      if (firstInSession("formOpen")) track("formOpenSessions", { category });
     },
     trackLeadFormSubmit: (category?: string, searchQuery?: string) => {
       push("lead_form_submit", { category, search_query: searchQuery });

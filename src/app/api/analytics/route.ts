@@ -4,7 +4,7 @@ import { validateToken, COOKIE_NAME } from "@/lib/auth";
 import { trackEvent, getAnalytics, addEvent, type DayStats, type EventLog } from "@/lib/db";
 
 const ALLOWED_EVENTS: (keyof DayStats)[] = [
-  "whatsappClicks", "phoneClicks", "formOpens", "formSubmits", "fileUploads",
+  "whatsappClicks", "phoneClicks", "formOpens", "formOpenSessions", "formSubmits", "fileUploads",
 ];
 
 const TYPE_MAP: Record<string, EventLog["type"]> = {
