@@ -97,12 +97,13 @@ def size_count(slug):
         return sum(len(t.get('sizes', [])) for t in node['types'])
     return 0
 
-def build_generic(c, slug):
-    """Описание для подкатегорий без DIN/ГОСТ-стандартов."""
+def build_generic(c, slug, skip_desc=False):
+    """Описание для подкатегорий без DIN/ГОСТ-стандартов.
+    skip_desc=True — если выше уже есть содержательный текст, не дублируем desc."""
     desc = re.sub(r'\s+', ' ', (c.get('desc') or '').strip())
     n = size_count(slug)
     parts = []
-    if desc:
+    if desc and not skip_desc:
         parts.append('<p>%s</p>' % desc)
     if n:
         parts.append('<p>В наличии %d типоразмеров со склада в Алматы.</p>' % n)
@@ -132,13 +133,14 @@ def build_block(stds):
 
 changed = 0
 for c in CATS:
-    stds = collect_standards(c['slug'], c)
-    block = build_block(stds) if stds else build_generic(c, c['slug'])
     fd = c.get('fullDescription') or ''
     fd = re.sub(re.escape(MARK_OPEN) + r'.*?' + re.escape(MARK_CLOSE), '', fd, flags=re.S).strip()
     # старую прозу без тегов переводим в <br>, чтобы перенос строк не потерялся
     if fd and not re.search(r'<[a-z]', fd, re.I):
         fd = fd.replace('\n', '<br>')
+    plain_len = len(re.sub(r'<[^>]+>', '', fd))  # длина уже имеющегося текста
+    stds = collect_standards(c['slug'], c)
+    block = build_block(stds) if stds else build_generic(c, c['slug'], skip_desc=(plain_len > 120))
     c['fullDescription'] = (fd + block).strip()
     changed += 1
 
