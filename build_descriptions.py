@@ -89,6 +89,27 @@ def collect_standards(slug, cat):
 
 MARK_OPEN, MARK_CLOSE = '<!--std-block-->', '<!--/std-block-->'
 
+def size_count(slug):
+    node = TREE.get(slug, {})
+    if node.get('sizes'):
+        return len(node['sizes'])
+    if node.get('types'):
+        return sum(len(t.get('sizes', [])) for t in node['types'])
+    return 0
+
+def build_generic(c, slug):
+    """Описание для подкатегорий без DIN/ГОСТ-стандартов."""
+    desc = re.sub(r'\s+', ' ', (c.get('desc') or '').strip())
+    n = size_count(slug)
+    parts = []
+    if desc:
+        parts.append('<p>%s</p>' % desc)
+    if n:
+        parts.append('<p>В наличии %d типоразмеров со склада в Алматы.</p>' % n)
+    parts.append('<p>Оптом и в розницу, доставка по Казахстану. '
+                 'Не нашли нужную позицию — пришлите спецификацию, подберём.</p>')
+    return MARK_OPEN + ''.join(parts) + MARK_CLOSE
+
 def build_block(stds):
     if not stds:
         return ''
@@ -112,9 +133,7 @@ def build_block(stds):
 changed = 0
 for c in CATS:
     stds = collect_standards(c['slug'], c)
-    block = build_block(stds)
-    if not block:
-        continue
+    block = build_block(stds) if stds else build_generic(c, c['slug'])
     fd = c.get('fullDescription') or ''
     fd = re.sub(re.escape(MARK_OPEN) + r'.*?' + re.escape(MARK_CLOSE), '', fd, flags=re.S).strip()
     # старую прозу без тегов переводим в <br>, чтобы перенос строк не потерялся
