@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { MessageCircle, Check } from "lucide-react";
+import { MessageCircle, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import LeadFormModal from "@/components/LeadFormModal";
@@ -16,7 +16,15 @@ export default function TypeSizePicker({
 }) {
   const [picked, setPicked] = useState<string[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const { trackWhatsAppClick, trackLeadFormOpen } = useAnalytics();
+
+  const LIMIT = 24;
+  // показываем первые LIMIT + все уже выбранные (чтобы выбор не «прятался» при свёртке)
+  const shown =
+    expanded || sizes.length <= LIMIT
+      ? sizes
+      : sizes.filter((s, i) => i < LIMIT || picked.includes(s.label));
 
   const toggle = (l: string) =>
     setPicked((p) => (p.includes(l) ? p.filter((x) => x !== l) : [...p, l]));
@@ -38,25 +46,39 @@ export default function TypeSizePicker({
       </div>
 
       {sizes.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {sizes.map((s) => {
-            const active = picked.includes(s.label);
-            return (
-              <button
-                key={s.code || s.label}
-                onClick={() => toggle(s.label)}
-                className={`flex items-center gap-1.5 border-2 px-3 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? "border-orange-600 bg-orange-50 text-orange-700"
-                    : "border-slate-200 text-slate-700 hover:border-orange-400"
-                }`}
-              >
-                {active && <Check size={14} className="shrink-0" />}
-                {s.label}
-              </button>
-            );
-          })}
-        </div>
+        <>
+          <div className="flex flex-wrap gap-2">
+            {shown.map((s) => {
+              const active = picked.includes(s.label);
+              return (
+                <button
+                  key={s.code || s.label}
+                  onClick={() => toggle(s.label)}
+                  className={`flex items-center gap-1.5 border-2 px-3 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? "border-orange-600 bg-orange-50 text-orange-700"
+                      : "border-slate-200 text-slate-700 hover:border-orange-400"
+                  }`}
+                >
+                  {active && <Check size={14} className="shrink-0" />}
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
+          {sizes.length > LIMIT && (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-orange-600 hover:text-orange-700"
+            >
+              {expanded ? (
+                <>Свернуть <ChevronUp size={16} /></>
+              ) : (
+                <>Показать все {sizes.length} размеров <ChevronDown size={16} /></>
+              )}
+            </button>
+          )}
+        </>
       ) : (
         <p className="text-slate-500">Уточните размер у менеджера — поможем подобрать.</p>
       )}
