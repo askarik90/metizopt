@@ -9,11 +9,12 @@ import TypeSizePicker from "@/components/TypeSizePicker";
 import { COMPANY } from "@/config/company";
 import { getCategories, getGroups, type CategoryItem, type GroupItem } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
+import { sanitizeRichText } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
 type Size = { label: string; code: string };
-type TypeNode = { slug: string; name: string; count: number; sizes: Size[] };
+type TypeNode = { slug: string; name: string; count: number; sizes: Size[]; description?: string };
 const tree = catalogTreeJson as Record<string, { types?: TypeNode[]; sizes?: Size[] }>;
 
 function findType(slug: string, typeSlug: string): TypeNode | undefined {
@@ -125,7 +126,13 @@ export default async function TypePage({
       </section>
 
       <div className="bg-slate-50 py-8 lg:py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
+          {node.description && (
+            <div
+              className="prose prose-slate max-w-none rounded-lg border border-slate-200 bg-white p-6 text-slate-600"
+              dangerouslySetInnerHTML={{ __html: sanitizeRichText(node.description) }}
+            />
+          )}
           <TypeSizePicker typeName={node.name} sizes={node.sizes} category={category?.title ?? node.name} />
         </div>
       </div>
