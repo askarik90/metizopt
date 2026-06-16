@@ -5,6 +5,7 @@ import { MessageCircle, ArrowRight } from "lucide-react";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import LeadFormModal from "@/components/LeadFormModal";
 import CategoryCharacteristics from "@/components/CategoryCharacteristics";
+import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -25,6 +26,7 @@ interface CategoryClientProps {
   fullDescription?: string;
   sidebar?: React.ReactNode;
   types?: TypeLink[];
+  sizes?: { label: string; code: string }[];
 }
 
 export default function CategoryClient({
@@ -37,6 +39,7 @@ export default function CategoryClient({
   fullDescription,
   sidebar,
   types = [],
+  sizes = [],
 }: CategoryClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { trackWhatsAppClick, trackLeadFormOpen } = useAnalytics();
@@ -94,7 +97,7 @@ export default function CategoryClient({
       </section>
 
       {/* Content area: sidebar + description + classes */}
-      {(types.length > 0 || fullDescription || classes.length > 0 || sidebar) && (
+      {(sizes.length > 0 || types.length > 0 || fullDescription || classes.length > 0 || sidebar) && (
         <div className="bg-slate-50 py-8 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-start gap-8">
@@ -108,6 +111,11 @@ export default function CategoryClient({
 
               {/* Main column */}
               <div className="flex-1 min-w-0 space-y-6">
+                {/* Выбор размера (для подкатегорий = одного типа) */}
+                {sizes.length > 0 && (
+                  <TypeSizePicker typeName={title} sizes={sizes} category={title} />
+                )}
+
                 {/* Виды (типы) с выбором размера */}
                 {types.length > 0 && (
                   <div>

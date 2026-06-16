@@ -3,7 +3,7 @@ import { COMPANY } from "@/config/company";
 import { getCategories, getGroups } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
 
-const catalogTree = catalogTreeJson as Record<string, { types: { slug: string }[] }>;
+const catalogTree = catalogTreeJson as Record<string, { types?: { slug: string }[] }>;
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const typePages: MetadataRoute.Sitemap = Object.entries(catalogTree).flatMap(
     ([slug, node]) =>
-      node.types.map((t) => ({
+      (node.types ?? []).map((t) => ({
         url: `${base}/catalog/${slug}/${t.slug}`,
         priority: 0.7,
         changeFrequency: "monthly" as const,

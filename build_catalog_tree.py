@@ -1,76 +1,106 @@
 # -*- coding: utf-8 -*-
-"""Собирает src/data/catalog-tree.json: site-подкатегория -> типы -> размеры.
-Источник: src/data/catalog-db.json (экспорт из 1С). Пока scope = krepezh."""
+"""src/data/catalog-tree.json: site-подкатегория -> типы/размеры. Источник: catalog-db.json (1С).
+- krepezh-*  (широкие): { types: [ {slug,name,sizes} ] } -> страницы типов
+- остальные (= один тип): { sizes: [ {label,code} ] }    -> выбор размера на самой подкатегории
+"""
 import json, re
 
 DB = json.load(open('src/data/catalog-db.json', encoding='utf-8'))
+CATS = {c['slug']: c for c in json.load(open('data/categories.json', encoding='utf-8'))}
+GROUPS = {g['slug']: g for g in json.load(open('data/groups.json', encoding='utf-8'))}
 
-# site-слаг подкатегории -> ключ в catalog-db (krepezh: широкие категории с типами внутри)
-MAP = {
+# krepezh: site-слаг -> широкий ключ catalog-db
+KREPEZH = {
     'krepezh-bolty': 'bolty', 'krepezh-gayki': 'gayki', 'krepezh-shayby': 'shayby',
     'krepezh-vintyi': 'vinty', 'krepezh-ankera': 'ankera', 'krepezh-shplinty': 'shplinty',
     'krepezh-dyubela': 'dyubelya', 'krepezh-samorezi': 'shurupy', 'krepezh-shpilki': 'shpilki',
     'krepezh-zaklepki': 'zaklepki', 'krepezh-gvozdi': 'gvozdi',
 }
+# группы, где подкатегории сайта = отдельные типы в этом ключе catalog-db
+SINGLE = {'nerzhaveyushchiy': 'nerzhaveyushchiy', 'ventilatsiya': 'ventilatsiya',
+          'perfo': 'perfo', 'takelazh': 'takelazh', 'kanaty': 'kanaty', 'elektrody': 'elektrody'}
 
-TR = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i',
-      'й':'j','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t',
-      'у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'',
-      'э':'e','ю':'yu','я':'ya'}
+# ручные оверрайды там, где автоматч промахнулся (site-слаг -> точное имя типа в catalog-db)
+OVERRIDE = {
+    'nerzhav-vintyi': 'Винт с потайной головкой и внутренним шестигранником  DIN 7991 нерж',
+    'ventil-shpilka': 'шпилька сантехничекая',
+    'ventil-traversa': 'Траверса',
+    'svarka-rossiya': 'Россия',
+    # svarka-crown — в данных нет, остаётся без размеров (только форма заявки)
+}
+def norm_ws(s):
+    return re.sub(r'\s+', ' ', s).strip()
+
+TR = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'j',
+      'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f',
+      'х':'h','ц':'c','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'}
 def slugify(s):
-    s = s.lower()
-    out = ''.join(TR.get(ch, ch) for ch in s)
-    out = re.sub(r'[^a-z0-9]+', '-', out).strip('-')
-    return re.sub(r'-{2,}', '-', out)
+    out = ''.join(TR.get(ch, ch) for ch in s.lower())
+    return re.sub(r'-{2,}', '-', re.sub(r'[^a-z0-9]+', '-', out).strip('-'))
 
-# размер: М?10*30, 6*8*60, 8*40, 10×100 (один и более «*/×/x/х» разделителей)
-SIZE_RE = re.compile(r'(?:[МM]\s*)?\d+(?:[.,]\d+)?(?:\s*[*×xх]\s*\d+(?:[.,]\d+)?)+', re.IGNORECASE)
+SIZE_RE = re.compile(r'(?:[МM]\s*)?\d+(?:[.,]\d+)?(?:\s*[*×xх]\s*\d+(?:[.,]\d+)?)+', re.I)
 PACK_RE = re.compile(r'\([^)]*\)')
-
 def extract_size(name):
     n = PACK_RE.sub(' ', name)
-    cands = SIZE_RE.findall(n)
-    if not cands:
+    c = SIZE_RE.findall(n)
+    if not c:
         return None
-    best = max(cands, key=lambda x: (x.count('*') + x.count('×') + x.count('x') + x.count('х'), len(x)))
-    best = re.sub(r'\s*', '', best).replace('*', '×').replace('x', '×').replace('х', '×')
-    best = best.replace('M', 'М')  # латинская M -> кириллическая М (метрика)
-    if best[:1] in 'мМ':           # нормализуем регистр ведущей М
+    best = max(c, key=lambda x: (re.subn(r'[*×xх]', '', x)[1], len(x)))
+    best = re.sub(r'\s*', '', best).replace('*', '×').replace('x', '×').replace('х', '×').replace('M', 'М')
+    if best[:1] in 'мМ':
         best = 'М' + best[1:]
     return best
 
-def natkey(label):
-    nums = re.findall(r'\d+', label)
-    return [int(x) for x in nums] or [0]
+def sizes_of(type_node):
+    out, seen = [], set()
+    for it in type_node.get('items', []):
+        sz = extract_size(it['name'])
+        label = sz if sz else PACK_RE.sub('', it['name']).strip()
+        if label and label not in seen:
+            seen.add(label); out.append({'label': label, 'code': it['code']})
+    out.sort(key=lambda s: [int(x) for x in re.findall(r'\d+', s['label'])] or [0])
+    return out
 
-tree = {}
-for slug, key in MAP.items():
-    types = []
-    for t in DB.get(key, []):
-        tname = t['type'].strip()
-        sizes, seen = [], set()
-        for it in t.get('items', []):
-            sz = extract_size(it['name'])
-            label = sz if sz else PACK_RE.sub('', it['name']).strip()
-            if label and label not in seen:
-                seen.add(label)
-                sizes.append({'label': label, 'code': it['code']})
-        sizes.sort(key=lambda s: natkey(s['label']))
-        types.append({'slug': slugify(tname), 'name': tname,
-                      'count': t.get('count', len(t.get('items', []))), 'sizes': sizes})
+def toks(s):
+    return set(re.findall(r'[a-zа-я0-9]+', s.lower().replace('ё', 'е')))
+def best_match(title, types):
+    tt = toks(title); best, score = None, 0.0
+    for ty in types:
+        ts = toks(ty['type'])
+        j = len(tt & ts) / max(1, len(tt | ts))
+        if j > score:
+            score, best = j, ty
+    return best, score
+
+tree, report = {}, []
+
+# --- Фаза 1: krepezh (мульти-тип) ---
+for slug, key in KREPEZH.items():
+    types = [{'slug': slugify(t['type'].strip()), 'name': t['type'].strip(),
+              'count': t.get('count', len(t.get('items', []))), 'sizes': sizes_of(t)}
+             for t in DB.get(key, [])]
     tree[slug] = {'types': types}
 
-json.dump(tree, open('src/data/catalog-tree.json', 'w', encoding='utf-8'),
-          ensure_ascii=False, indent=2)
+# --- Фаза 2: одиночные типы (по матчингу title -> тип) ---
+for gslug, key in SINGLE.items():
+    types = DB.get(key, [])
+    for sub in GROUPS.get(gslug, {}).get('categories', []):
+        title = (CATS.get(sub) or {}).get('title', sub)
+        if sub in OVERRIDE:
+            m = next((t for t in types if norm_ws(t['type']) == norm_ws(OVERRIDE[sub])), None)
+            if m:
+                tree[sub] = {'sizes': sizes_of(m)}
+                report.append('OVR  %-32s -> %s' % (sub, m['type']))
+                continue
+        m, sc = best_match(title, types)
+        if m and sc >= 0.34:
+            tree[sub] = {'sizes': sizes_of(m)}
+            report.append('OK   %-32s sc=%.2f -> %s' % (sub, sc, m['type']))
+        else:
+            report.append('MISS %-32s sc=%.2f title=%r' % (sub, sc, title))
 
-# отчёт
-rep = []
-for slug, v in tree.items():
-    rep.append('%-18s типов=%-3d размеров=%d' % (slug, len(v['types']), sum(len(t['sizes']) for t in v['types'])))
-rep.append('')
-ank = tree['krepezh-ankera']['types']
-rep.append('Пример krepezh-ankera:')
-for t in ank[:4]:
-    rep.append('  %s [%s]: %s' % (t['name'], t['slug'], ', '.join(s['label'] for s in t['sizes'][:8])))
-open(r'C:/Users/sales/AppData/Local/Temp/ads_report/tree_report.txt', 'w', encoding='utf-8').write('\n'.join(rep))
-print('WROTE catalog-tree.json,', len(tree), 'subcats')
+json.dump(tree, open('src/data/catalog-tree.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+miss = sum(1 for r in report if r.startswith('MISS'))
+report.insert(0, 'subcats в дереве=%d | одиночных OK=%d | MISS=%d' % (len(tree), len(report) - miss, miss))
+open(r'C:/Users/sales/AppData/Local/Temp/ads_report/tree2_report.txt', 'w', encoding='utf-8').write('\n'.join(report))
+print('WROTE catalog-tree.json: %d subcats, MISS=%d' % (len(tree), miss))

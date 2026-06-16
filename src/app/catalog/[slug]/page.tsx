@@ -20,7 +20,10 @@ import catalogTreeJson from "@/data/catalog-tree.json";
 
 const catalogTree = catalogTreeJson as Record<
   string,
-  { types: { slug: string; name: string; count: number; sizes: { label: string }[] }[] }
+  {
+    types?: { slug: string; name: string; count: number; sizes: { label: string }[] }[];
+    sizes?: { label: string; code: string }[];
+  }
 >;
 
 export const dynamic = "force-dynamic";
@@ -316,6 +319,7 @@ export default async function CatalogPage({
         whatsappText={category.whatsappText ?? ""}
         fullDescription={sanitizeRichText(category.fullDescription)}
         types={catalogTree[slug]?.types ?? []}
+        sizes={catalogTree[slug]?.sizes ?? []}
         sidebar={
           <CatalogSidebar groups={groups} categories={categories} currentSlug={slug} />
         }

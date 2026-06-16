@@ -14,10 +14,10 @@ export const dynamic = "force-dynamic";
 
 type Size = { label: string; code: string };
 type TypeNode = { slug: string; name: string; count: number; sizes: Size[] };
-const tree = catalogTreeJson as Record<string, { types: TypeNode[] }>;
+const tree = catalogTreeJson as Record<string, { types?: TypeNode[]; sizes?: Size[] }>;
 
 function findType(slug: string, typeSlug: string): TypeNode | undefined {
-  return tree[slug]?.types.find((t) => t.slug === typeSlug);
+  return tree[slug]?.types?.find((t) => t.slug === typeSlug);
 }
 
 export async function generateMetadata({
