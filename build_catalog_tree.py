@@ -43,13 +43,17 @@ PACK_RE = re.compile(r'\([^)]*\)')
 def extract_size(name):
     n = PACK_RE.sub(' ', name)
     c = SIZE_RE.findall(n)
-    if not c:
-        return None
-    best = max(c, key=lambda x: (re.subn(r'[*×xх]', '', x)[1], len(x)))
-    best = re.sub(r'\s*', '', best).replace('*', '×').replace('x', '×').replace('х', '×').replace('M', 'М')
-    if best[:1] in 'мМ':
-        best = 'М' + best[1:]
-    return best
+    if c:
+        best = max(c, key=lambda x: (re.subn(r'[*×xх]', '', x)[1], len(x)))
+        best = re.sub(r'\s*', '', best).replace('*', '×').replace('x', '×').replace('х', '×').replace('M', 'М')
+        if best[:1] in 'мМ':
+            best = 'М' + best[1:]
+        return best
+    # одиночный метрический размер (гайки/шайбы/шпильки): М16, M8 — без второго измерения
+    m = re.search(r'[МM]\s*\d+(?:[.,]\d+)?', n)
+    if m:
+        return 'М' + re.sub(r'\s+', '', m.group())[1:]
+    return None
 
 def sizes_of(type_node):
     out, seen = [], set()
