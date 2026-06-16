@@ -8,6 +8,7 @@ import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { getCategoryImage, heroBg } from "@/lib/categoryImages";
 
 export interface TypeLink {
   slug: string;
@@ -51,14 +52,8 @@ export default function CategoryClient({
 
   return (
     <>
-      {/* Hero — full width */}
-      <section
-        className="bg-slate-900 py-16"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      >
+      {/* Hero — full width, фон = картинка категории с L→R градиентом */}
+      <section className="bg-slate-900 py-16" style={heroBg(getCategoryImage(slug))}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4">

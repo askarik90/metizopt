@@ -10,6 +10,7 @@ import { COMPANY } from "@/config/company";
 import { getCategories, getGroups, type CategoryItem, type GroupItem } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
+import { getCategoryImage, heroBg } from "@/lib/categoryImages";
 
 export const dynamic = "force-dynamic";
 
@@ -103,13 +104,7 @@ export default async function TypePage({
         ]}
       />
 
-      <section
-        className="bg-slate-900 py-14"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      >
+      <section className="bg-slate-900 py-14" style={heroBg(getCategoryImage(slug))}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-3 inline-flex items-center border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
             {category?.title ?? "Каталог"} · оптом и в розницу
