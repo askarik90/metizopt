@@ -42,17 +42,33 @@ SIZE_RE = re.compile(r'(?:[МM]\s*)?\d+(?:[.,]\d+)?(?:\s*[*×xх]\s*\d+(?:[.,]\d
 PACK_RE = re.compile(r'\([^)]*\)')
 def extract_size(name):
     n = PACK_RE.sub(' ', name)
-    c = SIZE_RE.findall(n)
+    # 1) многомерный размер: М6×20, 6×8×60, 06Х022 (разделители * × x х Х)
+    c = re.findall(r'(?:[МM]\s*)?\d+(?:[.,]\d+)?(?:\s*[*×xхХ]\s*\d+(?:[.,]\d+)?)+', n)
     if c:
-        best = max(c, key=lambda x: (re.subn(r'[*×xх]', '', x)[1], len(x)))
-        best = re.sub(r'\s*', '', best).replace('*', '×').replace('x', '×').replace('х', '×').replace('M', 'М')
+        best = max(c, key=lambda x: (len(re.findall(r'[*×xхХ]', x)), len(x)))
+        best = re.sub(r'\s+', '', best)
+        best = re.sub(r'[*xхХ]', '×', best).replace('M', 'М')
         if best[:1] in 'мМ':
             best = 'М' + best[1:]
         return best
-    # одиночный метрический размер (гайки/шайбы/шпильки): М16, M8 — без второго измерения
-    m = re.search(r'[МM]\s*\d+(?:[.,]\d+)?', n)
+    # 2) метрическая резьба: М16, M8 (М вплотную к числу)
+    m = re.search(r'[МM]\s*(\d+(?:[.,]\d+)?)(?![\w])', n)
     if m:
-        return 'М' + re.sub(r'\s+', '', m.group())[1:]
+        return 'М' + m.group(1)
+    # 3) диаметр: d3.0мм, Ø8, 7мм, «Д 3 ММ» (регистронезависимо)
+    m = re.search(r'(?:[dDØдД]\s*\.?\s*)?(\d+(?:[.,]\d+)?)\s*мм', n, re.I)
+    if not m:
+        m = re.search(r'[dDØдД]\s*\.?\s*(\d+(?:[.,]\d+)?)', n, re.I)
+    if m:
+        return m.group(1).replace('.', ',') + ' мм'
+    # 4) диаметр каната по ГОСТ: «Канат 5,6 ГОСТ …»
+    m = re.search(r'[Кк]анат\s+(\d+(?:[.,]\d+)?)\s+ГОСТ', n)
+    if m:
+        return m.group(1).replace('.', ',') + ' мм'
+    # 5) грузоподъёмность крюков: «0,5 т», «5,0 т.»
+    m = re.search(r'(\d+(?:[.,]\d+)?)\s*т\.?(?=\s|$)', n)
+    if m:
+        return m.group(1).replace('.', ',') + ' т'
     return None
 
 def sizes_of(type_node):
