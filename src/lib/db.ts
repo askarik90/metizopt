@@ -71,7 +71,8 @@ const DEFAULT_SETTINGS = {
 };
 
 export async function getSettings() {
-  if (useBlob()) return blobGet("settings", DEFAULT_SETTINGS);
+  // Статичный контент — источник истины в git (data/*.json), НЕ в Blob.
+  // Убирает поштучные чтения Blob на каждый запрос (причина превышения лимита).
   return fsRead("settings.json", DEFAULT_SETTINGS);
 }
 
@@ -85,8 +86,7 @@ export async function saveSettings(data: typeof DEFAULT_SETTINGS) {
 export interface FAQItem { id: string; question: string; answer: string }
 
 export async function getFAQ(): Promise<FAQItem[]> {
-  if (useBlob()) return blobGet<FAQItem[]>("faq", []);
-  return fsRead<FAQItem[]>("faq.json", []);
+  return fsRead<FAQItem[]>("faq.json", []); // статичный контент → git
 }
 
 export async function saveFAQ(data: FAQItem[]) {
@@ -199,11 +199,7 @@ export async function saveLeads(data: Lead[]) {
 // ── GROUPS ────────────────────────────────────────────────────────────
 
 export async function getGroups(): Promise<GroupItem[]> {
-  if (useBlob()) {
-    const data = await blobGet<GroupItem[]>("groups", []);
-    if (data.length > 0) return data;
-  }
-  return fsRead<GroupItem[]>("groups.json", []);
+  return fsRead<GroupItem[]>("groups.json", []); // статичный контент → git
 }
 
 export async function saveGroups(data: GroupItem[]) {
@@ -214,11 +210,7 @@ export async function saveGroups(data: GroupItem[]) {
 // ── CATEGORIES ────────────────────────────────────────────────────────
 
 export async function getCategories(): Promise<CategoryItem[]> {
-  if (useBlob()) {
-    const data = await blobGet<CategoryItem[]>("categories", []);
-    if (data.length > 0) return data;
-  }
-  return fsRead<CategoryItem[]>("categories.json", []);
+  return fsRead<CategoryItem[]>("categories.json", []); // статичный контент → git
 }
 
 export async function saveCategories(data: CategoryItem[]) {
