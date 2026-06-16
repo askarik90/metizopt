@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 ADMIN_SECRET=krp-hmac-secret-9f2k7p3x
+KRP_MEMORY.md

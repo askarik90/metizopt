@@ -16,6 +16,12 @@ import {
   type GroupItem,
 } from "@/lib/db";
 import { sanitizeRichText } from "@/lib/sanitize";
+import catalogTreeJson from "@/data/catalog-tree.json";
+
+const catalogTree = catalogTreeJson as Record<
+  string,
+  { types: { slug: string; name: string; count: number; sizes: { label: string }[] }[] }
+>;
 
 export const dynamic = "force-dynamic";
 
@@ -309,6 +315,7 @@ export default async function CatalogPage({
         classes={(category.classes ?? []) as readonly string[]}
         whatsappText={category.whatsappText ?? ""}
         fullDescription={sanitizeRichText(category.fullDescription)}
+        types={catalogTree[slug]?.types ?? []}
         sidebar={
           <CatalogSidebar groups={groups} categories={categories} currentSlug={slug} />
         }

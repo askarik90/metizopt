@@ -1,11 +1,19 @@
 "use client";
 import { useState } from "react";
-import { MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, ArrowRight } from "lucide-react";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import LeadFormModal from "@/components/LeadFormModal";
 import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+
+export interface TypeLink {
+  slug: string;
+  name: string;
+  count: number;
+  sizes: { label: string }[];
+}
 
 interface CategoryClientProps {
   title: string;
@@ -16,6 +24,7 @@ interface CategoryClientProps {
   whatsappText: string;
   fullDescription?: string;
   sidebar?: React.ReactNode;
+  types?: TypeLink[];
 }
 
 export default function CategoryClient({
@@ -27,6 +36,7 @@ export default function CategoryClient({
   whatsappText,
   fullDescription,
   sidebar,
+  types = [],
 }: CategoryClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { trackWhatsAppClick, trackLeadFormOpen } = useAnalytics();
@@ -84,7 +94,7 @@ export default function CategoryClient({
       </section>
 
       {/* Content area: sidebar + description + classes */}
-      {(fullDescription || classes.length > 0 || sidebar) && (
+      {(types.length > 0 || fullDescription || classes.length > 0 || sidebar) && (
         <div className="bg-slate-50 py-8 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-start gap-8">
@@ -98,6 +108,37 @@ export default function CategoryClient({
 
               {/* Main column */}
               <div className="flex-1 min-w-0 space-y-6">
+                {/* Виды (типы) с выбором размера */}
+                {types.length > 0 && (
+                  <div>
+                    <h2 className="mb-4 text-xl font-black uppercase tracking-tight text-slate-900">
+                      Виды — выберите для размеров
+                    </h2>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {types.map((t) => (
+                        <Link
+                          key={t.slug}
+                          href={`/catalog/${slug}/${t.slug}`}
+                          className="group flex flex-col rounded border border-slate-200 bg-white p-4 transition-all hover:border-orange-400 hover:shadow-md"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="text-sm font-bold uppercase leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
+                              {t.name}
+                            </h3>
+                            <ArrowRight size={16} className="mt-0.5 shrink-0 text-orange-600 transition-transform group-hover:translate-x-1" />
+                          </div>
+                          {t.sizes.length > 0 && (
+                            <p className="mt-2 line-clamp-1 text-xs text-slate-500">
+                              {t.sizes.length} размеров: {t.sizes.slice(0, 5).map((s) => s.label).join(", ")}
+                              {t.sizes.length > 5 ? "…" : ""}
+                            </p>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Characteristics from index */}
                 <CategoryCharacteristics slug={slug} />
 

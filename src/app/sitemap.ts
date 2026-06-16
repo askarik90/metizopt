@@ -1,6 +1,9 @@
 import { MetadataRoute } from "next";
 import { COMPANY } from "@/config/company";
 import { getCategories, getGroups } from "@/lib/db";
+import catalogTreeJson from "@/data/catalog-tree.json";
+
+const catalogTree = catalogTreeJson as Record<string, { types: { slug: string }[] }>;
 
 export const dynamic = "force-dynamic";
 
@@ -42,5 +45,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: now,
   }));
 
-  return [...staticPages, ...groupPages, ...categoryPages];
+  const typePages: MetadataRoute.Sitemap = Object.entries(catalogTree).flatMap(
+    ([slug, node]) =>
+      node.types.map((t) => ({
+        url: `${base}/catalog/${slug}/${t.slug}`,
+        priority: 0.7,
+        changeFrequency: "monthly" as const,
+        lastModified: now,
+      })),
+  );
+
+  return [...staticPages, ...groupPages, ...categoryPages, ...typePages];
 }
