@@ -1,8 +1,8 @@
 // Simple password-based authentication for admin panel
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "krp.admin.2024";
-
 export function validateAdminPassword(password: string): boolean {
-  return password === ADMIN_PASSWORD;
+  const expected = process.env.ADMIN_PASSWORD;
+  if (!expected) return false; // fail-closed: без ADMIN_PASSWORD в env вход запрещён
+  return password === expected;
 }
 
 export function setAdminSession(password: string): void {

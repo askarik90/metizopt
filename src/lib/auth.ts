@@ -7,12 +7,13 @@ export const COOKIE_MAX_AGE = 60 * 60 * 8; // 8 часов
 
 /** Токен сессии из env (надёжный случайный токен) */
 export function getSessionToken(): string {
-  return process.env.ADMIN_SESSION_TOKEN ?? "fallback-dev-token-change-in-prod";
+  return process.env.ADMIN_SESSION_TOKEN ?? "";
 }
 
 /** Проверка пароля */
 export function checkPassword(input: string): boolean {
-  const password = process.env.ADMIN_PASSWORD ?? "krp.admin.2024";
+  const password = process.env.ADMIN_PASSWORD;
+  if (!password) return false; // fail-closed: без ADMIN_PASSWORD вход запрещён
   return input === password;
 }
 
