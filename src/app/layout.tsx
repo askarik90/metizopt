@@ -79,17 +79,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {children}
       </body>
 
-      {/* Google Ads conversion tracking */}
+      {/* Google Ads conversion + GA4 analytics (gtag.js универсален для обоих) */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=AW-949552136"
         strategy="afterInteractive"
       />
-      <Script id="google-ads-config" strategy="afterInteractive">
+      <Script id="gtag-config" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'AW-949552136');
+          gtag('config', 'G-TLDLTKY024');
         `}
       </Script>
     </html>
