@@ -94,13 +94,14 @@ def best_match(title, types):
 
 # --- описание для страницы типа (DIN/ГОСТ из din_gost.json) ---
 EQUIV = {k: tuple(v) for k, v in json.load(open('din_gost.json', encoding='utf-8')).items()}
+APPLICATIONS = json.load(open('applications.json', encoding='utf-8'))
 DESC_STD_RE = re.compile(r'(DIN\s*[A-ZGГ]?\s*\d+[A-Za-z]?|ГОСТ\s*\d+(?:-\d+)?)', re.I)
 def _norm_std(s):
     s = re.sub(r'\s+', ' ', s.strip())
     s = re.sub(r'^din\s*', 'DIN ', s, flags=re.I)
     s = re.sub(r'^гост\s*', 'ГОСТ ', s, flags=re.I)
     return s, re.sub(r'-\d+$', '', s).strip()
-def type_description(name, sizes):
+def type_description(name, sizes, app=''):
     segs = []
     for m in DESC_STD_RE.findall(name):
         disp, base = _norm_std(m)
@@ -108,6 +109,8 @@ def type_description(name, sizes):
         segs.append(disp + (' (аналог %s)' % eq if eq else ''))
     std = (' Стандарт: ' + '; '.join(segs) + '.') if segs else ''
     parts = ['<p>%s — крепёж со склада в Алматы.%s</p>' % (name, std)]
+    if app:
+        parts.append('<p><strong>Применение:</strong> %s</p>' % app)
     if sizes:
         head = ', '.join(s['label'] for s in sizes[:8])
         parts.append('<p>Доступно %d размеров: %s%s. Отметьте нужные выше — пришлём наличие и цену.</p>'
@@ -125,7 +128,8 @@ for slug, key in KREPEZH.items():
         szs = sizes_of(t)
         types.append({'slug': slugify(name), 'name': name,
                       'count': t.get('count', len(t.get('items', []))),
-                      'sizes': szs, 'description': type_description(name, szs)})
+                      'sizes': szs,
+                      'description': type_description(name, szs, APPLICATIONS.get(key, ''))})
     tree[slug] = {'types': types}
 
 # --- Фаза 2: одиночные типы (по матчингу title -> тип) ---

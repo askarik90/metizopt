@@ -8,6 +8,18 @@ TREE = json.load(open('src/data/catalog-tree.json', encoding='utf-8'))
 
 # Справочник DIN<->ГОСТ — единый источник в din_gost.json (правь его, не код)
 EQUIV = {k: tuple(v) for k, v in json.load(open('din_gost.json', encoding='utf-8')).items()}
+APPLICATIONS = json.load(open('applications.json', encoding='utf-8'))
+_KREPEZH_APP = {
+    'krepezh-bolty': 'bolty', 'krepezh-gayki': 'gayki', 'krepezh-shayby': 'shayby',
+    'krepezh-vintyi': 'vinty', 'krepezh-ankera': 'ankera', 'krepezh-shplinty': 'shplinty',
+    'krepezh-dyubela': 'dyubelya', 'krepezh-samorezi': 'shurupy', 'krepezh-shpilki': 'shpilki',
+    'krepezh-zaklepki': 'zaklepki', 'krepezh-gvozdi': 'gvozdi',
+}
+_GROUP_APP = {'nerzhav': 'nerzhaveyushchiy', 'takelazh': 'takelazh', 'perfo': 'perfo',
+              'ventil': 'ventilatsiya', 'kanat': 'kanaty', 'svarka': 'elektrody'}
+def app_for(slug):
+    key = _KREPEZH_APP.get(slug) or _GROUP_APP.get(slug.split('-')[0])
+    return APPLICATIONS.get(key, '')
 STD_RE = re.compile(r'(DIN\s*[A-ZGГ]?\s*\d+[A-Za-z]?|ГОСТ\s*\d+(?:-\d+)?)', re.I)
 
 def norm_std(s):
@@ -42,7 +54,7 @@ def size_count(slug):
         return sum(len(t.get('sizes', [])) for t in node['types'])
     return 0
 
-def build_generic(c, slug, skip_desc=False):
+def build_generic(c, slug, skip_desc=False, app=''):
     """Описание для подкатегорий без DIN/ГОСТ-стандартов.
     skip_desc=True — если выше уже есть содержательный текст, не дублируем desc."""
     desc = re.sub(r'\s+', ' ', (c.get('desc') or '').strip())
@@ -50,13 +62,15 @@ def build_generic(c, slug, skip_desc=False):
     parts = []
     if desc and not skip_desc:
         parts.append('<p>%s</p>' % desc)
+    if app:
+        parts.append('<p><strong>Применение:</strong> %s</p>' % app)
     if n:
         parts.append('<p>В наличии %d типоразмеров со склада в Алматы.</p>' % n)
     parts.append('<p>Оптом и в розницу, доставка по Казахстану. '
                  'Не нашли нужную позицию — пришлите спецификацию, подберём.</p>')
     return MARK_OPEN + ''.join(parts) + MARK_CLOSE
 
-def build_block(stds):
+def build_block(stds, app=''):
     if not stds:
         return ''
     items = []
@@ -71,8 +85,9 @@ def build_block(stds):
         else:
             line = f'<li><strong>{disp}</strong></li>'
         items.append(line)
+    app_html = f'<p><strong>Применение:</strong> {app}</p>' if app else ''
     return (MARK_OPEN +
-            '<h3>Стандарты и аналоги</h3><ul>' + ''.join(items) + '</ul>'
+            '<h3>Стандарты и аналоги</h3><ul>' + ''.join(items) + '</ul>' + app_html +
             '<p>Подберём аналог DIN ↔ ГОСТ без потери характеристик — пришлите спецификацию.</p>' +
             MARK_CLOSE)
 
@@ -85,7 +100,8 @@ for c in CATS:
         fd = fd.replace('\n', '<br>')
     plain_len = len(re.sub(r'<[^>]+>', '', fd))  # длина уже имеющегося текста
     stds = collect_standards(c['slug'], c)
-    block = build_block(stds) if stds else build_generic(c, c['slug'], skip_desc=(plain_len > 120))
+    app = app_for(c['slug'])
+    block = build_block(stds, app) if stds else build_generic(c, c['slug'], skip_desc=(plain_len > 120), app=app)
     c['fullDescription'] = (fd + block).strip()
     changed += 1
 
