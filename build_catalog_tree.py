@@ -155,6 +155,7 @@ for slug, key in KREPEZH.items():
         types.append({'slug': slugify(name), 'name': name,
                       'count': t.get('count', len(t.get('items', []))),
                       'sizes': szs,
+                      'summary': size_summary(szs),
                       'description': type_description(name, szs, APPLICATIONS.get(key, ''))})
     tree[slug] = {'types': types}
 

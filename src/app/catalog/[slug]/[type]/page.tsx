@@ -15,7 +15,7 @@ import { getCategoryImage, heroBg } from "@/lib/categoryImages";
 export const dynamic = "force-dynamic";
 
 type Size = { label: string; code: string };
-type TypeNode = { slug: string; name: string; count: number; sizes: Size[]; description?: string };
+type TypeNode = { slug: string; name: string; count: number; sizes: Size[]; description?: string; summary?: string };
 const tree = catalogTreeJson as Record<string, { types?: TypeNode[]; sizes?: Size[] }>;
 
 function findType(slug: string, typeSlug: string): TypeNode | undefined {
@@ -113,8 +113,8 @@ export default async function TypePage({
             {node.name}
           </h1>
           <p className="mt-3 max-w-2xl text-slate-300">
-            {node.sizes.length > 0
-              ? `В наличии ${node.sizes.length} позиций со склада в Алматы. Отметьте нужные — отправим наличие и цену.`
+            {node.summary
+              ? `${node.summary} со склада в Алматы. Отметьте нужные — отправим наличие и цену.`
               : "Со склада в Алматы. Запросите наличие и цену — поможем подобрать размер."}
           </p>
         </div>

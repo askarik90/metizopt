@@ -8,7 +8,7 @@ interface Crumb {
 
 export default function BreadcrumbNav({ crumbs }: { crumbs: Crumb[] }) {
   return (
-    <nav className="border-b border-slate-200 bg-white py-2.5">
+    <nav className="sticky top-16 z-40 border-b border-slate-200 bg-white py-2.5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ol className="flex flex-wrap items-center gap-1 text-xs">
           <li>
