@@ -108,6 +108,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "svarka-monolith": C("svarka"),
   "svarka-rossiya":  C("svarka"),
   "svarka-kitay":    C("elektrody"),
+  "svarka-prinadlezhnosti": C("svarka"),
 };
 
 // Убираем SEO-суффиксы из названия для отображения в каталоге

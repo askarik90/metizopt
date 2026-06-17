@@ -28,6 +28,7 @@ OVERRIDE = {
     'ventil-traversa': 'Траверса',
     'svarka-rossiya': 'Россия',
     'svarka-monolith': 'Монолит (Украина)',
+    'svarka-prinadlezhnosti': 'Для Сварки',
     'shlangi-armirovannyi': 'Армированный',
     'shlangi-mbs': 'МБС',
     'shlangi-polivochnyi': 'поливка',

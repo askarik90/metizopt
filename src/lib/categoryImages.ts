@@ -85,6 +85,7 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   "svarka-monolith": C("svarka"),
   "svarka-rossiya": C("svarka"),
   "svarka-kitay": C("elektrody"),
+  "svarka-prinadlezhnosti": C("svarka"),
 };
 
 // Картинки групп — для hero страницы группы
