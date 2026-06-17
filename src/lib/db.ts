@@ -24,7 +24,10 @@ async function blobGet<T>(key: string, fallback: T): Promise<T> {
       access: "private",
       useCache: false,
     });
-    if (!result || result.statusCode !== 200 || !result.stream) return fallback;
+    // SDK возвращает { stream, headers, blob } (без statusCode). Раньше проверка
+    // result.statusCode !== 200 была всегда истинной → чтение всегда падало в fallback,
+    // из-за чего getLeads возвращал [] и перезаписывал историю заявок.
+    if (!result || !result.stream) return fallback;
     const text = await new Response(result.stream).text();
     return JSON.parse(text) as T;
   } catch {
