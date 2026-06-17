@@ -159,7 +159,9 @@ function CatCard({ cat }: { cat: Cat }) {
 export default function HierarchicalCatalog() {
   const { groups } = useGroups();
   const { categories } = useCategories();
-  const [expandedGroup, setExpandedGroup] = useState<string>(groups[0]?.slug || "");
+  // По умолчанию свёрнуто (моб. аккордеон ничего не раскрывает; на десктопе панель
+  // подхватит первую группу через activeGroup-fallback).
+  const [expandedGroup, setExpandedGroup] = useState<string>("");
 
   const catsOf = (group: { categories: readonly string[] }) => {
     const set = new Set(group.categories as string[]);

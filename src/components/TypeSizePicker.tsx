@@ -50,7 +50,7 @@ export default function TypeSizePicker({
     return { order: ord, groups: g, other: oth, hasGrid: has };
   }, [sizes]);
 
-  const [view, setView] = useState<1 | 2 | 3>(hasGrid ? 2 : 1);
+  const [view, setView] = useState<1 | 2 | 3>(hasGrid ? 3 : 1);
   const [curD, setCurD] = useState(order[0]?.key || "");
 
   const LIMIT = 24;
