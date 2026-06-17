@@ -101,6 +101,9 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "svarka-monolith": C("svarka"),
   "svarka-kitay":    C("elektrody"),
   "svarka-prinadlezhnosti": C("svarka"),
+  "shlangi-armirovannyi": C("shlangi"),
+  "shlangi-mbs": C("shlangi"),
+  "shlangi-polivochnyi": C("shlangi"),
 };
 
 function displayName(title: string) {

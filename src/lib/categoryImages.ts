@@ -86,6 +86,10 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   "svarka-rossiya": C("svarka"),
   "svarka-kitay": C("elektrody"),
   "svarka-prinadlezhnosti": C("svarka"),
+  // Шланги
+  "shlangi-armirovannyi": C("shlangi"),
+  "shlangi-mbs": C("shlangi"),
+  "shlangi-polivochnyi": C("shlangi"),
 };
 
 // Картинки групп — для hero страницы группы
