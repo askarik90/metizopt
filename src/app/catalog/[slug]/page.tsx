@@ -21,7 +21,7 @@ import catalogTreeJson from "@/data/catalog-tree.json";
 const catalogTree = catalogTreeJson as Record<
   string,
   {
-    types?: { slug: string; name: string; count: number; sizes: { label: string }[] }[];
+    types?: { slug: string; name: string; count: number; sizes: { label: string }[]; summary?: string }[];
     sizes?: { label: string; code: string }[];
   }
 >;

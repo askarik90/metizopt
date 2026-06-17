@@ -15,6 +15,7 @@ export interface TypeLink {
   name: string;
   count: number;
   sizes: { label: string }[];
+  summary?: string;
 }
 
 interface CategoryClientProps {
@@ -130,10 +131,9 @@ export default function CategoryClient({
                             </h3>
                             <ArrowRight size={16} className="mt-0.5 shrink-0 text-orange-600 transition-transform group-hover:translate-x-1" />
                           </div>
-                          {t.sizes.length > 0 && (
+                          {t.summary && (
                             <p className="mt-2 line-clamp-1 text-xs text-slate-500">
-                              {t.sizes.length} позиций: {t.sizes.slice(0, 5).map((s) => s.label).join(", ")}
-                              {t.sizes.length > 5 ? "…" : ""}
+                              {t.summary.replace(/^В наличии /, "")}
                             </p>
                           )}
                         </Link>
