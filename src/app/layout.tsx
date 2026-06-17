@@ -76,6 +76,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        <noscript>
+          <div>
+            <img src="https://mc.yandex.ru/watch/109915321" style={{ position: "absolute", left: "-9999px" }} alt="" />
+          </div>
+        </noscript>
         {children}
       </body>
 
@@ -92,6 +97,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           gtag('config', 'AW-949552136');
           gtag('config', 'G-TLDLTKY024');
         `}
+      </Script>
+
+      {/* Yandex.Metrika (counter 109915321) */}
+      <Script id="yandex-metrika" strategy="afterInteractive">
+        {`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=109915321", "ym");
+ym(109915321, "init", {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});`}
       </Script>
     </html>
   );
