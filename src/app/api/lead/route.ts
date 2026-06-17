@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Lead, LeadResponse } from "@/types/lead";
 import { sendLeadNotification } from "@/lib/email";
 import { getLeads, saveLeads, addEvent } from "@/lib/db";
-import { forwardLeadToHub } from "@/lib/hub";
 
 export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>> {
   try {
@@ -82,9 +81,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
     } catch (e) {
       console.error("Email send error:", e);
     }
-
-    // --- FORWARD TO LEAD HUB (best-effort) ---
-    await forwardLeadToHub(lead);
 
     return NextResponse.json({
       success: true,
