@@ -144,7 +144,7 @@ export default function HierarchicalCatalog() {
           <div className="flex gap-4 flex-col lg:flex-row">
 
             {/* Сайдбар групп */}
-            <div className="w-4/5 lg:w-64 flex flex-col gap-2">
+            <div className="w-full lg:w-64 flex flex-col gap-2">
               {groups.map((group) => {
                 const Icon = GROUP_ICONS[group.slug] || Wrench;
                 const isActive = expandedGroup === group.slug;
