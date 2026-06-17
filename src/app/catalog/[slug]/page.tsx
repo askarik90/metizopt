@@ -26,7 +26,15 @@ const catalogTree = catalogTreeJson as Record<
   }
 >;
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
+
+export async function generateStaticParams() {
+  const [groups, categories] = await Promise.all([getGroups(), getCategories()]);
+  return [
+    ...groups.map((g: GroupItem) => ({ slug: g.slug })),
+    ...categories.map((c: CategoryItem) => ({ slug: c.slug })),
+  ];
+}
 
 export async function generateMetadata({
   params,

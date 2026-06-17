@@ -12,7 +12,7 @@ import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { getCategoryImage, heroBg } from "@/lib/categoryImages";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
 
 type Size = { label: string; code: string };
 type TypeNode = { slug: string; name: string; count: number; sizes: Size[]; description?: string; summary?: string };
@@ -20,6 +20,14 @@ const tree = catalogTreeJson as Record<string, { types?: TypeNode[]; sizes?: Siz
 
 function findType(slug: string, typeSlug: string): TypeNode | undefined {
   return tree[slug]?.types?.find((t) => t.slug === typeSlug);
+}
+
+export function generateStaticParams() {
+  const params: { slug: string; type: string }[] = [];
+  for (const [slug, node] of Object.entries(tree)) {
+    for (const t of node.types ?? []) params.push({ slug, type: t.slug });
+  }
+  return params;
 }
 
 export async function generateMetadata({
