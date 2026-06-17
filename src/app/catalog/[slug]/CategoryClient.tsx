@@ -132,7 +132,7 @@ export default function CategoryClient({
                           </div>
                           {t.sizes.length > 0 && (
                             <p className="mt-2 line-clamp-1 text-xs text-slate-500">
-                              {t.sizes.length} размеров: {t.sizes.slice(0, 5).map((s) => s.label).join(", ")}
+                              {t.sizes.length} позиций: {t.sizes.slice(0, 5).map((s) => s.label).join(", ")}
                               {t.sizes.length > 5 ? "…" : ""}
                             </p>
                           )}

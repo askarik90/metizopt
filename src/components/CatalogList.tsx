@@ -190,7 +190,7 @@ export default function CatalogList({ slug }: CatalogListProps) {
                             {type}
                           </h4>
                           <div className="text-xs text-slate-500 mt-0.5">
-                            {items.length} размеров
+                            {items.length} позиций
                           </div>
                         </div>
                         <ChevronDown

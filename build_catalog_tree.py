@@ -118,7 +118,7 @@ def type_description(name, sizes, app=''):
         parts.append('<p><strong>Применение:</strong> %s</p>' % app)
     if sizes:
         head = ', '.join(s['label'] for s in sizes[:8])
-        parts.append('<p>Доступно %d размеров: %s%s. Отметьте нужные выше — пришлём наличие и цену.</p>'
+        parts.append('<p>В наличии %d позиций: %s%s. Отметьте нужные выше или пришлите спецификацию.</p>'
                      % (len(sizes), head, '…' if len(sizes) > 8 else ''))
     parts.append('<p>Оптом и в розницу, доставка по Казахстану. Не нашли размер — пришлите спецификацию, подберём.</p>')
     return ''.join(parts)
