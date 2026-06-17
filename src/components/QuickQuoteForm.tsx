@@ -20,7 +20,7 @@ export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
-    name: "", company: "", phone: "", whatsapp: "", city: "", message: "",
+    name: "", company: "", phone: "", whatsapp: "", city: "", message: "", company_site: "",
   });
   const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -105,6 +105,9 @@ export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
+              <input name="company_site" value={form.company_site} onChange={handleChange} tabIndex={-1} autoComplete="off" />
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-slate-400 text-xs font-medium block mb-1.5">Имя *</label>

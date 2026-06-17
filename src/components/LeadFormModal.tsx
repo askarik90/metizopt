@@ -23,6 +23,7 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
     whatsapp: "",
     city: "",
     message: "",
+    company_site: "", // honeypot — поле-ловушка для ботов, скрыто от людей
   });
   const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -91,6 +92,16 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* honeypot — скрыто от людей, заполняют только боты */}
+          <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
+            <input
+              name="company_site"
+              value={form.company_site}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
           {category && (
             <div className="bg-orange-600/10 border border-orange-600/30 text-orange-400 text-sm px-3 py-2">
               Категория: {category}

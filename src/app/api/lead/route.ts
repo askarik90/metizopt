@@ -3,26 +3,56 @@ import { Lead, LeadResponse } from "@/types/lead";
 import { sendLeadNotification } from "@/lib/email";
 import { getLeads, saveLeads, addEvent } from "@/lib/db";
 
+// Анти-спам: лимит заявок с одного IP (best-effort, в памяти инстанса).
+const HITS = new Map<string, number[]>();
+const WINDOW_MS = 10 * 60 * 1000; // 10 минут
+const MAX_PER_WINDOW = 6;
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const arr = (HITS.get(ip) || []).filter((t) => now - t < WINDOW_MS);
+  arr.push(now);
+  HITS.set(ip, arr);
+  if (HITS.size > 5000) HITS.clear(); // защита от роста памяти
+  return arr.length > MAX_PER_WINDOW;
+}
+
+// Ограничение длины строковых полей — против огромных payload'ов.
+const cap = (v: unknown, n: number) => (typeof v === "string" ? v.slice(0, n) : "");
+
 export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>> {
   try {
     const body = await req.json();
 
+    // Honeypot: скрытое поле company_site боты заполняют, люди — нет.
+    // Тихо «принимаем» (чтобы бот не понял), но НЕ сохраняем и не шлём.
+    if (typeof body.company_site === "string" && body.company_site.trim()) {
+      return NextResponse.json({ success: true, message: "Заявка принята", leadId: `lead_${Date.now()}` });
+    }
+
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (rateLimited(ip)) {
+      return NextResponse.json(
+        { success: false, message: "Слишком много заявок. Попробуйте через несколько минут или позвоните нам." },
+        { status: 429 }
+      );
+    }
+
     const lead: Lead = {
-      name: body.name,
-      company: body.company || "",
-      phone: body.phone,
-      whatsapp: body.whatsapp || "",
-      city: body.city || "",
-      message: body.message || "",
-      category: body.category || "",
-      search_query: body.search_query || "",
-      fileUrl: body.fileUrl || "",
-      page_url: body.page_url || "",
-      utm_source: body.utm_source || "",
-      utm_medium: body.utm_medium || "",
-      utm_campaign: body.utm_campaign || "",
-      utm_content: body.utm_content || "",
-      utm_term: body.utm_term || "",
+      name: cap(body.name, 120),
+      company: cap(body.company, 200),
+      phone: cap(body.phone, 40),
+      whatsapp: cap(body.whatsapp, 40),
+      city: cap(body.city, 80),
+      message: cap(body.message, 3000),
+      category: cap(body.category, 200),
+      search_query: cap(body.search_query, 200),
+      fileUrl: cap(body.fileUrl, 500),
+      page_url: cap(body.page_url, 500),
+      utm_source: cap(body.utm_source, 100),
+      utm_medium: cap(body.utm_medium, 100),
+      utm_campaign: cap(body.utm_campaign, 100),
+      utm_content: cap(body.utm_content, 100),
+      utm_term: cap(body.utm_term, 100),
       created_at: new Date().toISOString(),
     };
 
@@ -33,14 +63,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       );
     }
 
-    console.log("NEW LEAD:", JSON.stringify(lead, null, 2));
+    console.log("NEW LEAD:", lead.name, lead.phone, lead.category);
 
     // Заявку нельзя терять: считаем принятой только если сохранилась хотя бы в один
     // надёжный канал (Blob или email). Иначе вернём ошибку, чтобы форма не показала «успех».
     let blobOk = false;
     let emailOk = false;
 
-    // Сохраняем напрямую через db — без внутреннего HTTP-запроса
     try {
       const leads = await getLeads();
       const newEntry = {
@@ -89,7 +118,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       console.error("Email send error:", e);
     }
 
-    // Ни один надёжный канал не сработал — не теряем заявку молча, сообщаем об ошибке.
     if (!blobOk && !emailOk) {
       return NextResponse.json(
         { success: false, message: "Не удалось принять заявку, позвоните нам, пожалуйста" },
