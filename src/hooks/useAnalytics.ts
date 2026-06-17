@@ -55,6 +55,14 @@ function gtagEvent(eventName: string, params?: Record<string, unknown>) {
   }
 }
 
+// Яндекс Метрика — достижение цели (контекстологи заводят цели по этим идентификаторам)
+const METRIKA_ID = 109915321;
+function ymGoal(goal: string) {
+  if (typeof window !== "undefined" && typeof window.ym === "function") {
+    window.ym(METRIKA_ID, "reachGoal", goal);
+  }
+}
+
 export function useAnalytics() {
   const push = useCallback((event: string, params?: Record<string, unknown>) => {
     if (typeof window === "undefined") return;
@@ -69,6 +77,7 @@ export function useAnalytics() {
       track("formOpens", { category }); // сырой счётчик — каждое открытие
       // уникальное открытие: 1 на сессию (знаменатель конверсии)
       if (firstInSession("formOpen")) track("formOpenSessions", { category });
+      ymGoal("form_open");
     },
     trackLeadFormSubmit: (category?: string, searchQuery?: string) => {
       push("lead_form_submit", { category, search_query: searchQuery });
@@ -80,21 +89,25 @@ export function useAnalytics() {
         value: 0,
       });
       track("formSubmits", { category });
+      ymGoal("lead");
     },
     trackWhatsAppClick: (category?: string) => {
       push("whatsapp_click", { category });
       gtagEvent("whatsapp_click", { event_category: "contact", event_label: category });
       track("whatsappClicks", { category });
+      ymGoal("whatsapp");
     },
     trackPhoneClick: (category?: string) => {
       push("phone_click", { category });
       gtagEvent("phone_click", { event_category: "contact" });
       track("phoneClicks", { category });
+      ymGoal("phone");
     },
     trackFileUpload: () => {
       push("file_upload");
       gtagEvent("file_upload", { event_category: "engagement" });
       track("fileUploads");
+      ymGoal("file_upload");
     },
     trackSearch: (searchTerm: string, resultsCount: number) => {
       push("search", { search_term: searchTerm, results_count: resultsCount });
