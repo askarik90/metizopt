@@ -140,7 +140,8 @@ const EMPTY_DAY: DayStats = {
 };
 
 export async function getAnalytics(): Promise<AnalyticsData> {
-  if (useBlob()) return blobGet<AnalyticsData>("analytics", {});
+  // Аналитику в Blob не держим — это выжигало лимит Hobby. Метрики ведут GA4 + Яндекс.Метрика.
+  if (useBlob()) return {};
   return fsRead<AnalyticsData>("analytics.json", {});
 }
 
@@ -148,12 +149,13 @@ export async function trackEvent(
   type: keyof DayStats,
   date?: string,
 ): Promise<void> {
+  // В проде (Blob) аналитику НЕ пишем — каждый визит = чтение+запись Blob → выжигание лимита.
+  // Метрики уже собирают GA4 и Яндекс.Метрика. Локально (fs) оставляем для дев-отладки.
+  if (useBlob()) return;
   const day = date ?? new Date().toISOString().slice(0, 10);
   const data = await getAnalytics();
-  // merge with EMPTY_DAY so newly-added counters default to 0 on existing days (no NaN)
   const prev: DayStats = { ...EMPTY_DAY, ...data[day] };
   const updated: AnalyticsData = { ...data, [day]: { ...prev, [type]: prev[type] + 1 } };
-  if (useBlob()) { await blobSet("analytics", updated); return; }
   fsWrite("analytics.json", updated);
 }
 
@@ -168,16 +170,17 @@ export interface EventLog {
 }
 
 export async function getEvents(): Promise<EventLog[]> {
-  if (useBlob()) return blobGet<EventLog[]>("events", []);
+  // Лог событий в Blob не держим (лимит). В проде пусто, локально — fs для отладки.
+  if (useBlob()) return [];
   return fsRead<EventLog[]>("events.json", []);
 }
 
 export async function addEvent(event: Omit<EventLog, "id">): Promise<void> {
+  // В проде (Blob) события НЕ пишем — выжигало лимит. Локально (fs) оставляем.
+  if (useBlob()) return;
   const events = await getEvents();
   events.push({ id: Date.now().toString(), ...event });
-  // Храним последние 1000 событий
-  const trimmed = events.slice(-1000);
-  if (useBlob()) { await blobSet("events", trimmed); return; }
+  const trimmed = events.slice(-1000); // последние 1000
   fsWrite("events.json", trimmed);
 }
 

@@ -35,6 +35,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
 
     console.log("NEW LEAD:", JSON.stringify(lead, null, 2));
 
+    // Заявку нельзя терять: считаем принятой только если сохранилась хотя бы в один
+    // надёжный канал (Blob или email). Иначе вернём ошибку, чтобы форма не показала «успех».
+    let blobOk = false;
+    let emailOk = false;
+
     // Сохраняем напрямую через db — без внутреннего HTTP-запроса
     try {
       const leads = await getLeads();
@@ -52,6 +57,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       };
       leads.push(newEntry);
       await saveLeads(leads);
+      blobOk = true;
       console.log("✅ Lead saved to Blob:", newEntry.id);
       await addEvent({
         type: "form_submit",
@@ -78,8 +84,17 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
         utm_campaign: lead.utm_campaign,
       });
       console.log("✅ Email sent successfully");
+      emailOk = true;
     } catch (e) {
       console.error("Email send error:", e);
+    }
+
+    // Ни один надёжный канал не сработал — не теряем заявку молча, сообщаем об ошибке.
+    if (!blobOk && !emailOk) {
+      return NextResponse.json(
+        { success: false, message: "Не удалось принять заявку, позвоните нам, пожалуйста" },
+        { status: 503 }
+      );
     }
 
     return NextResponse.json({
