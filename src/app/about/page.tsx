@@ -5,7 +5,7 @@ import { COMPANY } from "@/config/company";
 import { MapPin, Clock, Phone, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "О компании — МетизОпт",
+  title: "О компании — KRP",
   description: "Оптовый поставщик крепежа и метизов в Казахстане. Склад в Алматы, работа с юрлицами, документы.",
 };
 
@@ -17,7 +17,7 @@ export default function AboutPage() {
         <section className="bg-slate-900 py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl font-black text-white uppercase tracking-tight mb-6">
-              О компании МетизОпт
+              О компании KRP
             </h1>
             <p className="text-slate-300 text-lg leading-relaxed">
               {COMPANY.legalName} — оптовый поставщик крепежа, метизов и такелажного оборудования

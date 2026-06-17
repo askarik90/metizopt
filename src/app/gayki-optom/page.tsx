@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
-  title: "Гайки оптом в Алматы — DIN 934, самоконтрящиеся | МетизОпт",
+  title: "Гайки оптом в Алматы — DIN 934, самоконтрящиеся | KRP",
   description: "Гайки оптом со склада в Алматы. DIN 934, DIN 985, самоконтрящиеся, фланцевые. Пришлите список — подберём и рассчитаем КП.",
 };
 

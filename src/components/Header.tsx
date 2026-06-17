@@ -3,8 +3,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, X, MessageCircle, Phone } from "lucide-react";
-import { COMPANY, getWhatsAppUrl } from "@/config/company";
+import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { usePhone } from "@/hooks/usePhone";
 import SearchBar from "./SearchBar";
 
 interface HeaderProps {
@@ -15,6 +16,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const { trackWhatsAppClick, trackPhoneClick } = useAnalytics();
+  const { phone, phoneRaw } = usePhone();
 
   // Если страница не передала обработчик — открываем /quote
   const handleQuote = () => {
@@ -62,12 +64,12 @@ export default function Header({ onQuoteClick }: HeaderProps) {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-2">
             <a
-              href={`tel:${COMPANY.phoneRaw}`}
+              href={`tel:${phoneRaw}`}
               onClick={() => trackPhoneClick()}
               className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 text-sm font-medium transition-colors"
             >
               <Phone size={16} />
-              {COMPANY.phone}
+              {phone}
             </a>
             <a
               href={getWhatsAppUrl()}
@@ -90,7 +92,7 @@ export default function Header({ onQuoteClick }: HeaderProps) {
           {/* Mobile burger */}
           <div className="flex lg:hidden items-center gap-2">
             <a
-              href={`tel:${COMPANY.phoneRaw}`}
+              href={`tel:${phoneRaw}`}
               onClick={() => trackPhoneClick()}
               className="text-slate-300 hover:text-white p-2"
             >

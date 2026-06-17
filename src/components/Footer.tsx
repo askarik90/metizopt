@@ -4,13 +4,16 @@ import Link from "next/link";
 import { Phone, MessageCircle, Mail, MapPin, Clock } from "lucide-react";
 import { COMPANY } from "@/config/company";
 import { useSettings } from "@/hooks/useSettings";
+import { usePhone } from "@/hooks/usePhone";
 
 export default function Footer() {
   const { settings } = useSettings();
+  const sat = usePhone();
 
   // Fallback to company config if settings not loaded
   const address = settings?.address || COMPANY.address;
-  const phone = settings?.phone || COMPANY.phone;
+  // По субботам (время Алматы) — отдельный номер для звонка
+  const phone = sat.isSat ? sat.phone : settings?.phone || COMPANY.phone;
   const email = settings?.email || COMPANY.email;
   const whatsapp = settings?.whatsapp || COMPANY.whatsapp;
   const workingHours = settings?.workingHours || COMPANY.workingHours;

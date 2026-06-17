@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
-  title: "Анкера оптом в Алматы — клиновые, химические, распорные | МетизОпт",
+  title: "Анкера оптом в Алматы — клиновые, химические, распорные | KRP",
   description: "Анкерный крепеж оптом в Алматы. Клиновые, распорные, химические анкера. Пришлите список — проверим наличие и подготовим КП.",
 };
 

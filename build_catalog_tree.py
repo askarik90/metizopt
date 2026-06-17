@@ -18,7 +18,8 @@ KREPEZH = {
 }
 # группы, где подкатегории сайта = отдельные типы в этом ключе catalog-db
 SINGLE = {'nerzhaveyushchiy': 'nerzhaveyushchiy', 'ventilatsiya': 'ventilatsiya',
-          'perfo': 'perfo', 'takelazh': 'takelazh', 'kanaty': 'kanaty', 'elektrody': 'elektrody'}
+          'perfo': 'perfo', 'takelazh': 'takelazh', 'kanaty': 'kanaty', 'elektrody': 'elektrody',
+          'shlangi': 'shlangi'}
 
 # ручные оверрайды там, где автоматч промахнулся (site-слаг -> точное имя типа в catalog-db)
 OVERRIDE = {
@@ -26,7 +27,10 @@ OVERRIDE = {
     'ventil-shpilka': 'шпилька сантехничекая',
     'ventil-traversa': 'Траверса',
     'svarka-rossiya': 'Россия',
-    # svarka-crown — в данных нет, остаётся без размеров (только форма заявки)
+    'svarka-monolith': 'Монолит (Украина)',
+    'shlangi-armirovannyi': 'Армированный',
+    'shlangi-mbs': 'МБС',
+    'shlangi-polivochnyi': 'поливка',
 }
 def norm_ws(s):
     return re.sub(r'\s+', ' ', s).strip()

@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
-  title: "Крепеж оптом в Алматы — болты, гайки, анкера, шайбы | МетизОпт",
+  title: "Крепеж оптом в Алматы — болты, гайки, анкера, шайбы | KRP",
   description: "Оптовые поставки крепежа в Алматы и по Казахстану. Болты, гайки, анкера, шайбы, шпильки. Пришлите список — КП за 30 минут.",
 };
 

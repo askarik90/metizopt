@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
-  title: "Шайбы оптом в Алматы — DIN 125, DIN 127, гровер | МетизОпт",
+  title: "Шайбы оптом в Алматы — DIN 125, DIN 127, гровер | KRP",
   description: "Шайбы оптом со склада в Алматы. Плоские DIN 125, пружинные DIN 127. Пришлите список — подготовим КП.",
 };
 

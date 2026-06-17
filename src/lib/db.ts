@@ -70,7 +70,7 @@ const DEFAULT_SETTINGS = {
   email: "140@bugel.kz",
   whatsapp: "+7 (771) 070-75-52",
   workingHours: "Пн–Пт: 09:00–18:00",
-  workingHoursSat: "Сб: 09:00–14:00",
+  workingHoursSat: "Сб: 09:00–16:00",
 };
 
 export async function getSettings() {

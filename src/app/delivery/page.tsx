@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { Truck, CreditCard, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Доставка и оплата — МетизОпт",
+  title: "Доставка и оплата — KRP",
   description: "Условия доставки крепежа по Казахстану. Безналичная оплата, документы для юрлиц.",
 };
 

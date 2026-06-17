@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
-  title: "Крепеж для производства оптом в Алматы | МетизОпт",
+  title: "Крепеж для производства оптом в Алматы | KRP",
   description: "Промышленный крепеж оптом для производственных предприятий. Высокопрочные болты, специальный крепеж DIN/ISO. КП за 30 минут.",
 };
 

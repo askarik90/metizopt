@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
-  title: "Крепеж DIN ISO оптом в Алматы | МетизОпт",
+  title: "Крепеж DIN ISO оптом в Алматы | KRP",
   description: "Крепеж по стандартам DIN и ISO оптом в Алматы. Подберём аналоги для импортного оборудования. Пришлите список — подготовим КП.",
 };
 

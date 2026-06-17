@@ -4,7 +4,7 @@ import Link from "next/link";
 import { COMPANY } from "@/config/company";
 import { useGroups, useCategories } from "@/hooks/useCatalog";
 import {
-  Wrench, Wind, BarChart3, Star, Link2, Zap,
+  Wrench, Wind, BarChart3, Star, Link2, Zap, Droplets,
 } from "lucide-react";
 
 const GROUP_ICONS: Record<string, React.ElementType> = {
@@ -15,6 +15,7 @@ const GROUP_ICONS: Record<string, React.ElementType> = {
   takelazh: Link2,
   kanaty: Link2,
   elektrody: Zap,
+  shlangi: Droplets,
 };
 
 // Локальные фото для категорий (скачаны из Pexels)
@@ -107,7 +108,6 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "svarka-monolith": C("svarka"),
   "svarka-rossiya":  C("svarka"),
   "svarka-kitay":    C("elektrody"),
-  "svarka-crown":    C("svarka"),
 };
 
 // Убираем SEO-суффиксы из названия для отображения в каталоге
