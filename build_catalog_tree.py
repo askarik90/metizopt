@@ -106,6 +106,29 @@ def _norm_std(s):
     s = re.sub(r'^din\s*', 'DIN ', s, flags=re.I)
     s = re.sub(r'^гост\s*', 'ГОСТ ', s, flags=re.I)
     return s, re.sub(r'-\d+$', '', s).strip()
+def _fmt(x):
+    return str(int(x)) if float(x).is_integer() else ('%g' % x).replace('.', ',')
+
+M2_RE = re.compile(r'^(М?)\s*(\d+(?:[.,]\d+)?)\s*×\s*(\d+(?:[.,]\d+)?)$')
+def size_summary(sizes):
+    """Диапазон размеров «от и до» вместо перечисления.
+    Двухмерный крепёж М×L -> «диаметры X–Y, длины A–B мм»; иначе «размеры от … до …»."""
+    labels = [s['label'] for s in sizes]
+    if not labels:
+        return ''
+    if len(labels) == 1:
+        return 'В наличии размер ' + labels[0]
+    m2 = [M2_RE.match(l) for l in labels]
+    if all(m2):
+        pref = 'М' if any(m.group(1) for m in m2) else ''
+        ds = sorted(float(m.group(2).replace(',', '.')) for m in m2)
+        ls = sorted(float(m.group(3).replace(',', '.')) for m in m2)
+        if ds[0] == ds[-1]:
+            return 'В наличии диаметр %s%s, длины %s–%s мм' % (pref, _fmt(ds[0]), _fmt(ls[0]), _fmt(ls[-1]))
+        return 'В наличии диаметры %s%s–%s%s, длины %s–%s мм' % (
+            pref, _fmt(ds[0]), pref, _fmt(ds[-1]), _fmt(ls[0]), _fmt(ls[-1]))
+    return 'В наличии размеры от %s до %s' % (labels[0], labels[-1])
+
 def type_description(name, sizes, app=''):
     segs = []
     for m in DESC_STD_RE.findall(name):
@@ -117,9 +140,7 @@ def type_description(name, sizes, app=''):
     if app:
         parts.append('<p><strong>Применение:</strong> %s</p>' % app)
     if sizes:
-        head = ', '.join(s['label'] for s in sizes[:8])
-        parts.append('<p>В наличии %d позиций: %s%s. Отметьте нужные выше или пришлите спецификацию.</p>'
-                     % (len(sizes), head, '…' if len(sizes) > 8 else ''))
+        parts.append('<p>%s. Отметьте нужные выше или пришлите спецификацию.</p>' % size_summary(sizes))
     parts.append('<p>Оптом и в розницу, доставка по Казахстану. Не нашли размер — пришлите спецификацию, подберём.</p>')
     return ''.join(parts)
 
