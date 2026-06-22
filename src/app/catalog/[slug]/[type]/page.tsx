@@ -10,7 +10,7 @@ import { COMPANY } from "@/config/company";
 import { getCategories, getGroups, type CategoryItem, type GroupItem } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
-import { getCategoryImage, heroBg, cardBg } from "@/lib/categoryImages";
+import { getCategoryImage, getTypeImage, heroBg, cardBg } from "@/lib/categoryImages";
 
 export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
 
@@ -112,7 +112,7 @@ export default async function TypePage({
         ]}
       />
 
-      <section className="bg-slate-900 py-14" style={heroBg(getCategoryImage(slug))}>
+      <section className="bg-slate-900 py-14" style={heroBg(getTypeImage(type) ?? getCategoryImage(slug))}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-3 inline-flex items-center border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
             {category?.title ?? "Каталог"} · оптом и в розницу
@@ -133,7 +133,7 @@ export default async function TypePage({
           {node.description && (
             <div
               className="relative overflow-hidden rounded-lg border border-slate-200 bg-white"
-              style={cardBg(getCategoryImage(slug))}
+              style={cardBg(getTypeImage(type) ?? getCategoryImage(slug))}
             >
               <div
                 className="prose prose-slate max-w-2xl p-6 text-slate-600"

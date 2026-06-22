@@ -1,8 +1,12 @@
 import type { CSSProperties } from "react";
+import typeImagesJson from "@/data/type-images.json";
 
 // Картинки категорий (public/images/categories/*.jpg). Единый источник для
 // карточек каталога (HierarchicalCatalog) и фоновых hero (категория/тип).
 const C = (name: string) => `/images/categories/${name}.jpg`;
+// Фото конкретных видов (public/images/types/<slug>.jpg)
+const T = (name: string) => `/images/types/${name}.jpg`;
+const TYPE_IMG = new Set(typeImagesJson as string[]);
 
 export const CATEGORY_IMAGES: Record<string, string> = {
   // Крепеж
@@ -18,11 +22,11 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   "krepezh-zaklepki": C("zaklepki"),
   "krepezh-gvozdi": C("gvozdi"),
   // Нержавейка
-  "nerzhav-bolty": C("nerzhav"),
-  "nerzhav-gayki": C("gayki"),
-  "nerzhav-shayby": C("shayby"),
-  "nerzhav-vintyi": C("vintyi"),
-  "nerzhav-shpilki": C("shpilki"),
+  "nerzhav-bolty": C("nerzhav-bolty"),
+  "nerzhav-gayki": C("nerzhav-gayki"),
+  "nerzhav-shayby": C("nerzhav-shayby"),
+  "nerzhav-vintyi": C("nerzhav-vintyi"),
+  "nerzhav-shpilki": C("nerzhav-shpilki"),
   // Такелаж
   "takelazh-vertlyug": C("takelazh-vertlyug"),
   "takelazh-zazim-din741": C("takelazh-zazim-din741"),
@@ -105,6 +109,11 @@ export const GROUP_IMAGES: Record<string, string> = {
 
 export function getCategoryImage(slug: string): string | undefined {
   return CATEGORY_IMAGES[slug] || GROUP_IMAGES[slug];
+}
+
+// Фото конкретного вида (если есть) — для страниц типа
+export function getTypeImage(typeSlug?: string): string | undefined {
+  return typeSlug && TYPE_IMG.has(typeSlug) ? T(typeSlug) : undefined;
 }
 
 // тёмный градиент слева направо поверх картинки (текст читаем слева, фото справа);

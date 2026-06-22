@@ -34,11 +34,11 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "krepezh-zaklepki": C("zaklepki"),
   "krepezh-gvozdi":   C("gvozdi"),
   // Нержавейка
-  "nerzhav-bolty":    C("nerzhav"),
-  "nerzhav-gayki":    C("gayki"),
-  "nerzhav-shayby":   C("shayby"),
-  "nerzhav-vintyi":   C("vintyi"),
-  "nerzhav-shpilki":  C("shpilki"),
+  "nerzhav-bolty":    C("nerzhav-bolty"),
+  "nerzhav-gayki":    C("nerzhav-gayki"),
+  "nerzhav-shayby":   C("nerzhav-shayby"),
+  "nerzhav-vintyi":   C("nerzhav-vintyi"),
+  "nerzhav-shpilki":  C("nerzhav-shpilki"),
   // Такелаж
   "takelazh-vertlyug": C("takelazh-vertlyug"),
   "takelazh-zazim-din741": C("takelazh-zazim-din741"),
