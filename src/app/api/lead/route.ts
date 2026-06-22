@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Lead, LeadResponse } from "@/types/lead";
 import { sendLeadNotification } from "@/lib/email";
+import { sendLeadTelegram } from "@/lib/telegram";
 import { getLeads, saveLeads, addEvent } from "@/lib/db";
 
 // Анти-спам: лимит заявок с одного IP (best-effort, в памяти инстанса).
@@ -69,6 +70,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
     // надёжный канал (Blob или email). Иначе вернём ошибку, чтобы форма не показала «успех».
     let blobOk = false;
     let emailOk = false;
+    let tgOk = false;
 
     try {
       const leads = await getLeads();
@@ -118,7 +120,25 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       console.error("Email send error:", e);
     }
 
-    if (!blobOk && !emailOk) {
+    // --- TELEGRAM NOTIFICATION (надёжный канал без квот) ---
+    try {
+      await sendLeadTelegram({
+        name: lead.name,
+        phone: lead.phone,
+        company: lead.company,
+        city: lead.city,
+        message: lead.message,
+        category: lead.category,
+        searchQuery: lead.search_query,
+        pageUrl: lead.page_url,
+      });
+      console.log("✅ Telegram sent");
+      tgOk = true;
+    } catch (e) {
+      console.error("Telegram send error:", e);
+    }
+
+    if (!blobOk && !emailOk && !tgOk) {
       return NextResponse.json(
         { success: false, message: "Не удалось принять заявку, позвоните нам, пожалуйста" },
         { status: 503 }
