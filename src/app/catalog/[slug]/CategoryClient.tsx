@@ -8,7 +8,7 @@ import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { getCategoryImage, heroBg } from "@/lib/categoryImages";
+import { getCategoryImage, getTypeImage, heroBg } from "@/lib/categoryImages";
 
 export interface TypeLink {
   slug: string;
@@ -119,25 +119,38 @@ export default function CategoryClient({
                       Виды — выберите для размеров
                     </h2>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {types.map((t) => (
+                      {types.map((t) => {
+                        const img = getTypeImage(t.slug);
+                        return (
                         <Link
                           key={t.slug}
                           href={`/catalog/${slug}/${t.slug}`}
-                          className="group flex flex-col rounded border border-slate-200 bg-white p-4 transition-all hover:border-orange-400 hover:shadow-md"
+                          className="group relative overflow-hidden flex flex-col rounded border border-slate-200 bg-white p-4 transition-all hover:border-orange-400 hover:shadow-md"
                         >
-                          <div className="flex items-start justify-between gap-2">
+                          {img && (
+                            <div
+                              className="absolute inset-0"
+                              style={{
+                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 45%, rgba(255,255,255,0.5) 70%, rgba(255,255,255,0) 100%), url('${img}')`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "right center",
+                              }}
+                            />
+                          )}
+                          <div className="relative z-10 flex items-start justify-between gap-2">
                             <h3 className="text-sm font-bold uppercase leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
                               {t.name}
                             </h3>
                             <ArrowRight size={16} className="mt-0.5 shrink-0 text-orange-600 transition-transform group-hover:translate-x-1" />
                           </div>
                           {t.summary && (
-                            <p className="mt-2 line-clamp-1 text-xs text-slate-500">
+                            <p className="relative z-10 mt-2 line-clamp-1 text-xs text-slate-500">
                               {t.summary.replace(/^В наличии /, "")}
                             </p>
                           )}
                         </Link>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
