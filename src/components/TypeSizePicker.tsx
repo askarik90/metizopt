@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { MessageCircle, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageCircle, Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import LeadFormModal from "@/components/LeadFormModal";
@@ -60,6 +60,8 @@ export default function TypeSizePicker({
   };
   const toggle = (l: string) =>
     setPicked((p) => (p.includes(l) ? p.filter((x) => x !== l) : [...p, l]));
+  const pickedInGroup = (key: string) =>
+    (groups[key] || []).filter((s) => picked.includes(s.label)).length;
 
   const chip = (s: Size, text?: string) => {
     const active = picked.includes(s.label);
@@ -143,7 +145,9 @@ export default function TypeSizePicker({
         <div className="divide-y divide-slate-100">
           {order.map((o) => (
             <div key={o.key} className="flex flex-wrap items-baseline gap-x-3 gap-y-2 py-2.5">
-              <div className="w-12 shrink-0 text-sm font-bold text-slate-900">{o.key}</div>
+              <div className="w-14 shrink-0 text-sm font-bold text-slate-900">
+                {o.key}{pickedInGroup(o.key) > 0 && <span className="text-orange-600"> ({pickedInGroup(o.key)})</span>}
+              </div>
               <div className="flex flex-1 flex-wrap gap-2">
                 {groups[o.key].map((s) => chip(s, lengthOf(s.label)))}
               </div>
@@ -164,13 +168,18 @@ export default function TypeSizePicker({
               <button
                 key={o.key}
                 onClick={() => setCurD(o.key)}
-                className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
                   curD === o.key
                     ? "border-blue-600 bg-blue-50 text-blue-700"
                     : "border-slate-300 text-slate-600 hover:border-blue-400"
                 }`}
               >
                 {o.key}
+                {pickedInGroup(o.key) > 0 && (
+                  <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-600 px-1 text-[10px] font-bold text-white">
+                    {pickedInGroup(o.key)}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -181,11 +190,32 @@ export default function TypeSizePicker({
         </>
       )}
 
+      {picked.length > 0 && (
+        <div className="mt-4 rounded-md border border-orange-200 bg-orange-50 p-3">
+          <div className="mb-2 text-xs font-bold uppercase tracking-tight text-slate-600">
+            Выбрано: {picked.length}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {picked.map((l) => (
+              <button
+                key={l}
+                onClick={() => toggle(l)}
+                className="inline-flex items-center gap-1 rounded-full border border-orange-300 bg-white px-2.5 py-1 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-100"
+              >
+                {l}<X size={12} />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center">
         <span className="text-sm text-slate-500 sm:mr-auto">
-          {picked.length > 0
-            ? `Выбрано позиций: ${picked.length}${picked.length > 20 ? " — полный список уточним сообщением" : ""}`
-            : "Отметьте нужные размеры — или запросите весь вид"}
+          {picked.length > 20
+            ? "Полный список уточним сообщением"
+            : picked.length === 0
+            ? "Отметьте нужные размеры — или запросите весь вид"
+            : ""}
         </span>
         <a
           href={getWhatsAppUrl(waText)}
