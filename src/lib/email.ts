@@ -22,8 +22,10 @@ export interface LeadEmailData {
 
 export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
   if (!SMTP_USER || !SMTP_PASS) {
-    console.log("⚠️  SMTP_USER/SMTP_PASS not set — email skipped");
-    return;
+    // Раньше тут был тихий return — из-за него форма считала письмо «отправленным»
+    // и показывала ложный «успех», хотя заявка никуда не уходила. Теперь — честная ошибка.
+    console.error("SMTP_USER/SMTP_PASS not set — lead email NOT sent");
+    throw new Error("SMTP not configured");
   }
 
   const transporter = nodemailer.createTransport({
