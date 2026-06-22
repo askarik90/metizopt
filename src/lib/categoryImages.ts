@@ -122,3 +122,13 @@ export function heroBg(img?: string): CSSProperties {
     backgroundPosition: "right center",
   };
 }
+
+// светлый вариант для контентных карточек: тёмный текст слева читаем, фото проступает справа
+export function cardBg(img?: string): CSSProperties {
+  if (!img) return {};
+  return {
+    backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.99) 48%, rgba(255,255,255,0.65) 72%, rgba(255,255,255,0.25) 100%), url('${img}')`,
+    backgroundSize: "cover",
+    backgroundPosition: "right center",
+  };
+}

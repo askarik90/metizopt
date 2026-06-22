@@ -10,7 +10,7 @@ import { COMPANY } from "@/config/company";
 import { getCategories, getGroups, type CategoryItem, type GroupItem } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
-import { getCategoryImage, heroBg } from "@/lib/categoryImages";
+import { getCategoryImage, heroBg, cardBg } from "@/lib/categoryImages";
 
 export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
 
@@ -132,9 +132,14 @@ export default async function TypePage({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
           {node.description && (
             <div
-              className="prose prose-slate max-w-none rounded-lg border border-slate-200 bg-white p-6 text-slate-600"
-              dangerouslySetInnerHTML={{ __html: sanitizeRichText(node.description) }}
-            />
+              className="relative overflow-hidden rounded-lg border border-slate-200 bg-white"
+              style={cardBg(getCategoryImage(slug))}
+            >
+              <div
+                className="prose prose-slate max-w-2xl p-6 text-slate-600"
+                dangerouslySetInnerHTML={{ __html: sanitizeRichText(node.description) }}
+              />
+            </div>
           )}
           <TypeSizePicker typeName={node.name} sizes={node.sizes} category={category?.title ?? node.name} />
         </div>
