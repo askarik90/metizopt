@@ -120,6 +120,15 @@ export default function TypeSizePicker({
         </div>
       </div>
 
+      {hasGrid && (
+        <p className="-mt-2 mb-4 text-xs text-slate-400">
+          Совет: размеры можно смотреть тремя способами — переключите справа
+          (<span className="font-semibold text-slate-500">1</span> · список,{" "}
+          <span className="font-semibold text-slate-500">2</span> · по диаметру,{" "}
+          <span className="font-semibold text-slate-500">3</span> · шаги).
+        </p>
+      )}
+
       {sizes.length === 0 ? (
         <p className="text-slate-500">Уточните размер у менеджера — поможем подобрать.</p>
       ) : !hasGrid || view === 1 ? (
