@@ -27,6 +27,7 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   "nerzhav-shayby": C("nerzhav-shayby"),
   "nerzhav-vintyi": C("nerzhav-vintyi"),
   "nerzhav-shpilki": C("nerzhav-shpilki"),
+  "nerzhav-zaklepki": C("zaklepki"),
   // Такелаж
   "takelazh-vertlyug": C("takelazh-vertlyug"),
   "takelazh-zazim-din741": C("takelazh-zazim-din741"),
