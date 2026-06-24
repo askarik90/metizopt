@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
       if (!v || typeof v !== "object") continue;
       const o = v as Record<string, unknown>;
       const e: { x?: number; y?: number; size?: "cover" | "contain" | number } = {};
-      if (typeof o.x === "number") e.x = Math.max(0, Math.min(100, Math.round(o.x)));
-      if (typeof o.y === "number") e.y = Math.max(0, Math.min(100, Math.round(o.y)));
+      if (typeof o.x === "number") e.x = Math.max(-100, Math.min(200, Math.round(o.x)));
+      if (typeof o.y === "number") e.y = Math.max(-100, Math.min(200, Math.round(o.y)));
       if (o.size === "cover" || o.size === "contain") e.size = o.size;
       else if (typeof o.size === "number") e.size = Math.max(10, Math.min(400, Math.round(o.size)));
       // Храним только непустые/нестандартные записи — файл остаётся компактным.

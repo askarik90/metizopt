@@ -123,16 +123,16 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
           </div>
           <label className="block text-xs text-slate-500">
             Масштаб: {typeof size === "number" ? `${size}%` : "авто"}
-            <input type="range" min={50} max={300} value={typeof size === "number" ? size : 100} onClick={stop} onChange={(e) => setSize(+e.target.value)} className="w-full" />
+            <input type="range" min={20} max={300} value={typeof size === "number" ? size : 100} onClick={stop} onChange={(e) => setSize(+e.target.value)} className="w-full" />
           </label>
 
           <label className="block text-xs text-slate-500">
             По горизонтали: {x}%
-            <input type="range" min={0} max={100} value={x} onClick={stop} onChange={(e) => setX(+e.target.value)} className="w-full" />
+            <input type="range" min={-50} max={150} value={x} onClick={stop} onChange={(e) => setX(+e.target.value)} className="w-full" />
           </label>
           <label className="block text-xs text-slate-500">
             По вертикали: {y}%
-            <input type="range" min={0} max={100} value={y} onClick={stop} onChange={(e) => setY(+e.target.value)} className="w-full" />
+            <input type="range" min={-50} max={150} value={y} onClick={stop} onChange={(e) => setY(+e.target.value)} className="w-full" />
           </label>
 
           <button onClick={(e) => { stop(e); save(); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
