@@ -19,6 +19,7 @@ import {
 import { sanitizeRichText } from "@/lib/sanitize";
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { getCategoryImage, heroBg } from "@/lib/categoryImages";
+import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
 const catalogTree = catalogTreeJson as Record<
   string,
@@ -143,6 +144,7 @@ export default async function CatalogPage({
           className="relative overflow-hidden bg-slate-900 py-16"
           style={heroBg(groupImg, imgPositions[slug])}
         >
+          {groupImg && <ImageEditOverlay slug={slug} />}
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
               <div className="mb-6 inline-flex items-center gap-2 border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">

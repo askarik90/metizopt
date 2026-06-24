@@ -9,6 +9,7 @@ import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { getCategoryImage, getTypeImage, heroBg, type ImgPos } from "@/lib/categoryImages";
+import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
 export interface TypeLink {
   slug: string;
@@ -59,7 +60,8 @@ export default function CategoryClient({
     <>
       {/* Hero — full width, фон = картинка категории с L→R градиентом */}
       {heroImg && <link rel="preload" as="image" href={heroImg} fetchPriority="high" />}
-      <section className="bg-slate-900 py-16" style={heroBg(heroImg, imgPos?.[slug])}>
+      <section className="relative bg-slate-900 py-16" style={heroBg(heroImg, imgPos?.[slug])}>
+        {heroImg && <ImageEditOverlay slug={slug} />}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4">

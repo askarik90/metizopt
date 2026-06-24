@@ -63,6 +63,18 @@ export default function ImagePositionsEditor({
           className="min-w-48 flex-1 rounded border border-slate-300 px-3 py-2 text-sm"
         />
         <button
+          onClick={() => {
+            try {
+              localStorage.setItem("krp_edit", "1");
+            } catch {}
+            window.open("/", "_blank");
+          }}
+          title="Открыть сайт и править фото прямо на страницах"
+          className="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-orange-400 hover:text-orange-600"
+        >
+          ✎ Править на сайте
+        </button>
+        <button
           onClick={save}
           disabled={saving}
           className="rounded bg-orange-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-orange-700 disabled:opacity-50"

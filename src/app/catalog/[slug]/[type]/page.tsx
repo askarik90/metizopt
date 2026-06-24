@@ -11,6 +11,7 @@ import { getCategories, getGroups, getImagePositions, type CategoryItem, type Gr
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { getCategoryImage, getTypeImage, heroBg, cardBg } from "@/lib/categoryImages";
+import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
 export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
 
@@ -115,7 +116,8 @@ export default async function TypePage({
       />
 
       {heroImg && <link rel="preload" as="image" href={heroImg} fetchPriority="high" />}
-      <section className="bg-slate-900 py-14" style={heroBg(heroImg, pos)}>
+      <section className="relative bg-slate-900 py-14" style={heroBg(heroImg, pos)}>
+        {heroImg && <ImageEditOverlay slug={type} />}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-3 inline-flex items-center border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
             {category?.title ?? "Каталог"} · оптом и в розницу
