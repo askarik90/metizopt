@@ -1,19 +1,22 @@
 "use client";
 import { useState, Suspense } from "react";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import UploadRequestBlock from "@/components/UploadRequestBlock";
 import HierarchicalCatalog from "@/components/HierarchicalCatalog";
 import HowItWorks from "@/components/HowItWorks";
-import QuickQuoteForm from "@/components/QuickQuoteForm";
 import TrustSection from "@/components/TrustSection";
-import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
-import LeadFormModal from "@/components/LeadFormModal";
 import { MessageCircle, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+
+// Ниже первого экрана / по требованию — code-split, чтобы не грузить в стартовом бандле (меньше JS/TBT)
+const QuickQuoteForm = dynamic(() => import("@/components/QuickQuoteForm"));
+const FAQ = dynamic(() => import("@/components/FAQ"));
+const LeadFormModal = dynamic(() => import("@/components/LeadFormModal"), { ssr: false });
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -90,13 +93,13 @@ export default function HomePage() {
         <StickyMobileCTA onQuoteClick={() => openModal()} />
       </Suspense>
 
-      <Suspense>
+      {modalOpen && (
         <LeadFormModal
-          open={modalOpen}
+          open
           onClose={() => setModalOpen(false)}
           category={modalCategory}
         />
-      </Suspense>
+      )}
     </main>
   );
 }
