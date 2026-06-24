@@ -10,7 +10,8 @@ import { COMPANY } from "@/config/company";
 import { getCategories, getGroups, getImagePositions, type CategoryItem, type GroupItem } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
-import { getCategoryImage, getTypeImage, heroBg, cardBg } from "@/lib/categoryImages";
+import Image from "next/image";
+import { getCategoryImage, getTypeImage, heroBg } from "@/lib/categoryImages";
 import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
 export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
@@ -135,11 +136,19 @@ export default async function TypePage({
 
       <div className="bg-slate-50 py-8 lg:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
+          {heroImg && (
+            <div className="relative mx-auto h-56 w-full max-w-2xl rounded-lg border border-slate-200 bg-white">
+              <Image
+                src={heroImg}
+                alt={`${node.name} — крепёж оптом и в розницу со склада в Алматы, KRP`}
+                fill
+                sizes="(max-width: 768px) 100vw, 700px"
+                className="object-contain p-4"
+              />
+            </div>
+          )}
           {node.description && (
-            <div
-              className="relative overflow-hidden rounded-lg border border-slate-200 bg-white"
-              style={cardBg(getTypeImage(type) ?? getCategoryImage(slug), pos)}
-            >
+            <div className="rounded-lg border border-slate-200 bg-white">
               <div
                 className="prose prose-slate max-w-2xl p-6 text-slate-600"
                 dangerouslySetInnerHTML={{ __html: sanitizeRichText(node.description) }}
