@@ -90,15 +90,47 @@ export async function saveSettings(data: typeof DEFAULT_SETTINGS) {
 export interface ImagePosition { x?: number; y?: number; size?: "cover" | "contain" | number }
 export type ImagePositions = Record<string, ImagePosition>;
 
+// Временный режим записи в git через GitHub Contents API (пока Blob лежит).
+// Токен — fine-grained PAT с Contents:write на репо, в Vercel env GITHUB_TOKEN.
+// Код токен не хранит. Убрать GITHUB_TOKEN → код вернётся на Blob автоматически.
+async function saveJsonToGitHub(path: string, content: string): Promise<void> {
+  const token = process.env.GITHUB_TOKEN!;
+  const repo = process.env.GITHUB_REPO || "askarik90/metizopt";
+  const branch = process.env.GITHUB_BRANCH || "master";
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/vnd.github+json",
+    "User-Agent": "krp-inline-editor",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  let sha: string | undefined;
+  const cur = await fetch(`${url}?ref=${branch}`, { headers });
+  if (cur.ok) sha = ((await cur.json()) as { sha?: string }).sha;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({
+      message: "edit: правка фото через инлайн-редактор",
+      content: Buffer.from(content, "utf8").toString("base64"),
+      branch,
+      ...(sha ? { sha } : {}),
+    }),
+  });
+  if (!res.ok) throw new Error(`GitHub save ${res.status}: ${(await res.text()).slice(0, 200)}`);
+}
+
 export async function getImagePositions(): Promise<ImagePositions> {
   const fromGit = fsRead<ImagePositions>("image-positions.json", {});
-  // Источник истины в проде — Blob (правки из админки), с фолбэком на git
-  // (мои значения). Blob лежит/пуст → используется git. Без поштучных чтений.
+  // GitHub-режим: источник истины — закоммиченный git-файл (читается из сборки).
+  if (process.env.GITHUB_TOKEN) return fromGit;
   if (useBlob()) return blobGet<ImagePositions>("image-positions", fromGit);
   return fromGit;
 }
 
 export async function saveImagePositions(data: ImagePositions) {
+  const json = JSON.stringify(data, null, 2) + "\n";
+  if (process.env.GITHUB_TOKEN) { await saveJsonToGitHub("data/image-positions.json", json); return; }
   if (useBlob()) { await blobSet("image-positions", data); return; }
   fsWrite("image-positions.json", data);
 }

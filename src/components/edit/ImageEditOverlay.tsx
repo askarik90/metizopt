@@ -75,7 +75,7 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cur),
       });
-      if (r.ok) setMsg("✓ Сохранено — обновите страницу");
+      if (r.ok) setMsg("✓ Сохранено — применится за ~1 мин (передеплой)");
       else if (r.status === 401) setMsg("Войдите в админку, чтобы сохранять");
       else setMsg("Сохранение заработает после восстановления Blob");
     } catch {
