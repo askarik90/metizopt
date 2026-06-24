@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getImagePositions, saveImagePositions, type ImagePositions } from "@/lib/db";
+import { COOKIE_NAME, validateToken } from "@/lib/auth";
 
 export async function GET() {
   return NextResponse.json(await getImagePositions());
 }
 
 export async function POST(req: NextRequest) {
+  // Явная проверка авторизации (не полагаемся только на middleware/proxy)
+  if (!validateToken(req.cookies.get(COOKIE_NAME)?.value ?? "")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  // Защита от большого тела: лимит записей после parse не спасает от огромного запроса
+  if (Number(req.headers.get("content-length") || 0) > 200_000) {
+    return NextResponse.json({ error: "payload too large" }, { status: 413 });
+  }
   try {
     const body = await req.json();
     if (!body || typeof body !== "object" || Array.isArray(body)) {
