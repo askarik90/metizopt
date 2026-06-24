@@ -18,6 +18,7 @@ import {
 } from "@/lib/db";
 import { sanitizeRichText } from "@/lib/sanitize";
 import catalogTreeJson from "@/data/catalog-tree.json";
+import { getCategoryImage, heroBg } from "@/lib/categoryImages";
 
 const catalogTree = catalogTreeJson as Record<
   string,
@@ -93,6 +94,7 @@ export default async function CatalogPage({
   if (group) {
     const groupSlugs = new Set(group.categories);
     const groupCategories = categories.filter((item) => groupSlugs.has(item.slug));
+    const groupImg = getCategoryImage(group.slug);
 
     const groupJsonLd = {
       "@context": "https://schema.org",
@@ -136,13 +138,10 @@ export default async function CatalogPage({
         />
 
         {/* Hero */}
+        {groupImg && <link rel="preload" as="image" href={groupImg} fetchPriority="high" />}
         <section
           className="relative overflow-hidden bg-slate-900 py-16"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
+          style={heroBg(groupImg, imgPositions[slug])}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
@@ -197,13 +196,25 @@ export default async function CatalogPage({
                       Категории
                     </h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                      {groupCategories.map((category) => (
+                      {groupCategories.map((category) => {
+                        const cimg = getCategoryImage(category.slug);
+                        return (
                         <Link
                           key={category.slug}
                           href={`/catalog/${category.slug}`}
-                          className="group flex flex-col rounded border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-orange-400 hover:shadow-lg"
+                          className="group relative overflow-hidden flex flex-col rounded border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-orange-400 hover:shadow-lg"
                         >
-                          <div className="mb-3 flex items-start justify-between">
+                          {cimg && (
+                            <div
+                              className="absolute inset-0"
+                              style={{
+                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 46%, rgba(255,255,255,0.55) 72%, rgba(255,255,255,0.1) 100%), url('${cimg}')`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "right center",
+                              }}
+                            />
+                          )}
+                          <div className="relative z-10 mb-3 flex items-start justify-between">
                             <h3 className="flex-1 pr-2 text-sm font-black uppercase leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
                               {category.title}
                             </h3>
@@ -211,11 +222,11 @@ export default async function CatalogPage({
                               →
                             </span>
                           </div>
-                          <p className="mb-3 line-clamp-3 flex-grow text-xs leading-relaxed text-slate-500">
+                          <p className="relative z-10 mb-3 line-clamp-3 flex-grow text-xs leading-relaxed text-slate-500">
                             {category.desc}
                           </p>
                           {category.standards && category.standards.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
+                            <div className="relative z-10 flex flex-wrap gap-1">
                               {category.standards.slice(0, 2).map((standard) => (
                                 <span
                                   key={standard}
@@ -232,7 +243,8 @@ export default async function CatalogPage({
                             </div>
                           )}
                         </Link>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
