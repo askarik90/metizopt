@@ -10,13 +10,15 @@ function editOn() {
   }
 }
 
-// Значок ✎ на hero/картинке. Виден только в режиме правки. Клик → панель
-// положения с живым превью; сохранение пишет позицию по slug в image-positions.
+// Значок ✎ на hero/боксе. Виден только в режиме правки. Панель — плавающая
+// (fixed), чтобы не обрезалась рамкой бокса (overflow-hidden). Клики не проваливаются
+// в ссылку-карточку (preventDefault+stopPropagation).
 export default function ImageEditOverlay({ slug }: { slug: string }) {
   const [on, setOn] = useState(false);
   const [open, setOpen] = useState(false);
   const [x, setX] = useState(100);
   const [y, setY] = useState(50);
+  const [size, setSize] = useState<"cover" | "contain">("cover");
   const [msg, setMsg] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -27,8 +29,7 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     return () => window.removeEventListener("krp-edit-change", read);
   }, []);
 
-  // Находим элемент с фоновым фото: hero — предок-секция со стилем фона;
-  // бокс/карточка — фоновый div внутри той же ссылки.
+  // Элемент с фоновым фото: hero — предок-секция со стилем фона; бокс — фоновый div рядом.
   const findBgEl = (): HTMLElement | null => {
     const start = ref.current;
     if (!start) return null;
@@ -41,12 +42,15 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     return host?.querySelector<HTMLElement>('div[style*="background-image"]') ?? null;
   };
 
-  // живое превью положения фото (image — последний слой; градиент справа не трогаем)
+  // живое превью (image — последний слой; градиент не трогаем)
   useEffect(() => {
     if (!open) return;
     const el = findBgEl();
-    if (el) el.style.backgroundPosition = `right center, ${x}% ${y}%`;
-  }, [x, y, open]);
+    if (!el) return;
+    el.style.backgroundPosition = `right center, ${x}% ${y}%`;
+    el.style.backgroundSize = `cover, ${size}`;
+    el.style.backgroundRepeat = "no-repeat, no-repeat";
+  }, [x, y, size, open]);
 
   const openPanel = async () => {
     setOpen(true);
@@ -56,6 +60,7 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
       const p = d?.[slug] ?? {};
       setX(typeof p.x === "number" ? p.x : 100);
       setY(typeof p.y === "number" ? p.y : 50);
+      setSize(p.size === "contain" ? "contain" : "cover");
     } catch {}
   };
 
@@ -63,50 +68,72 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     setMsg("Сохраняю…");
     try {
       const cur = (await (await fetch("/api/image-positions")).json()) || {};
-      cur[slug] = { ...(cur[slug] || {}), x, y };
+      cur[slug] = { x, y, size };
       const r = await fetch("/api/image-positions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cur),
       });
-      setMsg(r.ok ? "Сохранено · появится после обновления страницы" : "Ошибка: нужен вход в админку");
+      if (r.ok) setMsg("✓ Сохранено — обновите страницу");
+      else if (r.status === 401) setMsg("Войдите в админку, чтобы сохранять");
+      else setMsg("Сохранение заработает после восстановления Blob");
     } catch {
-      setMsg("Ошибка сети");
+      setMsg("Сохранение заработает после восстановления Blob");
     }
+  };
+
+  // клик/нажатие внутри overlay не должны срабатывать как переход по ссылке-карточке
+  const stop = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   if (!on) return <div ref={ref} className="hidden" />;
 
   return (
-    <div ref={ref} className="absolute right-3 top-3 z-30">
-      {!open ? (
-        <button
-          onClick={openPanel}
-          title="Изменить положение фото"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-lg text-slate-800 shadow-lg ring-1 ring-black/10 hover:bg-white"
+    <div ref={ref} className="absolute right-2 top-2 z-30" onClick={stop}>
+      <button
+        onClick={(e) => {
+          stop(e);
+          if (open) setOpen(false);
+          else openPanel();
+        }}
+        title="Изменить фото"
+        className={`flex h-8 w-8 items-center justify-center rounded-full text-base shadow-lg ring-1 ring-black/10 ${
+          open ? "bg-orange-600 text-white" : "bg-white/95 text-slate-800 hover:bg-white"
+        }`}
+      >
+        ✎
+      </button>
+
+      {open && (
+        <div
+          onClick={stop}
+          className="fixed bottom-24 left-1/2 z-[70] w-72 -translate-x-1/2 rounded-xl bg-white p-4 text-left text-slate-800 shadow-2xl ring-1 ring-black/10"
         >
-          ✎
-        </button>
-      ) : (
-        <div className="w-64 rounded-lg bg-white p-3 text-slate-800 shadow-2xl ring-1 ring-black/10">
-          <div className="mb-2 text-xs font-bold uppercase tracking-tight">Положение фото</div>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-tight">Фото · {slug}</span>
+            <button onClick={(e) => { stop(e); setOpen(false); }} className="text-sm text-slate-400 hover:text-slate-700">✕</button>
+          </div>
+
+          <div className="mb-3 flex gap-2 text-xs">
+            <button onClick={(e) => { stop(e); setSize("cover"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "cover" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Заполнить</button>
+            <button onClick={(e) => { stop(e); setSize("contain"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "contain" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Целиком</button>
+          </div>
+
           <label className="block text-xs text-slate-500">
             По горизонтали: {x}%
-            <input type="range" min={0} max={100} value={x} onChange={(e) => setX(+e.target.value)} className="w-full" />
+            <input type="range" min={0} max={100} value={x} onClick={stop} onChange={(e) => setX(+e.target.value)} className="w-full" />
           </label>
           <label className="block text-xs text-slate-500">
             По вертикали: {y}%
-            <input type="range" min={0} max={100} value={y} onChange={(e) => setY(+e.target.value)} className="w-full" />
+            <input type="range" min={0} max={100} value={y} onClick={stop} onChange={(e) => setY(+e.target.value)} className="w-full" />
           </label>
-          <div className="mt-2 flex gap-2">
-            <button onClick={save} className="flex-1 rounded bg-orange-600 px-2 py-1.5 text-xs font-semibold text-white hover:bg-orange-700">
-              Сохранить
-            </button>
-            <button onClick={() => setOpen(false)} className="rounded bg-slate-100 px-2 py-1.5 text-xs hover:bg-slate-200">
-              Закрыть
-            </button>
-          </div>
-          {msg && <div className="mt-1.5 text-[11px] text-slate-500">{msg}</div>}
+
+          <button onClick={(e) => { stop(e); save(); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
+            Сохранить
+          </button>
+          {msg && <div className="mt-2 text-[11px] text-slate-500">{msg}</div>}
           <div className="mt-1 text-[11px] text-slate-400">Смена самой картинки — после восстановления Blob.</div>
         </div>
       )}

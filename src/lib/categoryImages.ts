@@ -133,8 +133,9 @@ export function heroBg(img?: string, pos?: ImgPos): CSSProperties {
   return {
     backgroundColor: "#0f172a", // тёмный плейсхолдер сразу — без светлого флэша до загрузки фото
     backgroundImage: `linear-gradient(to right, rgba(15,23,42,0.97) 0%, rgba(15,23,42,0.9) 38%, rgba(15,23,42,0.4) 72%, rgba(15,23,42,0.12) 100%), url('${img}')`,
-    backgroundSize: "cover",
-    backgroundPosition: `${x}% ${y}%`,
+    backgroundSize: `cover, ${pos?.size ?? "cover"}`,
+    backgroundPosition: `right center, ${x}% ${y}%`,
+    backgroundRepeat: "no-repeat, no-repeat",
   };
 }
 

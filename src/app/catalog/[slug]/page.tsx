@@ -212,8 +212,9 @@ export default async function CatalogPage({
                               className="absolute inset-0"
                               style={{
                                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 46%, rgba(255,255,255,0.55) 72%, rgba(255,255,255,0.1) 100%), url('${cimg}')`,
-                                backgroundSize: "cover",
+                                backgroundSize: `cover, ${cpos?.size ?? "cover"}`,
                                 backgroundPosition: `right center, ${cpos?.x ?? 100}% ${cpos?.y ?? 50}%`,
+                                backgroundRepeat: "no-repeat, no-repeat",
                               }}
                             />
                           )}
