@@ -8,8 +8,10 @@ const C = (name: string) => `/images/categories/${name}.jpg`;
 const T = (name: string) => `/images/types/${name}.jpg`;
 const TYPE_IMG = new Set(typeImagesJson as string[]);
 
-// Позиция/размер фонового фото (настраивается через админку, хранится в data/image-positions.json)
-export interface ImgPos { x?: number; y?: number; size?: "cover" | "contain" }
+// Позиция/размер фонового фото (настраивается через админку/инлайн-редактор).
+// size: "cover"/"contain" ИЛИ число = масштаб фото в % (для зума и панорамирования).
+export interface ImgPos { x?: number; y?: number; size?: "cover" | "contain" | number }
+export const sizeCss = (s?: "cover" | "contain" | number) => (typeof s === "number" ? `${s}%` : s ?? "cover");
 
 export const CATEGORY_IMAGES: Record<string, string> = {
   // Крепеж
@@ -133,7 +135,7 @@ export function heroBg(img?: string, pos?: ImgPos): CSSProperties {
   return {
     backgroundColor: "#0f172a", // тёмный плейсхолдер сразу — без светлого флэша до загрузки фото
     backgroundImage: `linear-gradient(to right, rgba(15,23,42,0.97) 0%, rgba(15,23,42,0.9) 38%, rgba(15,23,42,0.4) 72%, rgba(15,23,42,0.12) 100%), url('${img}')`,
-    backgroundSize: `cover, ${pos?.size ?? "cover"}`,
+    backgroundSize: `cover, ${sizeCss(pos?.size)}`,
     backgroundPosition: `right center, ${x}% ${y}%`,
     backgroundRepeat: "no-repeat, no-repeat",
   };
@@ -143,7 +145,7 @@ export function heroBg(img?: string, pos?: ImgPos): CSSProperties {
 export function cardBg(img?: string, pos?: ImgPos): CSSProperties {
   if (!img) return {};
   // Градиент — на всю ширину (cover), фото — настраиваемый размер/позиция (по умолч. целиком справа).
-  const size = pos?.size ?? "contain";
+  const size = sizeCss(pos?.size ?? "contain");
   const x = pos?.x ?? 100, y = pos?.y ?? 50;
   return {
     backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.99) 50%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.2) 100%), url('${img}')`,

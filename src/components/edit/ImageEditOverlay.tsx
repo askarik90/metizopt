@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { sizeCss } from "@/lib/categoryImages";
 
 const KEY = "krp_edit";
 function editOn() {
@@ -18,7 +19,7 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
   const [open, setOpen] = useState(false);
   const [x, setX] = useState(100);
   const [y, setY] = useState(50);
-  const [size, setSize] = useState<"cover" | "contain">("cover");
+  const [size, setSize] = useState<"cover" | "contain" | number>("cover");
   const [msg, setMsg] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -48,7 +49,7 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     const el = findBgEl();
     if (!el) return;
     el.style.backgroundPosition = `right center, ${x}% ${y}%`;
-    el.style.backgroundSize = `cover, ${size}`;
+    el.style.backgroundSize = `cover, ${sizeCss(size)}`;
     el.style.backgroundRepeat = "no-repeat, no-repeat";
   }, [x, y, size, open]);
 
@@ -60,7 +61,7 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
       const p = d?.[slug] ?? {};
       setX(typeof p.x === "number" ? p.x : 100);
       setY(typeof p.y === "number" ? p.y : 50);
-      setSize(p.size === "contain" ? "contain" : "cover");
+      setSize(typeof p.size === "number" ? p.size : p.size === "contain" ? "contain" : "cover");
     } catch {}
   };
 
@@ -116,10 +117,14 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
             <button onClick={(e) => { stop(e); setOpen(false); }} className="text-sm text-slate-400 hover:text-slate-700">✕</button>
           </div>
 
-          <div className="mb-3 flex gap-2 text-xs">
+          <div className="mb-2 flex gap-2 text-xs">
             <button onClick={(e) => { stop(e); setSize("cover"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "cover" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Заполнить</button>
             <button onClick={(e) => { stop(e); setSize("contain"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "contain" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Целиком</button>
           </div>
+          <label className="block text-xs text-slate-500">
+            Масштаб: {typeof size === "number" ? `${size}%` : "авто"}
+            <input type="range" min={50} max={300} value={typeof size === "number" ? size : 100} onClick={stop} onChange={(e) => setSize(+e.target.value)} className="w-full" />
+          </label>
 
           <label className="block text-xs text-slate-500">
             По горизонтали: {x}%

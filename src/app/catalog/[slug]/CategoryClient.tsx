@@ -8,7 +8,7 @@ import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { getCategoryImage, getTypeImage, heroBg, type ImgPos } from "@/lib/categoryImages";
+import { getCategoryImage, getTypeImage, heroBg, sizeCss, type ImgPos } from "@/lib/categoryImages";
 import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
 export interface TypeLink {
@@ -140,7 +140,7 @@ export default function CategoryClient({
                               className="absolute inset-0"
                               style={{
                                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 45%, rgba(255,255,255,0.5) 70%, rgba(255,255,255,0) 100%), url('${img}')`,
-                                backgroundSize: `cover, ${cp?.size ?? "cover"}`,
+                                backgroundSize: `cover, ${sizeCss(cp?.size)}`,
                                 backgroundPosition: `right center, ${cp?.x ?? 100}% ${cp?.y ?? 50}%`,
                                 backgroundRepeat: "no-repeat, no-repeat",
                               }}

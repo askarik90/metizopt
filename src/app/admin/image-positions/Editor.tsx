@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
+import { sizeCss } from "@/lib/categoryImages";
 
 interface Item { slug: string; label: string; img: string }
-interface Pos { x?: number; y?: number; size?: "cover" | "contain" }
+interface Pos { x?: number; y?: number; size?: "cover" | "contain" | number }
 
 export default function ImagePositionsEditor({
   items,
@@ -105,7 +106,7 @@ export default function ImagePositionsEditor({
                 className="mb-3 h-32 rounded border border-slate-200 bg-slate-100"
                 style={{
                   backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 60%, rgba(255,255,255,0) 100%), url('${it.img}')`,
-                  backgroundSize: `cover, ${size}`,
+                  backgroundSize: `cover, ${sizeCss(size)}`,
                   backgroundPosition: `right center, ${x}% ${y}%`,
                   backgroundRepeat: "no-repeat, no-repeat",
                 }}

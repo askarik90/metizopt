@@ -87,7 +87,7 @@ export async function saveSettings(data: typeof DEFAULT_SETTINGS) {
 // ── IMAGE POSITIONS (фон фото у hero/описаний/карточек) ───────────────
 // Безопасно для Blob: читается только при ISR-пересборке страницы (≤1/сутки
 // на страницу), пишется только при сохранении из админки. НЕ на каждый визит.
-export interface ImagePosition { x?: number; y?: number; size?: "cover" | "contain" }
+export interface ImagePosition { x?: number; y?: number; size?: "cover" | "contain" | number }
 export type ImagePositions = Record<string, ImagePosition>;
 
 export async function getImagePositions(): Promise<ImagePositions> {

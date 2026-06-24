@@ -18,7 +18,7 @@ import {
 } from "@/lib/db";
 import { sanitizeRichText } from "@/lib/sanitize";
 import catalogTreeJson from "@/data/catalog-tree.json";
-import { getCategoryImage, heroBg } from "@/lib/categoryImages";
+import { getCategoryImage, heroBg, sizeCss } from "@/lib/categoryImages";
 import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
 const catalogTree = catalogTreeJson as Record<
@@ -212,7 +212,7 @@ export default async function CatalogPage({
                               className="absolute inset-0"
                               style={{
                                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 46%, rgba(255,255,255,0.55) 72%, rgba(255,255,255,0.1) 100%), url('${cimg}')`,
-                                backgroundSize: `cover, ${cpos?.size ?? "cover"}`,
+                                backgroundSize: `cover, ${sizeCss(cpos?.size)}`,
                                 backgroundPosition: `right center, ${cpos?.x ?? 100}% ${cpos?.y ?? 50}%`,
                                 backgroundRepeat: "no-repeat, no-repeat",
                               }}
