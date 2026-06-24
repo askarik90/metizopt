@@ -7,6 +7,10 @@ const SMTP_PASS = process.env.SMTP_PASS || "";
 const NOTIFY_TO = process.env.NOTIFY_EMAIL || "140@bugel.kz";
 const NOTIFY_CC = process.env.NOTIFY_EMAIL_CC || "marketingbugel1@gmail.com";
 
+// Экранирование пользовательских полей в HTML письма (защита от инъекций)
+const esc = (s = "") =>
+  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
+
 export interface LeadEmailData {
   name: string;
   phone: string;
@@ -18,6 +22,7 @@ export interface LeadEmailData {
   pageUrl?: string;
   utm_source?: string;
   utm_campaign?: string;
+  attachment?: { filename: string; content: Buffer };
 }
 
 export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
@@ -35,9 +40,20 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 
-  const source = lead.utm_source
-    ? `${lead.utm_source}${lead.utm_campaign ? ` / ${lead.utm_campaign}` : ""}`
-    : lead.pageUrl || "прямой переход";
+  const source = esc(
+    lead.utm_source
+      ? `${lead.utm_source}${lead.utm_campaign ? ` / ${lead.utm_campaign}` : ""}`
+      : lead.pageUrl || "прямой переход",
+  );
+  const v = {
+    name: esc(lead.name),
+    phone: esc(lead.phone),
+    company: esc(lead.company || ""),
+    city: esc(lead.city || ""),
+    category: esc(lead.category || ""),
+    searchQuery: esc(lead.searchQuery || ""),
+    message: esc(lead.message || "").replace(/\n/g, "<br>"),
+  };
 
   const html = `<!DOCTYPE html>
     <html><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>
@@ -49,38 +65,38 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
         <table style="width:100%;border-collapse:collapse">
           <tr>
             <td style="padding:8px 0;color:#64748b;width:140px;vertical-align:top">Имя</td>
-            <td style="padding:8px 0;font-weight:bold;color:#0f172a">${lead.name}</td>
+            <td style="padding:8px 0;font-weight:bold;color:#0f172a">${v.name}</td>
           </tr>
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Телефон</td>
             <td style="padding:8px 0;font-weight:bold;color:#0f172a">
-              <a href="tel:${lead.phone}" style="color:#ea580c">${lead.phone}</a>
+              <a href="tel:${v.phone}" style="color:#ea580c">${v.phone}</a>
             </td>
           </tr>
           ${lead.company ? `
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Компания</td>
-            <td style="padding:8px 0;color:#0f172a">${lead.company}</td>
+            <td style="padding:8px 0;color:#0f172a">${v.company}</td>
           </tr>` : ""}
           ${lead.city ? `
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Город</td>
-            <td style="padding:8px 0;color:#0f172a">${lead.city}</td>
+            <td style="padding:8px 0;color:#0f172a">${v.city}</td>
           </tr>` : ""}
           ${lead.category ? `
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Интерес</td>
-            <td style="padding:8px 0;color:#0f172a">${lead.category}</td>
+            <td style="padding:8px 0;color:#0f172a">${v.category}</td>
           </tr>` : ""}
           ${lead.searchQuery ? `
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Искал на сайте</td>
-            <td style="padding:8px 0;color:#0f172a;font-style:italic">"${lead.searchQuery}"</td>
+            <td style="padding:8px 0;color:#0f172a;font-style:italic">"${v.searchQuery}"</td>
           </tr>` : ""}
           ${lead.message ? `
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Сообщение</td>
-            <td style="padding:8px 0;color:#0f172a">${lead.message}</td>
+            <td style="padding:8px 0;color:#0f172a">${v.message}</td>
           </tr>` : ""}
           <tr>
             <td style="padding:8px 0;color:#64748b;vertical-align:top">Источник</td>
@@ -99,8 +115,10 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     from: `KRP.kz <${SMTP_USER}>`,
     to: NOTIFY_TO,
     cc: NOTIFY_CC,
-    subject: `📦 Новая заявка: ${lead.name} — ${lead.phone}`,
+    // \r\n из полей убираем — защита от инъекции заголовков
+    subject: `📦 Новая заявка: ${lead.name.replace(/[\r\n]+/g, " ")} — ${lead.phone.replace(/[\r\n]+/g, " ")}`,
     html,
+    attachments: lead.attachment ? [lead.attachment] : undefined,
     encoding: "utf8",
   });
 }

@@ -66,6 +66,18 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
 
     console.log("NEW LEAD:", lead.name, lead.phone, lead.category);
 
+    // Файл из формы (base64) → вложением в письмо менеджеру. Лимит 5 МБ.
+    let attachment: { filename: string; content: Buffer } | undefined;
+    const f = (body as { file?: { name?: string; data?: string } }).file;
+    if (f && typeof f.data === "string" && f.data.length > 0) {
+      const approxBytes = Math.floor(f.data.length * 0.75);
+      if (approxBytes <= 5 * 1024 * 1024) {
+        try {
+          attachment = { filename: cap(f.name, 200) || "spisok", content: Buffer.from(f.data, "base64") };
+        } catch {}
+      }
+    }
+
     // Заявку нельзя терять: считаем принятой только если сохранилась хотя бы в один
     // надёжный канал (Blob или email). Иначе вернём ошибку, чтобы форма не показала «успех».
     let blobOk = false;
@@ -113,6 +125,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
         pageUrl: lead.page_url,
         utm_source: lead.utm_source,
         utm_campaign: lead.utm_campaign,
+        attachment,
       });
       console.log("✅ Email sent successfully");
       emailOk = true;

@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import { X, Upload, CheckCircle } from "lucide-react";
 import { useAnalytics, getUtmParams } from "@/hooks/useAnalytics";
+import { getWhatsAppUrl } from "@/config/company";
 import { useRouter } from "next/navigation";
 
 interface LeadFormModalProps {
@@ -13,7 +14,7 @@ interface LeadFormModalProps {
 
 export default function LeadFormModal({ open, onClose, category, title }: LeadFormModalProps) {
   const router = useRouter();
-  const { trackLeadFormSubmit, trackFileUpload } = useAnalytics();
+  const { trackLeadFormSubmit, trackFileUpload, trackWhatsAppClick } = useAnalytics();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -25,6 +26,7 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
     message: "",
     company_site: "", // honeypot — поле-ловушка для ботов, скрыто от людей
   });
+  const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,11 +37,25 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   };
 
+  const fileToBase64 = (f: File) =>
+    new Promise<string>((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result).split(",")[1] || "");
+      r.onerror = reject;
+      r.readAsDataURL(f);
+    });
+
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setFileName(e.target.files[0].name);
-      trackFileUpload();
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) {
+      setError("Файл больше 5 МБ — отправьте его в WhatsApp");
+      return;
     }
+    setError("");
+    setFile(f);
+    setFileName(f.name);
+    trackFileUpload();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,11 +69,18 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
     try {
       // Подхватываем последний поисковый запрос — менеджеру виднее что искал клиент
       const searchQuery = sessionStorage.getItem("lastSearchQuery") || "";
+      let filePayload: { name: string; type: string; data: string } | undefined;
+      if (file) {
+        try {
+          filePayload = { name: file.name, type: file.type, data: await fileToBase64(file) };
+        } catch {}
+      }
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          file: filePayload,
           category: category || "",
           search_query: searchQuery,
           page_url: window.location.href,
@@ -84,14 +107,18 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
       <div className="relative bg-slate-900 border border-slate-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <h2 className="text-white font-black text-xl uppercase tracking-tight">
-            {title || "Оставить заявку"}
+            {title || "Запросить цену и наличие"}
           </h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
             <X size={24} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <p className="px-6 pt-4 text-sm text-slate-400">
+          Пришлите список — подготовим КП по позициям.
+        </p>
+
+        <form onSubmit={handleSubmit} className="p-6 pt-3 space-y-4">
           {/* honeypot — скрыто от людей, заполняют только боты */}
           <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
             <input
@@ -216,12 +243,25 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
             disabled={loading}
             className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white py-3.5 font-medium text-base transition-colors"
           >
-            {loading ? "Отправляем..." : "Отправить заявку"}
+            {loading ? "Отправляем..." : "Получить КП"}
           </button>
 
-          <p className="text-slate-500 text-xs text-center">
-            Можно отправить Excel, PDF, фото заявки или вставить список текстом
+          <p className="text-slate-400 text-xs text-center leading-relaxed">
+            Ответим в рабочее время за 30 минут · Безнал, договор, ЭСФ · Данные не передаём
           </p>
+          <a
+            href={getWhatsAppUrl(
+              category
+                ? `Здравствуйте! Интересует ${category}. Прикреплю список товаров.`
+                : undefined,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick(category)}
+            className="block text-center text-sm font-medium text-green-400 hover:text-green-300"
+          >
+            Есть готовый Excel или фото? Отправьте в WhatsApp
+          </a>
         </form>
       </div>
     </div>
