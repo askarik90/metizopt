@@ -27,13 +27,25 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     return () => window.removeEventListener("krp-edit-change", read);
   }, []);
 
-  const section = () => (ref.current?.closest("section") as HTMLElement | null) ?? null;
+  // Находим элемент с фоновым фото: hero — предок-секция со стилем фона;
+  // бокс/карточка — фоновый div внутри той же ссылки.
+  const findBgEl = (): HTMLElement | null => {
+    const start = ref.current;
+    if (!start) return null;
+    let el: HTMLElement | null = start.parentElement;
+    while (el) {
+      if (el.style?.backgroundImage && el.style.backgroundImage !== "none") return el;
+      el = el.parentElement;
+    }
+    const host = start.closest("a") ?? start.parentElement;
+    return host?.querySelector<HTMLElement>('div[style*="background-image"]') ?? null;
+  };
 
-  // живое превью положения фона hero
+  // живое превью положения фото (image — последний слой; градиент справа не трогаем)
   useEffect(() => {
     if (!open) return;
-    const el = section();
-    if (el) el.style.backgroundPosition = `${x}% ${y}%`;
+    const el = findBgEl();
+    if (el) el.style.backgroundPosition = `right center, ${x}% ${y}%`;
   }, [x, y, open]);
 
   const openPanel = async () => {

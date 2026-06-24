@@ -146,6 +146,7 @@ export default function CategoryClient({
                               }}
                             />
                           )}
+                          {img && <ImageEditOverlay slug={t.slug} />}
                           <div className="relative z-10 flex items-start justify-between gap-2">
                             <h3 className="text-sm font-bold uppercase leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
                               {t.name}

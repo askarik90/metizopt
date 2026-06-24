@@ -200,6 +200,7 @@ export default async function CatalogPage({
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                       {groupCategories.map((category) => {
                         const cimg = getCategoryImage(category.slug);
+                        const cpos = imgPositions[category.slug];
                         return (
                         <Link
                           key={category.slug}
@@ -212,10 +213,11 @@ export default async function CatalogPage({
                               style={{
                                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 46%, rgba(255,255,255,0.55) 72%, rgba(255,255,255,0.1) 100%), url('${cimg}')`,
                                 backgroundSize: "cover",
-                                backgroundPosition: "right center",
+                                backgroundPosition: `right center, ${cpos?.x ?? 100}% ${cpos?.y ?? 50}%`,
                               }}
                             />
                           )}
+                          {cimg && <ImageEditOverlay slug={category.slug} />}
                           <div className="relative z-10 mb-3 flex items-start justify-between">
                             <h3 className="flex-1 pr-2 text-sm font-black uppercase leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
                               {category.title}
