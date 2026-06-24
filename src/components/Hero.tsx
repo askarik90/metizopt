@@ -28,6 +28,7 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
     <section
       className="relative overflow-hidden bg-slate-900"
       style={{
+        backgroundColor: "#0f172a", // тёмный плейсхолдер сразу (до загрузки CSS/картинки) — без голубого флэша
         backgroundImage: `url('${HERO_IMG}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",

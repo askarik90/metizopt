@@ -63,6 +63,7 @@ export default async function TypePage({
 
   const [groups, categories, positions] = await Promise.all([getGroups(), getCategories(), getImagePositions()]);
   const pos = positions[type] ?? positions[slug];
+  const heroImg = getTypeImage(type) ?? getCategoryImage(slug);
   const category = categories.find((c: CategoryItem) => c.slug === slug);
   const parentGroup = groups.find((g: GroupItem) => g.categories.includes(slug));
   const pageUrl = `https://${COMPANY.domain}/catalog/${slug}/${type}`;
@@ -113,7 +114,8 @@ export default async function TypePage({
         ]}
       />
 
-      <section className="bg-slate-900 py-14" style={heroBg(getTypeImage(type) ?? getCategoryImage(slug), pos)}>
+      {heroImg && <link rel="preload" as="image" href={heroImg} fetchPriority="high" />}
+      <section className="bg-slate-900 py-14" style={heroBg(heroImg, pos)}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-3 inline-flex items-center border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
             {category?.title ?? "Каталог"} · оптом и в розницу
