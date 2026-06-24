@@ -41,7 +41,7 @@ export async function generateMetadata({
   if (!node) return {};
   const canonical = `https://${COMPANY.domain}/catalog/${slug}/${type}`;
   const sizeList = node.sizes.slice(0, 6).map((s) => s.label).join(", ");
-  const title = `${node.name} в Алматы — купить оптом и в розницу`;
+  const title = `${node.name} оптом в Алматы`;
   const description = `${node.name}${
     sizeList ? `: размеры ${sizeList}` : ""
   }. Со склада в Алматы, оптом и в розницу. Доставка по Казахстану.`.slice(0, 165);
