@@ -204,6 +204,12 @@ export default function AdminDashboard() {
           >
             📦 Каталог
           </a>
+          <a
+            href="/admin/image-positions"
+            className="px-2 py-3 font-bold text-slate-600 transition hover:border-b-2 hover:border-slate-300 hover:text-slate-900"
+          >
+            🖼️ Фото
+          </a>
         </div>
       </nav>
 

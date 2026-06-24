@@ -7,7 +7,7 @@ import FAQ from "@/components/FAQ";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import TypeSizePicker from "@/components/TypeSizePicker";
 import { COMPANY } from "@/config/company";
-import { getCategories, getGroups, type CategoryItem, type GroupItem } from "@/lib/db";
+import { getCategories, getGroups, getImagePositions, type CategoryItem, type GroupItem } from "@/lib/db";
 import catalogTreeJson from "@/data/catalog-tree.json";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { getCategoryImage, getTypeImage, heroBg, cardBg } from "@/lib/categoryImages";
@@ -61,7 +61,8 @@ export default async function TypePage({
   const node = findType(slug, type);
   if (!node) notFound();
 
-  const [groups, categories] = await Promise.all([getGroups(), getCategories()]);
+  const [groups, categories, positions] = await Promise.all([getGroups(), getCategories(), getImagePositions()]);
+  const pos = positions[type] ?? positions[slug];
   const category = categories.find((c: CategoryItem) => c.slug === slug);
   const parentGroup = groups.find((g: GroupItem) => g.categories.includes(slug));
   const pageUrl = `https://${COMPANY.domain}/catalog/${slug}/${type}`;
@@ -112,7 +113,7 @@ export default async function TypePage({
         ]}
       />
 
-      <section className="bg-slate-900 py-14" style={heroBg(getTypeImage(type) ?? getCategoryImage(slug))}>
+      <section className="bg-slate-900 py-14" style={heroBg(getTypeImage(type) ?? getCategoryImage(slug), pos)}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-3 inline-flex items-center border border-orange-600/30 bg-orange-600/20 px-3 py-1.5 text-xs font-medium text-orange-400">
             {category?.title ?? "Каталог"} · оптом и в розницу
@@ -133,7 +134,7 @@ export default async function TypePage({
           {node.description && (
             <div
               className="relative overflow-hidden rounded-lg border border-slate-200 bg-white"
-              style={cardBg(getTypeImage(type) ?? getCategoryImage(slug))}
+              style={cardBg(getTypeImage(type) ?? getCategoryImage(slug), pos)}
             >
               <div
                 className="prose prose-slate max-w-2xl p-6 text-slate-600"

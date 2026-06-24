@@ -84,6 +84,25 @@ export async function saveSettings(data: typeof DEFAULT_SETTINGS) {
   fsWrite("settings.json", data);
 }
 
+// ── IMAGE POSITIONS (фон фото у hero/описаний/карточек) ───────────────
+// Безопасно для Blob: читается только при ISR-пересборке страницы (≤1/сутки
+// на страницу), пишется только при сохранении из админки. НЕ на каждый визит.
+export interface ImagePosition { x?: number; y?: number; size?: "cover" | "contain" }
+export type ImagePositions = Record<string, ImagePosition>;
+
+export async function getImagePositions(): Promise<ImagePositions> {
+  const fromGit = fsRead<ImagePositions>("image-positions.json", {});
+  // Источник истины в проде — Blob (правки из админки), с фолбэком на git
+  // (мои значения). Blob лежит/пуст → используется git. Без поштучных чтений.
+  if (useBlob()) return blobGet<ImagePositions>("image-positions", fromGit);
+  return fromGit;
+}
+
+export async function saveImagePositions(data: ImagePositions) {
+  if (useBlob()) { await blobSet("image-positions", data); return; }
+  fsWrite("image-positions.json", data);
+}
+
 // ── FAQ ───────────────────────────────────────────────────────────────
 
 export interface FAQItem { id: string; question: string; answer: string }

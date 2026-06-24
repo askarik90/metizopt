@@ -8,7 +8,7 @@ import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { getCategoryImage, getTypeImage, heroBg } from "@/lib/categoryImages";
+import { getCategoryImage, getTypeImage, heroBg, type ImgPos } from "@/lib/categoryImages";
 
 export interface TypeLink {
   slug: string;
@@ -29,6 +29,7 @@ interface CategoryClientProps {
   sidebar?: React.ReactNode;
   types?: TypeLink[];
   sizes?: { label: string; code: string }[];
+  imgPos?: Record<string, ImgPos>;
 }
 
 export default function CategoryClient({
@@ -42,6 +43,7 @@ export default function CategoryClient({
   sidebar,
   types = [],
   sizes = [],
+  imgPos,
 }: CategoryClientProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { trackWhatsAppClick, trackLeadFormOpen } = useAnalytics();
@@ -54,7 +56,7 @@ export default function CategoryClient({
   return (
     <>
       {/* Hero — full width, фон = картинка категории с L→R градиентом */}
-      <section className="bg-slate-900 py-16" style={heroBg(getCategoryImage(slug))}>
+      <section className="bg-slate-900 py-16" style={heroBg(getCategoryImage(slug), imgPos?.[slug])}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4">
@@ -121,6 +123,7 @@ export default function CategoryClient({
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {types.map((t) => {
                         const img = getTypeImage(t.slug);
+                        const cp = imgPos?.[t.slug];
                         return (
                         <Link
                           key={t.slug}
@@ -132,8 +135,9 @@ export default function CategoryClient({
                               className="absolute inset-0"
                               style={{
                                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 45%, rgba(255,255,255,0.5) 70%, rgba(255,255,255,0) 100%), url('${img}')`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "right center",
+                                backgroundSize: `cover, ${cp?.size ?? "cover"}`,
+                                backgroundPosition: `right center, ${cp?.x ?? 100}% ${cp?.y ?? 50}%`,
+                                backgroundRepeat: "no-repeat, no-repeat",
                               }}
                             />
                           )}

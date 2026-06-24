@@ -8,6 +8,9 @@ const C = (name: string) => `/images/categories/${name}.jpg`;
 const T = (name: string) => `/images/types/${name}.jpg`;
 const TYPE_IMG = new Set(typeImagesJson as string[]);
 
+// Позиция/размер фонового фото (настраивается через админку, хранится в data/image-positions.json)
+export interface ImgPos { x?: number; y?: number; size?: "cover" | "contain" }
+
 export const CATEGORY_IMAGES: Record<string, string> = {
   // Крепеж
   "krepezh-bolty": C("bolty"),
@@ -119,28 +122,31 @@ export function getTypeImage(typeSlug?: string): string | undefined {
 
 // тёмный градиент слева направо поверх картинки (текст читаем слева, фото справа);
 // без картинки — прежний паттерн из точек
-export function heroBg(img?: string): CSSProperties {
+export function heroBg(img?: string, pos?: ImgPos): CSSProperties {
   if (!img) {
     return {
       backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
       backgroundSize: "28px 28px",
     };
   }
+  const x = pos?.x ?? 100, y = pos?.y ?? 50;
   return {
     backgroundImage: `linear-gradient(to right, rgba(15,23,42,0.97) 0%, rgba(15,23,42,0.9) 38%, rgba(15,23,42,0.4) 72%, rgba(15,23,42,0.12) 100%), url('${img}')`,
     backgroundSize: "cover",
-    backgroundPosition: "right center",
+    backgroundPosition: `${x}% ${y}%`,
   };
 }
 
 // светлый вариант для контентных карточек: тёмный текст слева читаем, фото проступает справа
-export function cardBg(img?: string): CSSProperties {
+export function cardBg(img?: string, pos?: ImgPos): CSSProperties {
   if (!img) return {};
-  // Градиент — на всю ширину (cover), фото — целиком без обрезки (contain), справа.
+  // Градиент — на всю ширину (cover), фото — настраиваемый размер/позиция (по умолч. целиком справа).
+  const size = pos?.size ?? "contain";
+  const x = pos?.x ?? 100, y = pos?.y ?? 50;
   return {
     backgroundImage: `linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.99) 50%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.2) 100%), url('${img}')`,
-    backgroundSize: "cover, contain",
-    backgroundPosition: "right center, right center",
+    backgroundSize: `cover, ${size}`,
+    backgroundPosition: `right center, ${x}% ${y}%`,
     backgroundRepeat: "no-repeat, no-repeat",
   };
 }

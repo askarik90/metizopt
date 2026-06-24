@@ -12,6 +12,7 @@ import { COMPANY } from "@/config/company";
 import {
   getCategories,
   getGroups,
+  getImagePositions,
   type CategoryItem,
   type GroupItem,
 } from "@/lib/db";
@@ -84,7 +85,7 @@ export default async function CatalogPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [groups, categories] = await Promise.all([getGroups(), getCategories()]);
+  const [groups, categories, imgPositions] = await Promise.all([getGroups(), getCategories(), getImagePositions()]);
   const pageUrl = `https://${COMPANY.domain}/catalog/${slug}`;
 
   // ── GROUP PAGE ─────────────────────────────────────────────────────────
@@ -328,6 +329,7 @@ export default async function CatalogPage({
         fullDescription={sanitizeRichText(category.fullDescription)}
         types={catalogTree[slug]?.types ?? []}
         sizes={catalogTree[slug]?.sizes ?? []}
+        imgPos={imgPositions}
         sidebar={
           <CatalogSidebar groups={groups} categories={categories} currentSlug={slug} />
         }
