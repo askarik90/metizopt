@@ -54,6 +54,10 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       utm_campaign: cap(body.utm_campaign, 100),
       utm_content: cap(body.utm_content, 100),
       utm_term: cap(body.utm_term, 100),
+      gclid: cap(body.gclid, 200),
+      gbraid: cap(body.gbraid, 200),
+      wbraid: cap(body.wbraid, 200),
+      landing_page: cap(body.landing_page, 500),
       created_at: new Date().toISOString(),
     };
 
@@ -124,7 +128,15 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
         searchQuery: lead.search_query,
         pageUrl: lead.page_url,
         utm_source: lead.utm_source,
+        utm_medium: lead.utm_medium,
         utm_campaign: lead.utm_campaign,
+        utm_content: lead.utm_content,
+        utm_term: lead.utm_term,
+        gclid: lead.gclid,
+        gbraid: lead.gbraid,
+        wbraid: lead.wbraid,
+        landing_page: lead.landing_page,
+        whatsapp: lead.whatsapp,
         attachment,
       });
       console.log("✅ Email sent successfully");

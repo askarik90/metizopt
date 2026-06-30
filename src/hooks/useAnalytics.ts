@@ -130,15 +130,67 @@ export function useAnalytics() {
   };
 }
 
-// Читаем UTM напрямую из URL при сабмите — не использует useSearchParams (нет Suspense)
+// --- Атрибуция: ловим gclid + UTM при заходе с рекламы и храним в cookie (90 дней),
+// чтобы источник не терялся, если клиент походил по сайту до отправки формы. ---
+const ATTR_COOKIE = "krp_attr";
+const ATTR_KEYS = [
+  "gclid", "gbraid", "wbraid",
+  "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
+];
+
+function readCookie(name: string): string {
+  if (typeof document === "undefined") return "";
+  const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+  return m ? decodeURIComponent(m[1]) : "";
+}
+function writeCookie(name: string, value: string, days: number) {
+  if (typeof document === "undefined") return;
+  const exp = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${exp}; path=/; SameSite=Lax`;
+}
+
+// Вызывать на КАЖДОЙ загрузке страницы (см. <AttributionCapture/>): сохраняет «последний платный клик».
+export function captureAttribution(): void {
+  if (typeof window === "undefined") return;
+  const p = new URLSearchParams(window.location.search);
+  const incoming: Record<string, string> = {};
+  for (const k of ATTR_KEYS) {
+    const v = p.get(k);
+    if (v) incoming[k] = v;
+  }
+  // Перезаписываем cookie только при НОВОМ платном клике (gclid/gbraid/wbraid или utm_source) —
+  // так атрибутирует и Google (last paid click). Прямые/органические заходы старое не затирают.
+  if (incoming.gclid || incoming.gbraid || incoming.wbraid || incoming.utm_source) {
+    const data: Record<string, string> = {
+      ...incoming,
+      landing_page: window.location.pathname + window.location.search,
+      referrer: document.referrer || "",
+      ts: new Date().toISOString(),
+    };
+    try {
+      writeCookie(ATTR_COOKIE, JSON.stringify(data), 90);
+    } catch {}
+  }
+}
+
+// Полная атрибуция для отправки в форме/CRM: cookie (приоритет) + добор из текущего URL.
 export function getUtmParams(): Record<string, string> {
   if (typeof window === "undefined") return {};
+  let stored: Record<string, string> = {};
+  try {
+    stored = JSON.parse(readCookie(ATTR_COOKIE) || "{}");
+  } catch {}
   const p = new URLSearchParams(window.location.search);
+  const pick = (k: string) => stored[k] || p.get(k) || "";
   return {
-    utm_source: p.get("utm_source") || "",
-    utm_medium: p.get("utm_medium") || "",
-    utm_campaign: p.get("utm_campaign") || "",
-    utm_content: p.get("utm_content") || "",
-    utm_term: p.get("utm_term") || "",
+    utm_source: pick("utm_source"),
+    utm_medium: pick("utm_medium"),
+    utm_campaign: pick("utm_campaign"),
+    utm_content: pick("utm_content"),
+    utm_term: pick("utm_term"),
+    gclid: pick("gclid"),
+    gbraid: pick("gbraid"),
+    wbraid: pick("wbraid"),
+    landing_page: stored.landing_page || window.location.pathname,
   };
 }

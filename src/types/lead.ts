@@ -15,6 +15,10 @@ export interface Lead {
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
+  gclid?: string;
+  gbraid?: string;
+  wbraid?: string;
+  landing_page?: string;
   created_at: string;
 }
 

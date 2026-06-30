@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { COMPANY } from "@/config/company";
 import EditModeBar from "@/components/edit/EditModeBar";
+import AttributionCapture from "@/components/AttributionCapture";
 
 const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
@@ -85,6 +86,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </noscript>
         {children}
+        <AttributionCapture />
         <EditModeBar />
       </body>
 

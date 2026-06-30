@@ -21,7 +21,15 @@ export interface LeadEmailData {
   searchQuery?: string;
   pageUrl?: string;
   utm_source?: string;
+  utm_medium?: string;
   utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+  gclid?: string;
+  gbraid?: string;
+  wbraid?: string;
+  landing_page?: string;
+  whatsapp?: string;
   attachment?: { filename: string; content: Buffer };
 }
 
@@ -54,6 +62,29 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     searchQuery: esc(lead.searchQuery || ""),
     message: esc(lead.message || "").replace(/\n/g, "<br>"),
   };
+
+  // Машиночитаемый блок для CRM «Хаб лидов»: полные данные + атрибуция (gclid/UTM).
+  // CRM ловит LEADHUB-JSON:{...}:LEADHUB и берёт поля напрямую (см. email_collector.parse_lead_email).
+  const crmParts: string[] = [];
+  if (lead.company) crmParts.push(`Компания: ${lead.company}`);
+  if (lead.city) crmParts.push(`Город: ${lead.city}`);
+  if (lead.category) crmParts.push(`Интерес: ${lead.category}`);
+  if (lead.searchQuery) crmParts.push(`Искал: ${lead.searchQuery}`);
+  if (lead.whatsapp) crmParts.push(`WhatsApp: ${lead.whatsapp}`);
+  if (lead.message) crmParts.push(lead.message);
+  const crmJson = {
+    name: lead.name,
+    phone: lead.phone,
+    message: crmParts.join("\n"),
+    utm_source: lead.utm_source || "",
+    utm_medium: lead.utm_medium || "",
+    utm_campaign: lead.utm_campaign || "",
+    utm_content: lead.utm_content || "",
+    utm_term: lead.utm_term || "",
+    gclid: lead.gclid || lead.gbraid || lead.wbraid || "",
+    landing_page: lead.landing_page || lead.pageUrl || "",
+  };
+  const jsonBlock = `LEADHUB-JSON:${JSON.stringify(crmJson)}:LEADHUB`;
 
   const html = `<!DOCTYPE html>
     <html><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>
@@ -108,6 +139,7 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
         </div>
       </div>
     </div>
+    <div style="display:none;color:#fff;font-size:1px">${jsonBlock}</div>
     </body></html>
   `;
 
