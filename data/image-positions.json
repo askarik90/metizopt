@@ -1,27 +1,27 @@
 {
   "bolt-din-15237": {
-    "x": 100,
-    "y": 28,
-    "size": 35
+    "x": 94,
+    "y": 29,
+    "size": 33
   },
   "bolt-din-933-oc-kl-pr-5-8": {
     "x": 83,
     "y": 9,
     "size": 20
   },
-  "bolt-gost-52644-2006-stal-40h-selekt-kl-10-9": {
-    "x": 92,
-    "y": -4,
+  "bolt-mebelnyj-din-603-zhc": {
+    "x": 94,
+    "y": 21,
     "size": 20
   },
-  "bolty-s-flancem-din6921": {
-    "x": 90,
-    "y": 60,
+  "bolt-u-obraznyj-din-3570": {
+    "x": 94,
+    "y": 10,
     "size": 20
   },
-  "bolt-gost-7802": {
-    "x": 92,
-    "y": 50,
-    "size": 20
+  "bolt-lemeshnyj-gost-7786-81-din-608": {
+    "x": 100,
+    "y": 38,
+    "size": 28
   }
 }
