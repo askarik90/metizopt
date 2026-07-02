@@ -153,5 +153,35 @@
     "x": 99,
     "y": 50,
     "size": 20
+  },
+  "din-7380-vint-s-polukrugloj-golovkoj-i-vnutr-shestigrannikom": {
+    "x": 90,
+    "y": 50,
+    "size": 20
+  },
+  "din-7991-vint-s-potajnoj-golovkoj-i-vnutr-shestigrannikom": {
+    "x": 100,
+    "y": 50,
+    "size": 34
+  },
+  "din-967-vint-s-polukrugloj-golovkoj": {
+    "x": 96,
+    "y": 31,
+    "size": 20
+  },
+  "din-7985-vint-s-polucilindricheskoj-golovkoj": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "din-965-vint-s-potajnoj-golovkoj": {
+    "x": 97,
+    "y": 29,
+    "size": 20
+  },
+  "vint-din-912": {
+    "x": 100,
+    "y": 50,
+    "size": 31
   }
 }
