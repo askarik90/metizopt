@@ -728,5 +728,20 @@
     "x": 100,
     "y": 111,
     "size": 73
+  },
+  "shlangi-armirovannyi": {
+    "x": 100,
+    "y": 16,
+    "size": 55
+  },
+  "shlangi-mbs": {
+    "x": 100,
+    "y": 48,
+    "size": 57
+  },
+  "shlangi-polivochnyi": {
+    "x": 100,
+    "y": 121,
+    "size": 54
   }
 }
