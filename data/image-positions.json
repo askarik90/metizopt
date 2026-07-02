@@ -448,5 +448,55 @@
     "x": 100,
     "y": 50,
     "size": 130
+  },
+  "ventil-profil-l": {
+    "x": 100,
+    "y": 86,
+    "size": 49
+  },
+  "ventil-profil-u": {
+    "x": 100,
+    "y": 27,
+    "size": 60
+  },
+  "ventil-skoba-flantsev": {
+    "x": 100,
+    "y": 92,
+    "size": 46
+  },
+  "ventil-strubtsiny": {
+    "x": 100,
+    "y": 50,
+    "size": 59
+  },
+  "ventil-traversa": {
+    "x": 100,
+    "y": 150,
+    "size": 53
+  },
+  "ventil-trubki-kflex": {
+    "x": 105,
+    "y": 87,
+    "size": 54
+  },
+  "ventil-ugolok": {
+    "x": 100,
+    "y": 91,
+    "size": 29
+  },
+  "ventil-khomut": {
+    "x": 100,
+    "y": 110,
+    "size": 54
+  },
+  "ventil-shina": {
+    "x": 100,
+    "y": 122,
+    "size": 45
+  },
+  "ventil-shpilka": {
+    "x": 100,
+    "y": 100,
+    "size": 54
   }
 }
