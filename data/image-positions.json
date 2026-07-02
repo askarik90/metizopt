@@ -183,5 +183,55 @@
     "x": 100,
     "y": 50,
     "size": 31
+  },
+  "anker-kryuk": {
+    "x": 87,
+    "y": 0,
+    "size": 20
+  },
+  "anker-fiks": {
+    "x": 100,
+    "y": 38,
+    "size": 33
+  },
+  "bolt-ankernyj-klinovoj-zhc": {
+    "x": 97,
+    "y": 3,
+    "size": 21
+  },
+  "bolt-ankernyj-pod-gajku": {
+    "x": 100,
+    "y": 29,
+    "size": 30
+  },
+  "zabivaemyj-anker-canga": {
+    "x": 88,
+    "y": 23,
+    "size": 20
+  },
+  "anker-s-kolcom": {
+    "x": 85,
+    "y": -18,
+    "size": 20
+  },
+  "anker-klin-dlya-podvesnyh-potolkov": {
+    "x": 109,
+    "y": 17,
+    "size": 38
+  },
+  "bolt-ankernyj-klinovoj-cink": {
+    "x": 86,
+    "y": -23,
+    "size": 20
+  },
+  "bolt-ankernyj-prostoj": {
+    "x": 84,
+    "y": 35,
+    "size": 31
+  },
+  "metallicheskij-ramnyj-anker": {
+    "x": 99,
+    "y": 37,
+    "size": 39
   }
 }
