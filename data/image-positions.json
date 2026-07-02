@@ -408,5 +408,15 @@
     "x": 102,
     "y": 50,
     "size": 20
+  },
+  "gvozdi-gost-4028-63-korobkami": {
+    "x": 100,
+    "y": 50,
+    "size": 39
+  },
+  "gvozdi-mashinnye-svarennye-v-obojmu-ch-7811-7376": {
+    "x": 100,
+    "y": 21,
+    "size": 20
   }
 }
