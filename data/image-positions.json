@@ -758,5 +758,10 @@
     "x": 100,
     "y": 104,
     "size": "cover"
+  },
+  "krepezh-shpilki": {
+    "x": 100,
+    "y": 50,
+    "size": "cover"
   }
 }
