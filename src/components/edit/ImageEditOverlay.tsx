@@ -196,7 +196,8 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
             <input type="range" min={-50} max={150} value={y} onClick={stop} onChange={(e) => { const v = +e.target.value; setY(v); queue(x, v, size); }} className="w-full" />
           </label>
 
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onClick={stop} onChange={onFile} />
+          {/* только stopPropagation, БЕЗ preventDefault — иначе отменится открытие диалога выбора файла */}
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onClick={(e) => e.stopPropagation()} onChange={onFile} />
           <button onClick={(e) => { stop(e); fileRef.current?.click(); }} disabled={up} className="mt-3 w-full rounded border border-slate-300 px-2 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50">
             {up ? "Загрузка…" : "Заменить фото"}
           </button>
