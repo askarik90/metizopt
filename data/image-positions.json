@@ -743,5 +743,20 @@
     "x": 100,
     "y": 121,
     "size": 54
+  },
+  "krepezh-bolty": {
+    "x": 100,
+    "y": 50,
+    "size": 34
+  },
+  "krepezh-gayki": {
+    "x": 100,
+    "y": 96,
+    "size": "cover"
+  },
+  "krepezh-shayby": {
+    "x": 100,
+    "y": 104,
+    "size": "cover"
   }
 }
