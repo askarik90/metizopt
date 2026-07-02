@@ -93,58 +93,59 @@ export type ImagePositions = Record<string, ImagePosition>;
 // Временный режим записи в git через GitHub Contents API (пока Blob лежит).
 // Токен — fine-grained PAT с Contents:write на репо, в Vercel env GITHUB_TOKEN.
 // Код токен не хранит. Убрать GITHUB_TOKEN → код вернётся на Blob автоматически.
-async function saveJsonToGitHub(path: string, content: string): Promise<void> {
+function ghConf() {
   const token = process.env.GITHUB_TOKEN!;
-  const repo = process.env.GITHUB_REPO || "askarik90/metizopt";
-  const branch = process.env.GITHUB_BRANCH || "master";
-  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/vnd.github+json",
-    "User-Agent": "krp-inline-editor",
-    "X-GitHub-Api-Version": "2022-11-28",
+  return {
+    repo: process.env.GITHUB_REPO || "askarik90/metizopt",
+    branch: process.env.GITHUB_BRANCH || "master",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "krp-inline-editor",
+      "X-GitHub-Api-Version": "2022-11-28",
+    } as Record<string, string>,
   };
-  let sha: string | undefined;
-  const cur = await fetch(`${url}?ref=${branch}`, { headers });
-  if (cur.ok) sha = ((await cur.json()) as { sha?: string }).sha;
+}
+
+const IMG_MSG = "edit: правка фото через инлайн-редактор";
+
+// Чтение файла + его sha со свежего HEAD (не из отстающей сборки).
+// status: 200 — ок; 404 — файла ещё нет (пустая база, это НЕ ошибка); иначе — сбой чтения
+// (писать нельзя, иначе затрём файл одним батчем).
+async function githubGetFile(path: string): Promise<{ status: number; text?: string; sha?: string }> {
+  const { repo, branch, headers } = ghConf();
+  const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+  const res = await fetch(url, { headers, cache: "no-store" });
+  if (res.status === 404) return { status: 404 };
+  if (!res.ok) return { status: res.status };
+  const j = (await res.json()) as { content?: string; sha?: string };
+  const text = j.content ? Buffer.from(j.content, "base64").toString("utf8") : "";
+  return { status: 200, text, sha: j.sha };
+}
+
+// Запись файла. Возвращает HTTP-статус; 409 (конфликт sha) отдаём вызывающему для повтора.
+async function githubPutFile(path: string, content: string, sha: string | undefined): Promise<number> {
+  const { repo, branch, headers } = ghConf();
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
   const res = await fetch(url, {
     method: "PUT",
     headers,
     body: JSON.stringify({
-      message: "edit: правка фото через инлайн-редактор",
+      message: IMG_MSG,
       content: Buffer.from(content, "utf8").toString("base64"),
       branch,
       ...(sha ? { sha } : {}),
     }),
   });
+  if (res.status === 409) return 409;
   if (!res.ok) throw new Error(`GitHub save ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  return res.status;
 }
 
-// Чтение файла напрямую из GitHub (свежий HEAD ветки), а НЕ из задеплоенной сборки.
-// Нужно для безопасного мёржа: сборка отстаёт на время редеплоя (~1 мин), из-за чего
-// быстрые правки затирали друг друга.
-async function readJsonFromGitHub<T>(path: string, fallback: T): Promise<T> {
-  const token = process.env.GITHUB_TOKEN!;
-  const repo = process.env.GITHUB_REPO || "askarik90/metizopt";
-  const branch = process.env.GITHUB_BRANCH || "master";
-  const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
-  try {
-    const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github+json",
-        "User-Agent": "krp-inline-editor",
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-      cache: "no-store",
-    });
-    if (!res.ok) return fallback;
-    const j = (await res.json()) as { content?: string };
-    if (!j.content) return fallback;
-    return JSON.parse(Buffer.from(j.content, "base64").toString("utf8")) as T;
-  } catch {
-    return fallback;
-  }
+async function saveJsonToGitHub(path: string, content: string): Promise<void> {
+  const g = await githubGetFile(path);
+  if (g.status !== 200 && g.status !== 404) throw new Error(`GitHub read ${g.status}`);
+  await githubPutFile(path, content, g.status === 200 ? g.sha : undefined);
 }
 
 export async function getImagePositions(): Promise<ImagePositions> {
@@ -167,10 +168,18 @@ export async function saveImagePositions(data: ImagePositions) {
 // из-за которой быстрые правки нескольких фото затирали друг друга.
 export async function mergeImagePositions(partial: ImagePositions): Promise<ImagePositions> {
   if (process.env.GITHUB_TOKEN) {
-    const cur = await readJsonFromGitHub<ImagePositions>("data/image-positions.json", {});
-    const merged = { ...cur, ...partial };
-    await saveJsonToGitHub("data/image-positions.json", JSON.stringify(merged, null, 2) + "\n");
-    return merged;
+    const path = "data/image-positions.json";
+    // Атомарно: читаем content+sha, пишем с тем же sha; при 409 (кто-то закоммитил между)
+    // перечитываем свежий HEAD и мёржим заново. При сбое ЧТЕНИЯ бросаем ошибку и НЕ пишем.
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const g = await githubGetFile(path);
+      if (g.status !== 200 && g.status !== 404) throw new Error(`GitHub read ${g.status}`);
+      const cur: ImagePositions = g.text ? (JSON.parse(g.text) as ImagePositions) : {};
+      const merged = { ...cur, ...partial };
+      const st = await githubPutFile(path, JSON.stringify(merged, null, 2) + "\n", g.status === 200 ? g.sha : undefined);
+      if (st !== 409) return merged;
+    }
+    throw new Error("GitHub merge: конфликт sha после 3 попыток");
   }
   if (useBlob()) {
     const cur = await blobGet<ImagePositions>("image-positions", {});

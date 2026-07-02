@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getPending, clearPending, pendingCount, onPendingChange } from "@/lib/editPending";
+import { getPending, removeSavedKeys, pendingCount, onPendingChange } from "@/lib/editPending";
 
 // Глобальный флаг «режим правки» — хранится в localStorage (per-origin),
 // включается из админки. Видим только тому, кто включил.
@@ -42,7 +42,7 @@ export default function EditModeBar() {
 
   // Публикуем ВСЕ накопленные правки одним запросом → один коммит → один редеплой.
   const saveAll = async () => {
-    const pend = getPending();
+    const pend = getPending(); // snapshot того, что реально отправляем
     const n = Object.keys(pend).length;
     if (!n || saving) return;
     setSaving(true);
@@ -54,7 +54,7 @@ export default function EditModeBar() {
         body: JSON.stringify({ merge: true, positions: pend }),
       });
       if (r.ok) {
-        clearPending();
+        removeSavedKeys(pend); // чистим только отправленное; правки во время сохранения остаются
         setMsg(`✓ ${n} фото сохранено — применится за ~1 мин (передеплой)`);
       } else if (r.status === 401) {
         setMsg("Войдите в админку, чтобы сохранять");

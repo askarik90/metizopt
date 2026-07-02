@@ -75,10 +75,11 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     } catch {}
   };
 
-  // Кладём правку в общий буфер. Публикуются все разом по кнопке «Сохранить всё» в плашке.
-  const apply = () => {
-    setPending(slug, { x, y, size });
-    setMsg("✓ В очереди. Нажмите «Сохранить всё» в плашке снизу.");
+  // Кладём правку в буфер СРАЗУ при любом изменении — чтобы не терялось, если забыли нажать
+  // «Применить». Публикуются все разом кнопкой «Сохранить всё» в плашке.
+  const queue = (nx: number, ny: number, nsz: "cover" | "contain" | number) => {
+    const ok = setPending(slug, { x: nx, y: ny, size: nsz });
+    setMsg(ok ? "✓ В очереди — жмите «Сохранить всё» внизу" : "⚠ Браузер блокирует сохранение (localStorage)");
   };
 
   // клик/нажатие внутри overlay не должны срабатывать как переход по ссылке-карточке
@@ -116,28 +117,28 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
           </div>
 
           <div className="mb-2 flex gap-2 text-xs">
-            <button onClick={(e) => { stop(e); setSize("cover"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "cover" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Заполнить</button>
-            <button onClick={(e) => { stop(e); setSize("contain"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "contain" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Целиком</button>
+            <button onClick={(e) => { stop(e); setSize("cover"); queue(x, y, "cover"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "cover" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Заполнить</button>
+            <button onClick={(e) => { stop(e); setSize("contain"); queue(x, y, "contain"); }} className={`flex-1 rounded px-2 py-1.5 font-semibold ${size === "contain" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"}`}>Целиком</button>
           </div>
           <label className="block text-xs text-slate-500">
             Масштаб: {typeof size === "number" ? `${size}%` : "авто"}
-            <input type="range" min={20} max={300} value={typeof size === "number" ? size : 100} onClick={stop} onChange={(e) => setSize(+e.target.value)} className="w-full" />
+            <input type="range" min={20} max={300} value={typeof size === "number" ? size : 100} onClick={stop} onChange={(e) => { const v = +e.target.value; setSize(v); queue(x, y, v); }} className="w-full" />
           </label>
 
           <label className="block text-xs text-slate-500">
             По горизонтали: {x}%
-            <input type="range" min={-50} max={150} value={x} onClick={stop} onChange={(e) => setX(+e.target.value)} className="w-full" />
+            <input type="range" min={-50} max={150} value={x} onClick={stop} onChange={(e) => { const v = +e.target.value; setX(v); queue(v, y, size); }} className="w-full" />
           </label>
           <label className="block text-xs text-slate-500">
             По вертикали: {y}%
-            <input type="range" min={-50} max={150} value={y} onClick={stop} onChange={(e) => setY(+e.target.value)} className="w-full" />
+            <input type="range" min={-50} max={150} value={y} onClick={stop} onChange={(e) => { const v = +e.target.value; setY(v); queue(x, v, size); }} className="w-full" />
           </label>
 
-          <button onClick={(e) => { stop(e); apply(); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
-            Применить
+          <button onClick={(e) => { stop(e); queue(x, y, size); setOpen(false); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
+            Готово
           </button>
           {msg && <div className="mt-2 text-[11px] text-slate-500">{msg}</div>}
-          <div className="mt-1 text-[11px] text-slate-400">Правки копятся — публикуются кнопкой «Сохранить всё» внизу.</div>
+          <div className="mt-1 text-[11px] text-slate-400">Правки копятся автоматически — публикуются кнопкой «Сохранить всё» внизу.</div>
         </div>
       )}
     </div>
