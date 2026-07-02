@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { sizeCss } from "@/lib/categoryImages";
+import { getPending, setPending } from "@/lib/editPending";
 
 const KEY = "krp_edit";
 function editOn() {
@@ -56,6 +57,15 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
   const openPanel = async () => {
     setOpen(true);
     setMsg("");
+    // Сначала берём несохранённую правку из буфера (если её уже правили в этой сессии).
+    const pend = getPending()[slug];
+    if (pend) {
+      setX(typeof pend.x === "number" ? pend.x : 100);
+      setY(typeof pend.y === "number" ? pend.y : 50);
+      setSize(typeof pend.size === "number" ? pend.size : pend.size === "contain" ? "contain" : "cover");
+      setMsg("В очереди на сохранение");
+      return;
+    }
     try {
       const d = await (await fetch("/api/image-positions")).json();
       const p = d?.[slug] ?? {};
@@ -65,22 +75,10 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     } catch {}
   };
 
-  const save = async () => {
-    setMsg("Сохраняю…");
-    try {
-      const cur = (await (await fetch("/api/image-positions")).json()) || {};
-      cur[slug] = { x, y, size };
-      const r = await fetch("/api/image-positions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cur),
-      });
-      if (r.ok) setMsg("✓ Сохранено — применится за ~1 мин (передеплой)");
-      else if (r.status === 401) setMsg("Войдите в админку, чтобы сохранять");
-      else setMsg("Сохранение заработает после восстановления Blob");
-    } catch {
-      setMsg("Сохранение заработает после восстановления Blob");
-    }
+  // Кладём правку в общий буфер. Публикуются все разом по кнопке «Сохранить всё» в плашке.
+  const apply = () => {
+    setPending(slug, { x, y, size });
+    setMsg("✓ В очереди. Нажмите «Сохранить всё» в плашке снизу.");
   };
 
   // клик/нажатие внутри overlay не должны срабатывать как переход по ссылке-карточке
@@ -135,11 +133,11 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
             <input type="range" min={-50} max={150} value={y} onClick={stop} onChange={(e) => setY(+e.target.value)} className="w-full" />
           </label>
 
-          <button onClick={(e) => { stop(e); save(); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
-            Сохранить
+          <button onClick={(e) => { stop(e); apply(); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
+            Применить
           </button>
           {msg && <div className="mt-2 text-[11px] text-slate-500">{msg}</div>}
-          <div className="mt-1 text-[11px] text-slate-400">Смена самой картинки — после восстановления Blob.</div>
+          <div className="mt-1 text-[11px] text-slate-400">Правки копятся — публикуются кнопкой «Сохранить всё» внизу.</div>
         </div>
       )}
     </div>

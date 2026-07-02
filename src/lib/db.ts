@@ -120,6 +120,33 @@ async function saveJsonToGitHub(path: string, content: string): Promise<void> {
   if (!res.ok) throw new Error(`GitHub save ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
 
+// Чтение файла напрямую из GitHub (свежий HEAD ветки), а НЕ из задеплоенной сборки.
+// Нужно для безопасного мёржа: сборка отстаёт на время редеплоя (~1 мин), из-за чего
+// быстрые правки затирали друг друга.
+async function readJsonFromGitHub<T>(path: string, fallback: T): Promise<T> {
+  const token = process.env.GITHUB_TOKEN!;
+  const repo = process.env.GITHUB_REPO || "askarik90/metizopt";
+  const branch = process.env.GITHUB_BRANCH || "master";
+  const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "krp-inline-editor",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      cache: "no-store",
+    });
+    if (!res.ok) return fallback;
+    const j = (await res.json()) as { content?: string };
+    if (!j.content) return fallback;
+    return JSON.parse(Buffer.from(j.content, "base64").toString("utf8")) as T;
+  } catch {
+    return fallback;
+  }
+}
+
 export async function getImagePositions(): Promise<ImagePositions> {
   const fromGit = fsRead<ImagePositions>("image-positions.json", {});
   // GitHub-режим: источник истины — закоммиченный git-файл (читается из сборки).
@@ -133,6 +160,28 @@ export async function saveImagePositions(data: ImagePositions) {
   if (process.env.GITHUB_TOKEN) { await saveJsonToGitHub("data/image-positions.json", json); return; }
   if (useBlob()) { await blobSet("image-positions", data); return; }
   fsWrite("image-positions.json", data);
+}
+
+// Частичное обновление: подмешивает только изменённые слаги в САМУЮ свежую версию
+// хранилища (GitHub HEAD / Blob без кэша / fs), а не в отстающую сборку. Убирает гонку,
+// из-за которой быстрые правки нескольких фото затирали друг друга.
+export async function mergeImagePositions(partial: ImagePositions): Promise<ImagePositions> {
+  if (process.env.GITHUB_TOKEN) {
+    const cur = await readJsonFromGitHub<ImagePositions>("data/image-positions.json", {});
+    const merged = { ...cur, ...partial };
+    await saveJsonToGitHub("data/image-positions.json", JSON.stringify(merged, null, 2) + "\n");
+    return merged;
+  }
+  if (useBlob()) {
+    const cur = await blobGet<ImagePositions>("image-positions", {});
+    const merged = { ...cur, ...partial };
+    await blobSet("image-positions", merged);
+    return merged;
+  }
+  const cur = fsRead<ImagePositions>("image-positions.json", {});
+  const merged = { ...cur, ...partial };
+  fsWrite("image-positions.json", merged);
+  return merged;
 }
 
 // ── FAQ ───────────────────────────────────────────────────────────────
