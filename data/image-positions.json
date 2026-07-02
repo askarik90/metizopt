@@ -578,5 +578,125 @@
     "x": 100,
     "y": 58,
     "size": 28
+  },
+  "takelazh-vertlyug": {
+    "x": 100,
+    "y": 82,
+    "size": 32
+  },
+  "takelazh-zazim-din741": {
+    "x": 100,
+    "y": 92,
+    "size": 54
+  },
+  "takelazh-zazim-din3093": {
+    "x": 100,
+    "y": 108,
+    "size": 42
+  },
+  "takelazh-zazim-dvoinoi": {
+    "x": 100,
+    "y": 96,
+    "size": 38
+  },
+  "takelazh-zazim-odinarnyi": {
+    "x": 100,
+    "y": 109,
+    "size": 55
+  },
+  "takelazh-karabin-5299c": {
+    "x": 100,
+    "y": 115,
+    "size": 60
+  },
+  "takelazh-karabin-5299d": {
+    "x": 100,
+    "y": 108,
+    "size": 57
+  },
+  "takelazh-koush-6899b": {
+    "x": 100,
+    "y": 89,
+    "size": 50
+  },
+  "takelazh-kryuk-320a": {
+    "x": 100,
+    "y": 113,
+    "size": 53
+  },
+  "takelazh-kryuk-s": {
+    "x": 100,
+    "y": 150,
+    "size": 40
+  },
+  "takelazh-rym-bolt": {
+    "x": 100,
+    "y": 149,
+    "size": 54
+  },
+  "takelazh-rym-gayka": {
+    "x": 100,
+    "y": 117,
+    "size": 43
+  },
+  "takelazh-skoba-g209": {
+    "x": 100,
+    "y": 117,
+    "size": 47
+  },
+  "takelazh-skoba-g2130": {
+    "x": 100,
+    "y": 119,
+    "size": 50
+  },
+  "takelazh-skoba-g2150": {
+    "x": 100,
+    "y": 40,
+    "size": 55
+  },
+  "takelazh-soedinitel-tsepi": {
+    "x": 100,
+    "y": 120,
+    "size": 49
+  },
+  "takelazh-talrep-1478": {
+    "x": 100,
+    "y": 90,
+    "size": 40
+  },
+  "takelazh-talrep-1480-kk": {
+    "x": 100,
+    "y": 106,
+    "size": 42
+  },
+  "takelazh-talrep-1480-kryuk-k": {
+    "x": 100,
+    "y": 119,
+    "size": 39
+  },
+  "takelazh-talrep-1480-kryuk-kryuk": {
+    "x": 100,
+    "y": 96,
+    "size": 61
+  },
+  "takelazh-tros-din3055": {
+    "x": 100,
+    "y": 102,
+    "size": 37
+  },
+  "takelazh-tros-din3055-pvkh": {
+    "x": 100,
+    "y": 92,
+    "size": 39
+  },
+  "takelazh-tsep-din763": {
+    "x": 100,
+    "y": 86,
+    "size": 51
+  },
+  "takelazh-tsep-din766": {
+    "x": 100,
+    "y": 98,
+    "size": 55
   }
 }
