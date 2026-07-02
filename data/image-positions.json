@@ -498,5 +498,85 @@
     "x": 100,
     "y": 100,
     "size": 54
+  },
+  "perfo-derzhatel-balki": {
+    "x": 100,
+    "y": 98,
+    "size": 36
+  },
+  "perfo-plastina-kp": {
+    "x": 100,
+    "y": 96,
+    "size": 53
+  },
+  "perfo-ankernyi-ugol-kau": {
+    "x": 100,
+    "y": 104,
+    "size": 33
+  },
+  "perfo-ugol-ku": {
+    "x": 100,
+    "y": 101,
+    "size": 55
+  },
+  "perfo-ugol-kuas": {
+    "x": 100,
+    "y": 114,
+    "size": 49
+  },
+  "perfo-ugol-kus": {
+    "x": 100,
+    "y": 50,
+    "size": 47
+  },
+  "perfo-ugol-kur": {
+    "x": 100,
+    "y": 76,
+    "size": 65
+  },
+  "perfo-ugol-kuu": {
+    "x": 100,
+    "y": 103,
+    "size": 75
+  },
+  "perfo-ugol-kur-us": {
+    "x": 100,
+    "y": 90,
+    "size": 49
+  },
+  "perfo-lenta": {
+    "x": 100,
+    "y": 38,
+    "size": 50
+  },
+  "perfo-opora-balki": {
+    "x": 100,
+    "y": 18,
+    "size": 47
+  },
+  "perfo-lenta-lm": {
+    "x": 100,
+    "y": 109,
+    "size": 57
+  },
+  "perfo-plastina-ps": {
+    "x": 100,
+    "y": 106,
+    "size": 27
+  },
+  "perfo-prushina-pzp": {
+    "x": 100,
+    "y": 18,
+    "size": 55
+  },
+  "perfo-uglovoy-soedinitel": {
+    "x": 100,
+    "y": 50,
+    "size": 70
+  },
+  "perfo-ugol-mebelnyi": {
+    "x": 100,
+    "y": 58,
+    "size": 28
   }
 }
