@@ -148,6 +148,38 @@ async function saveJsonToGitHub(path: string, content: string): Promise<void> {
   await githubPutFile(path, content, g.status === 200 ? g.sha : undefined);
 }
 
+// Запись бинарного файла (картинки): base64 — это УЖЕ сырые байты в base64 (не текст).
+async function githubPutBase64(path: string, base64: string, sha: string | undefined): Promise<number> {
+  const { repo, branch, headers } = ghConf();
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({
+      message: "edit: замена фото через инлайн-редактор",
+      content: base64,
+      branch,
+      ...(sha ? { sha } : {}),
+    }),
+  });
+  if (res.status === 409) return 409;
+  if (!res.ok) throw new Error(`GitHub image save ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  return res.status;
+}
+
+// Заливка/замена картинки в public/... (repoPath, напр. "public/images/types/foo.jpg";
+// base64 = сырые байты jpeg в base64). Работает только в режиме GITHUB_TOKEN.
+export async function saveImageToGitHub(repoPath: string, base64: string): Promise<void> {
+  if (!process.env.GITHUB_TOKEN) throw new Error("upload requires GITHUB_TOKEN");
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const g = await githubGetFile(repoPath);
+    if (g.status !== 200 && g.status !== 404) throw new Error(`GitHub read ${g.status}`);
+    const st = await githubPutBase64(repoPath, base64, g.status === 200 ? g.sha : undefined);
+    if (st !== 409) return;
+  }
+  throw new Error("GitHub image save: конфликт sha");
+}
+
 export async function getImagePositions(): Promise<ImagePositions> {
   const fromGit = fsRead<ImagePositions>("image-positions.json", {});
   // GitHub-режим: источник истины — закоммиченный git-файл (читается из сборки).

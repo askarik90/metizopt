@@ -22,7 +22,9 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
   const [y, setY] = useState(50);
   const [size, setSize] = useState<"cover" | "contain" | number>("cover");
   const [msg, setMsg] = useState("");
+  const [up, setUp] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const read = () => setOn(editOn());
@@ -82,6 +84,66 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
     setMsg(ok ? "✓ В очереди — жмите «Сохранить всё» внизу" : "⚠ Браузер блокирует сохранение (localStorage)");
   };
 
+  // Текущий путь фонового фото (из DOM) — чтобы заменить именно этот файл.
+  const currentImgPath = (): string | null => {
+    const el = findBgEl();
+    if (!el) return null;
+    const m = /url\(["']?([^"')]+\.jpe?g)["']?\)/i.exec(el.style.backgroundImage || "");
+    if (!m) return null;
+    try {
+      return new URL(m[1], location.href).pathname;
+    } catch {
+      return m[1].startsWith("/") ? m[1] : null;
+    }
+  };
+
+  // Замена самого файла фото: сжимаем в браузере (≤1400px, jpeg) и льём в git по тому же пути.
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (fileRef.current) fileRef.current.value = "";
+    if (!file) return;
+    const path = currentImgPath();
+    if (!path) {
+      setMsg("У этого блока нет фото для замены");
+      return;
+    }
+    setUp(true);
+    setMsg("Готовлю фото…");
+    try {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, 1400 / Math.max(bitmap.width, bitmap.height));
+      const w = Math.round(bitmap.width * scale);
+      const h = Math.round(bitmap.height * scale);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("no ctx");
+      ctx.drawImage(bitmap, 0, 0, w, h);
+      const blob: Blob = await new Promise<Blob>((res, rej) =>
+        canvas.toBlob((b) => (b ? res(b) : rej(new Error("no blob"))), "image/jpeg", 0.82)
+      );
+      const dataUrl: string = await new Promise<string>((res) => {
+        const fr = new FileReader();
+        fr.onload = () => res(String(fr.result));
+        fr.readAsDataURL(blob);
+      });
+      const dataBase64 = dataUrl.split(",")[1];
+      setMsg("Загружаю…");
+      const r = await fetch("/api/image-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path, dataBase64 }),
+      });
+      if (r.ok) setMsg("✓ Фото заменено — применится за ~1 мин (передеплой)");
+      else if (r.status === 401) setMsg("Войдите в админку");
+      else setMsg("Не удалось загрузить фото");
+    } catch {
+      setMsg("Не удалось обработать фото");
+    }
+    setUp(false);
+  };
+
   // клик/нажатие внутри overlay не должны срабатывать как переход по ссылке-карточке
   const stop = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -134,11 +196,16 @@ export default function ImageEditOverlay({ slug }: { slug: string }) {
             <input type="range" min={-50} max={150} value={y} onClick={stop} onChange={(e) => { const v = +e.target.value; setY(v); queue(x, v, size); }} className="w-full" />
           </label>
 
-          <button onClick={(e) => { stop(e); queue(x, y, size); setOpen(false); }} className="mt-3 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onClick={stop} onChange={onFile} />
+          <button onClick={(e) => { stop(e); fileRef.current?.click(); }} disabled={up} className="mt-3 w-full rounded border border-slate-300 px-2 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50">
+            {up ? "Загрузка…" : "Заменить фото"}
+          </button>
+
+          <button onClick={(e) => { stop(e); queue(x, y, size); setOpen(false); }} className="mt-2 w-full rounded bg-orange-600 px-2 py-2 text-sm font-semibold text-white hover:bg-orange-700">
             Готово
           </button>
           {msg && <div className="mt-2 text-[11px] text-slate-500">{msg}</div>}
-          <div className="mt-1 text-[11px] text-slate-400">Правки копятся автоматически — публикуются кнопкой «Сохранить всё» внизу.</div>
+          <div className="mt-1 text-[11px] text-slate-400">Положение копится автоматически → «Сохранить всё» внизу. «Заменить фото» публикуется сразу.</div>
         </div>
       )}
     </div>

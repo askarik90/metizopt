@@ -12,6 +12,7 @@ const PROTECTED_API = [
   "/api/generate-image",
   "/api/approve-hero-settings",
   "/api/image-positions",
+  "/api/image-upload",
 ];
 const ALWAYS_AUTH_API = ["/api/leads", "/api/admin"];
 const WRITE_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);
@@ -56,5 +57,6 @@ export const config = {
     "/api/generate-image/:path*",
     "/api/approve-hero-settings/:path*",
     "/api/image-positions/:path*",
+    "/api/image-upload/:path*",
   ],
 };
