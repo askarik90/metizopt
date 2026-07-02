@@ -33,5 +33,40 @@
     "x": 94,
     "y": 19,
     "size": 25
+  },
+  "bolt-gost-7805-70-kl-pr-10-9": {
+    "x": 90,
+    "y": 21,
+    "size": 20
+  },
+  "bolt-mebelnyj-din-603-zhc": {
+    "x": 90,
+    "y": 20,
+    "size": 20
+  },
+  "bolt-din-933-kl-8-8-oc": {
+    "x": 100,
+    "y": 34,
+    "size": 36
+  },
+  "bolt-u-obraznyj-din-3570": {
+    "x": 94,
+    "y": 15,
+    "size": 20
+  },
+  "bolt-gost-7798-70-7805-70-kl-pr-5-8": {
+    "x": 115,
+    "y": 50,
+    "size": 49
+  },
+  "bolt-lemeshnyj-gost-7786-81-din-608": {
+    "x": 100,
+    "y": 42,
+    "size": 36
+  },
+  "bolt-mebelnyj-din-603-oc": {
+    "x": 96,
+    "y": 23,
+    "size": 20
   }
 }
