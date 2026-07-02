@@ -278,5 +278,90 @@
     "x": 90,
     "y": 50,
     "size": 20
+  },
+  "shurup-dlya-krepleniya-gipsokartonnyh-plit": {
+    "x": 100,
+    "y": 50,
+    "size": 22
+  },
+  "shurup-dlya-krepleniya-derevyannyh-lag-i-reek-gluhar-din-571": {
+    "x": 100,
+    "y": 50,
+    "size": 24
+  },
+  "shurup-dlya-krepleniya-listov-metalla-do-2-0mm-sds": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "shurup-dlya-krepleniya-okonnyh-ram-i-dvernyh-korobok": {
+    "x": 100,
+    "y": 50,
+    "size": 31
+  },
+  "shurup-konfirmat-dsp": {
+    "x": 100,
+    "y": 50,
+    "size": 23
+  },
+  "shurup-krovelnyj-okrashennyj-oc": {
+    "x": 100,
+    "y": 50,
+    "size": 26
+  },
+  "shurup-samorez-dlya-okon-shlic-pozi-2": {
+    "x": 100,
+    "y": 50,
+    "size": 29
+  },
+  "shurup-kolco": {
+    "x": 96,
+    "y": 29,
+    "size": 20
+  },
+  "shurupy-universalnye-rmz-sht": {
+    "x": 100,
+    "y": 50,
+    "size": 21
+  },
+  "shurup-dlya-krepleniya-gipsokartonnyh-plit-rossiya-korobkami-po-20kg": {
+    "x": 100,
+    "y": 50,
+    "size": 25
+  },
+  "shurup-dlya-krepleniya-listov-metalla-do-0-9mm": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "shurup-dlya-krepleniya-metallicheskih-profilej-do-2mm-semechki": {
+    "x": 100,
+    "y": 127,
+    "size": 26
+  },
+  "shurup-dlya-sendvich-panelej": {
+    "x": 100,
+    "y": 50,
+    "size": 37
+  },
+  "shurup-krovelnyj": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "shurup-krovelnyj-s-usilennym-sverlom": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "shurup-universalnyj-dlya-dereva-dsp-dvp": {
+    "x": 100,
+    "y": -10,
+    "size": 20
+  },
+  "shurup-kryuk": {
+    "x": 100,
+    "y": 8,
+    "size": 20
   }
 }
