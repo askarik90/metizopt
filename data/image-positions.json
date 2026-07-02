@@ -128,5 +128,30 @@
     "x": 100,
     "y": 74,
     "size": 23
+  },
+  "shajba-gost-32484-6-2013-en-14399-6-2005-kl-10": {
+    "x": 100,
+    "y": 36,
+    "size": 36
+  },
+  "shajba-grover-gost-6402-70-din-127": {
+    "x": 90,
+    "y": 35,
+    "size": 20
+  },
+  "shajba-ploskaya-usilennaya-din-9021": {
+    "x": 90,
+    "y": 50,
+    "size": 20
+  },
+  "shajba-gost-52646-2006-stal-40h-selekt-kl-10": {
+    "x": 98,
+    "y": 50,
+    "size": 20
+  },
+  "shajba-ploskaya-gost-11371-78-din-125": {
+    "x": 99,
+    "y": 50,
+    "size": 20
   }
 }
