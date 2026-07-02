@@ -238,5 +238,45 @@
     "x": 100,
     "y": 50,
     "size": 20
+  },
+  "dyubel-bez-shurupa": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "dyubel-dlya-gazo-penobetona": {
+    "x": 100,
+    "y": 0,
+    "size": 20
+  },
+  "dyubel-po-betonu": {
+    "x": 92,
+    "y": 50,
+    "size": 20
+  },
+  "dyubel-fasadnyj-polsha": {
+    "x": 91,
+    "y": 22,
+    "size": 20
+  },
+  "dyubel-raspornyj-dlya-teploizolyacii": {
+    "x": 100,
+    "y": 23,
+    "size": 20
+  },
+  "dyubel-dlya-teploizolyacii-zontiki": {
+    "x": 105,
+    "y": 38,
+    "size": 36
+  },
+  "dyubel-raspornyj-serii-zubr": {
+    "x": 100,
+    "y": 50,
+    "size": 33
+  },
+  "dyubel-gvozd-metallicheskij": {
+    "x": 90,
+    "y": 50,
+    "size": 20
   }
 }
