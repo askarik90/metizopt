@@ -418,5 +418,35 @@
     "x": 100,
     "y": 21,
     "size": 20
+  },
+  "nerzhav-bolty": {
+    "x": 100,
+    "y": 90,
+    "size": 38
+  },
+  "nerzhav-gayki": {
+    "x": 77,
+    "y": 102,
+    "size": 32
+  },
+  "nerzhav-shayby": {
+    "x": 100,
+    "y": 143,
+    "size": 49
+  },
+  "nerzhav-vintyi": {
+    "x": 97,
+    "y": 85,
+    "size": 40
+  },
+  "nerzhav-shpilki": {
+    "x": 100,
+    "y": 107,
+    "size": 34
+  },
+  "nerzhav-zaklepki": {
+    "x": 100,
+    "y": 50,
+    "size": 130
   }
 }
