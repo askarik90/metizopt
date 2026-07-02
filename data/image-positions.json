@@ -373,5 +373,40 @@
     "x": 93,
     "y": 45,
     "size": 42
+  },
+  "zaklepka-a2": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "zaklepka-alyuminij-stal": {
+    "x": 100,
+    "y": 61,
+    "size": 20
+  },
+  "zaklepka-rezbovaya-s-umenshennym-bortikom": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "zaklepka-stalnaya": {
+    "x": 100,
+    "y": 50,
+    "size": 24
+  },
+  "zaklepka-alyuminij-nerzhavejkaa2": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "zaklepka-rezbovaya-s-potajnym-bortikom": {
+    "x": 100,
+    "y": 50,
+    "size": 20
+  },
+  "zaklepka-rezbovaya-so-standartnym-bortikom": {
+    "x": 102,
+    "y": 50,
+    "size": 20
   }
 }
