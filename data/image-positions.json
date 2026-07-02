@@ -713,5 +713,20 @@
     "x": 100,
     "y": 92,
     "size": 65
+  },
+  "svarka-lez": {
+    "x": 100,
+    "y": 123,
+    "size": 85
+  },
+  "svarka-monolith": {
+    "x": 100,
+    "y": 106,
+    "size": 71
+  },
+  "svarka-kitay": {
+    "x": 100,
+    "y": 111,
+    "size": 73
   }
 }
