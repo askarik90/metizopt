@@ -68,5 +68,65 @@
     "x": 96,
     "y": 23,
     "size": 20
+  },
+  "gajka-din-934-oc-kl-8": {
+    "x": 90,
+    "y": 27,
+    "size": 20
+  },
+  "gajka-gost-52645-2006-stal-40h-selekt-kl-10": {
+    "x": 89,
+    "y": 23,
+    "size": 20
+  },
+  "gajka-gost-5927-70-10-9-bez-pokrytiya": {
+    "x": 88,
+    "y": 27,
+    "size": 20
+  },
+  "gajka-koronchataya-din-935": {
+    "x": 99,
+    "y": 45,
+    "size": 37
+  },
+  "gajka-s-nejlonovym-kolcom-din-985": {
+    "x": 92,
+    "y": 47,
+    "size": 30
+  },
+  "gajka-shestigrannaya-s-flancem-din6923": {
+    "x": 102,
+    "y": 50,
+    "size": 41
+  },
+  "gajka-din-934-oc-goryachij-cink": {
+    "x": 90,
+    "y": 38,
+    "size": 20
+  },
+  "gajka-barashkovaya-din-315": {
+    "x": 98,
+    "y": 38,
+    "size": 32
+  },
+  "gajka-gost-5915-70-5927-70-kl-pr-6": {
+    "x": 94,
+    "y": 44,
+    "size": 23
+  },
+  "gajka-kolpachkovaya-din-1587": {
+    "x": 90,
+    "y": 38,
+    "size": 20
+  },
+  "gajka-mebelnaya-din-1624": {
+    "x": 100,
+    "y": 37,
+    "size": 38
+  },
+  "gajka-soedinitelnaya-perehodnaya-din-6334": {
+    "x": 100,
+    "y": 74,
+    "size": 23
   }
 }
