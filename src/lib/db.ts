@@ -181,11 +181,10 @@ export async function saveImageToGitHub(repoPath: string, base64: string): Promi
 }
 
 export async function getImagePositions(): Promise<ImagePositions> {
-  const fromGit = fsRead<ImagePositions>("image-positions.json", {});
-  // GitHub-режим: источник истины — закоммиченный git-файл (читается из сборки).
-  if (process.env.GITHUB_TOKEN) return fromGit;
-  if (useBlob()) return blobGet<ImagePositions>("image-positions", fromGit);
-  return fromGit;
+  // Источник истины — git-файл (пишется инлайн-редактором через GitHub Contents API).
+  // Blob отсюда БОЛЬШЕ НЕ читаем: функция зовётся на каждой сборке для ~180 страниц,
+  // и лишние blobGet выжигали лимит Simple Requests (Blob Hobby = 10k).
+  return fsRead<ImagePositions>("image-positions.json", {});
 }
 
 export async function saveImagePositions(data: ImagePositions) {
