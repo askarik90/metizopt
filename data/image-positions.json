@@ -773,5 +773,10 @@
     "x": 100,
     "y": 50,
     "size": 20
+  },
+  "krepezh-samorezi": {
+    "x": 100,
+    "y": 50,
+    "size": "cover"
   }
 }
