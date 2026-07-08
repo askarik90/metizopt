@@ -755,9 +755,9 @@
     "size": 38
   },
   "krepezh-shayby": {
-    "x": 100,
-    "y": 55,
-    "size": 24
+    "x": 92,
+    "y": 83,
+    "size": 38
   },
   "krepezh-shpilki": {
     "x": 100,
@@ -766,18 +766,18 @@
   },
   "krepezh-vintyi": {
     "x": 100,
-    "y": 50,
-    "size": 32
+    "y": 3,
+    "size": 42
   },
   "krepezh-gvozdi": {
     "x": 100,
     "y": 50,
-    "size": 20
+    "size": 36
   },
   "krepezh-samorezi": {
-    "x": 100,
+    "x": 116,
     "y": 50,
-    "size": 20
+    "size": 38
   },
   "krepezh": {
     "x": 100,
