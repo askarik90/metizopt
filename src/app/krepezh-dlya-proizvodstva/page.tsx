@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://krp.kz/krepezh-dlya-proizvodstva" },
+  openGraph: { url: "https://krp.kz/krepezh-dlya-proizvodstva" },
   title: "Крепеж для производства оптом в Алматы | KRP",
   description: "Промышленный крепеж оптом для производственных предприятий. Высокопрочные болты, специальный крепеж DIN/ISO. КП за 30 минут.",
 };

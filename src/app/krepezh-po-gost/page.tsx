@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://krp.kz/krepezh-po-gost" },
+  openGraph: { url: "https://krp.kz/krepezh-po-gost" },
   title: "Крепеж по ГОСТ оптом в Алматы | KRP",
   description: "Крепеж по стандартам ГОСТ оптом в Алматы. Болты, гайки, шайбы, шпильки ГОСТ. Подберём и рассчитаем КП.",
 };

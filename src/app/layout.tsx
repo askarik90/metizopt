@@ -24,15 +24,14 @@ export const metadata: Metadata = {
   },
   description:
     "Оптовые поставки крепежа, метизов и такелажа в Казахстане. Болты, гайки, анкера, шайбы, шпильки. Пришлите список — подготовим КП за 30 минут.",
-  alternates: {
-    canonical: BASE_URL,
-  },
+  // canonical и openGraph.url НЕ задаём на уровне рута: в App Router дочерние страницы
+  // наследуют отсутствующее поле alternates → без своего canonical объявляли себя дублями
+  // главной. Каждая страница задаёт self-canonical сама; главная — в src/app/page.tsx.
   openGraph: {
     title: `Крепеж оптом в Алматы — ${COMPANY.name}`,
     description: "Оптовые поставки крепежа для компаний в Казахстане. Работаем с юрлицами.",
     locale: "ru_KZ",
     type: "website",
-    url: BASE_URL,
     siteName: COMPANY.name,
   },
   keywords: [

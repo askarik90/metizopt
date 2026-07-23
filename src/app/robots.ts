@@ -6,7 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/thanks"],
+      // /thanks НЕ блокируем в robots — иначе Google не увидит meta noindex на странице.
+      // noindex задан в самой /thanks (см. src/app/thanks/page.tsx).
+      disallow: ["/api/", "/admin/"],
     },
     sitemap: `https://${COMPANY.domain}/sitemap.xml`,
   };

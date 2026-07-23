@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import { Truck, CreditCard, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://krp.kz/delivery" },
+  openGraph: { url: "https://krp.kz/delivery" },
   title: "Доставка и оплата — KRP",
   description: "Условия доставки крепежа по Казахстану. Безналичная оплата, документы для юрлиц.",
 };

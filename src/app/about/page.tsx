@@ -5,6 +5,8 @@ import { COMPANY } from "@/config/company";
 import { MapPin, Clock, Phone, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://krp.kz/about" },
+  openGraph: { url: "https://krp.kz/about" },
   title: "О компании — KRP",
   description: "Оптовый поставщик крепежа и метизов в Казахстане. Склад в Алматы, работа с юрлицами, документы.",
 };

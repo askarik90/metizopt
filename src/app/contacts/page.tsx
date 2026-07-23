@@ -10,9 +10,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Контакты | KRP.kz",
     description: `Контактная информация ТОО Bugel. Адрес: ${settings.address}. Телефон: ${settings.phone}`,
+    alternates: { canonical: "https://krp.kz/contacts" },
     openGraph: {
       title: "Контакты | KRP.kz",
       description: `Контактная информация ТОО Bugel. Адрес: ${settings.address}. Телефон: ${settings.phone}`,
+      url: "https://krp.kz/contacts",
     },
   };
 }

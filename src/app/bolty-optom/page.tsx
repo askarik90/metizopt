@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://krp.kz/bolty-optom" },
+  openGraph: { url: "https://krp.kz/bolty-optom" },
   title: "Болты оптом в Алматы — ГОСТ, DIN, высокопрочные | KRP",
   description: "Болты оптом со склада в Алматы. DIN 933, DIN 931, ГОСТ 7798, классы прочности 4.8–12.9. Пришлите список — подберём и подготовим КП.",
 };
