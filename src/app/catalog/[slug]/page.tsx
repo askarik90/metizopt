@@ -307,12 +307,8 @@ export default async function CatalogPage({
         name: category.title,
         description: category.desc,
         brand: { "@type": "Brand", name: COMPANY.name },
-        offers: {
-          "@type": "Offer",
-          availability: "https://schema.org/InStock",
-          priceCurrency: "KZT",
-          seller: { "@type": "Organization", name: COMPANY.name },
-        },
+        // Offer не публикуем: публичных цен/наличия нет (работа по запросу).
+        // Пустой Offer с InStock без price невалиден и вводит Google в заблуждение.
       },
     ],
   };

@@ -1,6 +1,6 @@
 export const COMPANY = {
   name: "KRP",
-  legalName: "KRP.kz",
+  legalName: "ТОО Bugel",
   phone: "+7 (708) 800-31-50",
   phoneRaw: "77088003150",
   phoneSat: "+7 (705) 333-03-30",

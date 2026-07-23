@@ -92,12 +92,7 @@ export default async function TypePage({
         name: node.name,
         category: category?.title,
         brand: { "@type": "Brand", name: COMPANY.name },
-        offers: {
-          "@type": "Offer",
-          availability: "https://schema.org/InStock",
-          priceCurrency: "KZT",
-          seller: { "@type": "Organization", name: COMPANY.name },
-        },
+        // Offer не публикуем: публичных цен/наличия нет (работа по запросу).
       },
     ],
   };
