@@ -1,8 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
-import catalogDb from "@/data/catalog-db.json";
-import characteristicsIndex from "@/data/characteristics-index.json";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 // Словарь синонимов: что пишет клиент → что ищем
@@ -122,7 +120,26 @@ type IndexEntry = {
   searchTerms: string[];
 };
 
-const charIndex = characteristicsIndex as Record<string, IndexEntry>;
+// Тяжёлые данные поиска (~0.5 МБ) грузим ЛЕНИВО — при первом поиске, а не в стартовом
+// бандле каждой страницы (SearchBar сидит в Header). Кэшируем на уровне модуля.
+type CatalogDb = Record<string, Array<{ type: string; items: Array<{ name: string; code: string }> }>>;
+let _catalogDb: CatalogDb | null = null;
+let _charIndex: Record<string, IndexEntry> | null = null;
+let _loadingPromise: Promise<void> | null = null;
+
+async function loadSearchData(): Promise<void> {
+  if (_catalogDb && _charIndex) return;
+  if (!_loadingPromise) {
+    _loadingPromise = Promise.all([
+      import("@/data/catalog-db.json"),
+      import("@/data/characteristics-index.json"),
+    ]).then(([db, idx]) => {
+      _catalogDb = db.default as CatalogDb;
+      _charIndex = idx.default as Record<string, IndexEntry>;
+    });
+  }
+  await _loadingPromise;
+}
 
 interface SearchResult {
   slug: string;
@@ -147,7 +164,7 @@ export default function SearchBar() {
   };
 
   // Поиск вынесен в отдельную функцию — вызывается с дебаунсом
-  const runSearch = useCallback((rawQuery: string) => {
+  const runSearch = useCallback(async (rawQuery: string) => {
     const trimmed = rawQuery.trim();
 
     // Минимум 3 символа для запуска поиска и аналитики
@@ -155,6 +172,11 @@ export default function SearchBar() {
       setResults([]);
       return;
     }
+
+    // Ленивая подгрузка индекса при первом поиске (см. loadSearchData)
+    await loadSearchData();
+    const charIndex = _charIndex!;
+    const catalogDb = _catalogDb!;
 
     const q = trimmed.toLowerCase();
     const seen = new Set<string>();

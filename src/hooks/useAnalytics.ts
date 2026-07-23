@@ -81,12 +81,12 @@ export function useAnalytics() {
     },
     trackLeadFormSubmit: (category?: string, searchQuery?: string) => {
       push("lead_form_submit", { category, search_query: searchQuery });
+      // value/currency НЕ шлём: публичной цены/ценности лида нет. Ценность конверсии
+      // задаётся в GA4/Ads при пометке ключевым событием (не техническим value:0).
       gtagEvent("generate_lead", {
         event_category: "lead",
         event_label: category,
         search_query: searchQuery,
-        currency: "KZT",
-        value: 0,
       });
       track("formSubmits", { category });
       ymGoal("lead");
