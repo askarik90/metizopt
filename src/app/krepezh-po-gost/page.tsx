@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   alternates: { canonical: "https://krp.kz/krepezh-po-gost" },
   openGraph: { url: "https://krp.kz/krepezh-po-gost" },
   title: "Крепеж по ГОСТ оптом в Алматы | KRP",

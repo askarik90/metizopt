@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   alternates: { canonical: "https://krp.kz/gayki-optom" },
   openGraph: { url: "https://krp.kz/gayki-optom" },
   title: "Гайки оптом в Алматы — DIN 934, самоконтрящиеся | KRP",

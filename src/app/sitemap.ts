@@ -18,15 +18,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/contacts`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
     { url: `${base}/about`, priority: 0.6, changeFrequency: "monthly", lastModified: now },
     { url: `${base}/delivery`, priority: 0.6, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/bolty-optom`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/gayki-optom`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/ankera-optom`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/shayby-optom`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/krepezh-optom`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/krepezh-dlya-stroitelstva`, priority: 0.7, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/krepezh-dlya-proizvodstva`, priority: 0.7, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/krepezh-po-gost`, priority: 0.7, changeFrequency: "monthly", lastModified: now },
-    { url: `${base}/krepezh-din-iso`, priority: 0.7, changeFrequency: "monthly", lastModified: now },
+    // Рекламные лендинги /*-optom и /krepezh-* НЕ в sitemap: они noindex (под платный трафик),
+    // под органику работают каталожные страницы /catalog/*.
   ];
 
   const groups = await getGroups();

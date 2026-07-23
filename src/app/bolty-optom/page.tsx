@@ -4,6 +4,9 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  // Рекламный лендинг под платный трафик. noindex — чтобы не конкурировал в органике
+  // с каталожной страницей /catalog/krepezh-bolty (она под SEO). follow — чтобы вес шёл в каталог.
+  robots: { index: false, follow: true },
   alternates: { canonical: "https://krp.kz/bolty-optom" },
   openGraph: { url: "https://krp.kz/bolty-optom" },
   title: "Болты оптом в Алматы — ГОСТ, DIN, высокопрочные | KRP",

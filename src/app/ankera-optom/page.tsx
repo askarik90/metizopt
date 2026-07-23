@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   alternates: { canonical: "https://krp.kz/ankera-optom" },
   openGraph: { url: "https://krp.kz/ankera-optom" },
   title: "Анкера оптом в Алматы — клиновые, химические, распорные | KRP",

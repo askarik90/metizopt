@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import LandingCategoryPage from "@/components/LandingCategoryPage";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   alternates: { canonical: "https://krp.kz/krepezh-din-iso" },
   openGraph: { url: "https://krp.kz/krepezh-din-iso" },
   title: "Крепеж DIN ISO оптом в Алматы | KRP",
