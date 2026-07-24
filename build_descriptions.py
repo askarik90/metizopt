@@ -88,7 +88,9 @@ def build_block(stds, app=''):
     app_html = f'<p><strong>Применение:</strong> {app}</p>' if app else ''
     return (MARK_OPEN +
             '<h3>Стандарты и аналоги</h3><ul>' + ''.join(items) + '</ul>' + app_html +
-            '<p>Подберём аналог DIN ↔ ГОСТ без потери характеристик — пришлите спецификацию.</p>' +
+            '<p>Поможем подобрать аналог DIN ↔ ГОСТ: точную взаимозаменяемость '
+            'подтверждаем после сверки размеров, класса прочности, покрытия и редакции '
+            'стандарта. Пришлите спецификацию.</p>' +
             MARK_CLOSE)
 
 changed = 0
@@ -107,6 +109,3 @@ for c in CATS:
 
 json.dump(CATS, open('data/categories.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 print('updated subcats:', changed, '/', len(CATS))
-# sample
-s = [c for c in CATS if c['slug'] == 'krepezh-bolty'][0]
-open(r'C:/Users/sales/AppData/Local/Temp/ads_report/desc_sample.txt', 'w', encoding='utf-8').write(s['fullDescription'][-900:])

@@ -205,7 +205,7 @@ export default function CategoryClient({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <div className="font-black text-slate-900 text-lg">Не нашли нужную позицию?</div>
-            <div className="text-slate-600">Подберём аналог по ГОСТ/DIN/ISO без потери характеристик</div>
+            <div className="text-slate-600">Подберём аналог по ГОСТ/DIN/ISO с сопоставимыми характеристиками</div>
           </div>
           <button
             onClick={openModal}

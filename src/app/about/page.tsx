@@ -46,7 +46,7 @@ export default function AboutPage() {
                   <h3 className="font-black text-slate-900 mb-2">Подбор аналогов</h3>
                   <p className="text-sm leading-relaxed">
                     Специализируемся на подборе аналогов по ГОСТ/DIN/ISO. Если нужной позиции
-                    нет — предложим замену без потери характеристик.
+                    нет — предложим замену с сопоставимыми характеристиками.
                   </p>
                 </div>
                 <div className="border border-slate-200 p-6">
