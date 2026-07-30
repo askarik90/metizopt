@@ -2,6 +2,7 @@
 import { MessageCircle, Phone, FileText } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 
 interface StickyMobileCTAProps {
   onQuoteClick?: () => void;
@@ -15,10 +16,12 @@ export default function StickyMobileCTA({ onQuoteClick }: StickyMobileCTAProps) 
       <div className="grid grid-cols-3">
         <a
           href={getWhatsAppUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackWhatsAppClick()}
-          className="flex flex-col items-center justify-center gap-1 bg-green-600 hover:bg-green-700 text-white py-3.5 transition-colors"
+          onClick={(e) => {
+            e.preventDefault();
+            trackWhatsAppClick();
+            openWhatsApp();
+          }}
+          className="flex flex-col items-center justify-center gap-1 bg-green-600 hover:bg-green-700 text-white py-3.5 transition-colors cursor-pointer"
         >
           <MessageCircle size={20} />
           <span className="text-xs font-medium">WhatsApp</span>

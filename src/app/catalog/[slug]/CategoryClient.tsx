@@ -8,6 +8,7 @@ import CategoryCharacteristics from "@/components/CategoryCharacteristics";
 import TypeSizePicker from "@/components/TypeSizePicker";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 import { getCategoryImage, getTypeImage, heroBg, sizeCss, type ImgPos } from "@/lib/categoryImages";
 import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
 
@@ -80,10 +81,12 @@ export default function CategoryClient({
             <div className="flex flex-wrap gap-3">
               <a
                 href={getWhatsAppUrl(whatsappText)}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick(title)}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  trackWhatsAppClick(title);
+                  openWhatsApp(whatsappText, title);
+                }}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors cursor-pointer"
               >
                 <MessageCircle size={20} />
                 Запросить в WhatsApp

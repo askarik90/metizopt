@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { MessageCircle, Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 import LeadFormModal from "@/components/LeadFormModal";
 
 interface Size { label: string; code: string }
@@ -228,10 +229,12 @@ export default function TypeSizePicker({
         </span>
         <a
           href={getWhatsAppUrl(waText)}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackWhatsAppClick(typeName)}
-          className="flex items-center justify-center gap-2 bg-green-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-green-700"
+          onClick={(e) => {
+            e.preventDefault();
+            trackWhatsAppClick(typeName);
+            openWhatsApp(waText, typeName);
+          }}
+          className="flex items-center justify-center gap-2 bg-green-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-green-700 cursor-pointer"
         >
           <MessageCircle size={18} />
           Запросить в WhatsApp

@@ -12,6 +12,7 @@ import StickyMobileCTA from "@/components/StickyMobileCTA";
 import { MessageCircle, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 
 // Ниже первого экрана / по требованию — code-split, чтобы не грузить в стартовом бандле (меньше JS/TBT)
 const QuickQuoteForm = dynamic(() => import("@/components/QuickQuoteForm"));
@@ -63,9 +64,11 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={getWhatsAppUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 font-medium text-base transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                openWhatsApp();
+              }}
+              className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 font-medium text-base transition-colors cursor-pointer"
             >
               <MessageCircle size={20} />
               Написать в WhatsApp

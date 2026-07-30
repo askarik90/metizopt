@@ -33,6 +33,18 @@ export interface LeadEmailData {
   attachment?: { filename: string; content: Buffer };
 }
 
+function getTransporter() {
+  if (!SMTP_USER || !SMTP_PASS) {
+    throw new Error("SMTP not configured");
+  }
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
+}
+
 export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
   if (!SMTP_USER || !SMTP_PASS) {
     // Раньше тут был тихий return — из-за него форма считала письмо «отправленным»
@@ -41,12 +53,7 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     throw new Error("SMTP not configured");
   }
 
-  const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: SMTP_PORT,
-    secure: SMTP_PORT === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-  });
+  const transporter = getTransporter();
 
   const source = esc(
     lead.utm_source
@@ -151,6 +158,87 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     subject: `📦 Новая заявка: ${lead.name.replace(/[\r\n]+/g, " ")} — ${lead.phone.replace(/[\r\n]+/g, " ")}`,
     html,
     attachments: lead.attachment ? [lead.attachment] : undefined,
+    encoding: "utf8",
+  });
+}
+
+/**
+ * Отправляет маячок WhatsApp-клика в CRM
+ * Тот же SMTP-конфиг, что и для лидов
+ */
+export interface WaClickBeaconFields {
+  token: string;
+  gclid?: string;
+  gbraid?: string;
+  wbraid?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+  landing_page?: string;
+}
+
+export async function sendWaClickBeacon(fields: WaClickBeaconFields): Promise<void> {
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.error("SMTP_USER/SMTP_PASS not set — wa-click beacon NOT sent");
+    throw new Error("SMTP not configured");
+  }
+
+  const transporter = getTransporter();
+
+  // Машиночитаемый блок для CRM: тот же формат, что в лидах
+  const crmJson = {
+    type: "wa_click",
+    token: fields.token,
+    gclid: fields.gclid || "",
+    gbraid: fields.gbraid || "",
+    wbraid: fields.wbraid || "",
+    utm_source: fields.utm_source || "",
+    utm_medium: fields.utm_medium || "",
+    utm_campaign: fields.utm_campaign || "",
+    utm_content: fields.utm_content || "",
+    utm_term: fields.utm_term || "",
+    landing_page: fields.landing_page || "",
+  };
+  const jsonBlock = `LEADHUB-JSON:${JSON.stringify(crmJson)}:LEADHUB`;
+
+  const html = `<!DOCTYPE html>
+    <html><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+      <div style="background:#ea580c;padding:20px 24px;border-radius:8px 8px 0 0">
+        <h1 style="color:#fff;margin:0;font-size:20px">📱 Клик WhatsApp — KRP.kz</h1>
+      </div>
+      <div style="background:#f8fafc;padding:24px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px">
+        <table style="width:100%;border-collapse:collapse">
+          <tr>
+            <td style="padding:8px 0;color:#64748b;width:140px;vertical-align:top">Код заявки</td>
+            <td style="padding:8px 0;font-weight:bold;color:#0f172a;font-family:monospace">${esc(fields.token)}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#64748b;vertical-align:top">Источник</td>
+            <td style="padding:8px 0;color:#0f172a">${fields.utm_source || "—"}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#64748b;vertical-align:top">Кампания</td>
+            <td style="padding:8px 0;color:#0f172a">${fields.utm_campaign || "—"}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#64748b;vertical-align:top">Страница</td>
+            <td style="padding:8px 0;color:#0f172a;font-family:monospace;word-break:break-all">${esc(fields.landing_page || "—")}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div style="display:none;color:#fff;font-size:1px">${jsonBlock}</div>
+    </body></html>
+  `;
+
+  await transporter.sendMail({
+    from: `KRP.kz <${SMTP_USER}>`,
+    to: NOTIFY_TO,
+    subject: `📱 wa-click: ${fields.token}`,
+    html,
     encoding: "utf8",
   });
 }

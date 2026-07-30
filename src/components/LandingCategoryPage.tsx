@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MessageCircle, Upload, CheckCircle } from "lucide-react";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 import LeadFormModal from "./LeadFormModal";
 import TrustSection from "./TrustSection";
 import FAQ from "./FAQ";
@@ -46,10 +47,12 @@ export default function LandingCategoryPage({
             <div className="flex flex-wrap gap-3">
               <a
                 href={getWhatsAppUrl(whatsappText)}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick(category)}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  trackWhatsAppClick(category);
+                  openWhatsApp(whatsappText, category);
+                }}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors cursor-pointer"
               >
                 <MessageCircle size={20} />
                 Написать в WhatsApp

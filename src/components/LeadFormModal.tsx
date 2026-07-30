@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { X, Upload, CheckCircle } from "lucide-react";
 import { useAnalytics, getUtmParams } from "@/hooks/useAnalytics";
 import { getWhatsAppUrl } from "@/config/company";
+import { openWhatsApp } from "@/lib/waTracking";
 import { useRouter } from "next/navigation";
 
 interface LeadFormModalProps {
@@ -255,10 +256,17 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
                 ? `Здравствуйте! Интересует ${category}. Прикреплю список товаров.`
                 : undefined,
             )}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackWhatsAppClick(category)}
-            className="block text-center text-sm font-medium text-green-400 hover:text-green-300"
+            onClick={(e) => {
+              e.preventDefault();
+              trackWhatsAppClick(category);
+              openWhatsApp(
+                category
+                  ? `Здравствуйте! Интересует ${category}. Прикреплю список товаров.`
+                  : undefined,
+                category,
+              );
+            }}
+            className="block text-center text-sm font-medium text-green-400 hover:text-green-300 cursor-pointer"
           >
             Есть готовый Excel или фото? Отправьте в WhatsApp
           </a>

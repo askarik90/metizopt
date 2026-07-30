@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { CheckCircle, MessageCircle, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
+import { openWhatsApp } from "@/lib/waTracking";
 
 export default function ThanksPage() {
   useEffect(() => {
@@ -26,9 +27,11 @@ export default function ThanksPage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
           <a
             href={getWhatsAppUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              openWhatsApp();
+            }}
+            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium transition-colors cursor-pointer"
           >
             <MessageCircle size={20} />
             Написать в WhatsApp

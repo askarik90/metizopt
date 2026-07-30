@@ -2,6 +2,7 @@
 import { MessageCircle, Upload, FileText, Phone } from "lucide-react";
 import { COMPANY, getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 
 interface HeroProps {
   onQuoteClick?: () => void;
@@ -62,10 +63,12 @@ export default function Hero({ onQuoteClick, onUploadClick }: HeroProps) {
             <div className="flex flex-wrap gap-3 mb-8">
               <a
                 href={getWhatsAppUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick()}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium text-base transition-colors min-h-[48px]"
+                onClick={(e) => {
+                  e.preventDefault();
+                  trackWhatsAppClick();
+                  openWhatsApp();
+                }}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3.5 font-medium text-base transition-colors min-h-[48px] cursor-pointer"
               >
                 <MessageCircle size={20} />
                 Написать в WhatsApp

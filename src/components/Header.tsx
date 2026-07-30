@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Menu, X, MessageCircle, Phone } from "lucide-react";
 import { getWhatsAppUrl } from "@/config/company";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { openWhatsApp } from "@/lib/waTracking";
 import { usePhone } from "@/hooks/usePhone";
 import SearchBar from "./SearchBar";
 
@@ -73,10 +74,12 @@ export default function Header({ onQuoteClick }: HeaderProps) {
             </a>
             <a
               href={getWhatsAppUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackWhatsAppClick()}
-              className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white px-3 py-2 text-sm font-medium transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                trackWhatsAppClick();
+                openWhatsApp();
+              }}
+              className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white px-3 py-2 text-sm font-medium transition-colors cursor-pointer"
             >
               <MessageCircle size={16} />
               WhatsApp
@@ -124,10 +127,12 @@ export default function Header({ onQuoteClick }: HeaderProps) {
           <div className="flex gap-2 pt-2">
             <a
               href={getWhatsAppUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackWhatsAppClick()}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-green-600 text-white py-2.5 text-sm font-medium"
+              onClick={(e) => {
+                e.preventDefault();
+                trackWhatsAppClick();
+                openWhatsApp();
+              }}
+              className="flex-1 flex items-center justify-center gap-1.5 bg-green-600 text-white py-2.5 text-sm font-medium cursor-pointer"
             >
               <MessageCircle size={16} />
               WhatsApp
