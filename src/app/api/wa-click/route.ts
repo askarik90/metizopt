@@ -57,12 +57,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       landing_page: body.landing_page,
     };
 
-    // Fire-and-forget: шлём маячок в CRM, но не ждём
-    sendWaClickBeacon(fields).catch(() => {
-      // Тихо игнорируем ошибки отправки
-    });
+    // ВАЖНО: на Vercel serverless нельзя fire-and-forget после ответа — функция
+    // замораживается и письмо не успевает уйти. Клиент и так не ждёт (keepalive fetch),
+    // поэтому ДОЖИДАЕМСЯ отправки письма здесь. Ошибку глушим (маячок не критичен для UX).
+    try {
+      await sendWaClickBeacon(fields);
+    } catch {
+      // маячок не ушёл — не страшно, лид всё равно придёт (просто без атрибуции)
+    }
 
-    // Сразу возвращаем 204 (no content) чтобы не блокировать пользователя
     return new NextResponse(null, { status: 204 });
   } catch {
     // Невалидный JSON или другая ошибка — 400
