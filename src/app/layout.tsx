@@ -89,9 +89,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <EditModeBar />
       </body>
 
-      {/* Google Ads conversion + GA4 analytics (gtag.js универсален для обоих) */}
+      {/* Google Ads conversion + GA4 analytics (gtag.js универсален для обоих).
+          AW-18246325288 — СВОЙ конверсионный тег krp (customer 5662489109). Раньше здесь стоял
+          чужой AW-949552136 (тег аккаунта amc 3456435301) — из-за реструктуризации аккаунтов;
+          он утягивал конверсии krp (форма krp.kz/thanks) в аккаунт amc. Заменён 2026-08-04. */}
       <Script
-        src="https://www.googletagmanager.com/gtag/js?id=AW-949552136"
+        src="https://www.googletagmanager.com/gtag/js?id=AW-18246325288"
         strategy="afterInteractive"
       />
       <Script id="gtag-config" strategy="afterInteractive">
@@ -99,7 +102,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'AW-949552136');
+          gtag('config', 'AW-18246325288');
           gtag('config', 'G-TLDLTKY024');
         `}
       </Script>
