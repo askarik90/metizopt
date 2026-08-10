@@ -783,5 +783,10 @@
     "x": 100,
     "y": 50,
     "size": 42
+  },
+  "krepezh-zaklepki": {
+    "x": 100,
+    "y": 50,
+    "size": "cover"
   }
 }
