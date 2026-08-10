@@ -788,5 +788,20 @@
     "x": 100,
     "y": 50,
     "size": "cover"
+  },
+  "krepezh-ankera": {
+    "x": 100,
+    "y": 50,
+    "size": "cover"
+  },
+  "krepezh-shplinty": {
+    "x": 100,
+    "y": 50,
+    "size": "cover"
+  },
+  "krepezh-dyubela": {
+    "x": 100,
+    "y": 50,
+    "size": "cover"
   }
 }
