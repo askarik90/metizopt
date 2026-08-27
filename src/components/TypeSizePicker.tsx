@@ -8,8 +8,10 @@ import LeadFormModal from "@/components/LeadFormModal";
 
 interface Size { label: string; code: string }
 
-// Двухмерный размер крепежа: «М6×20» или «6×10» (диаметр×длина)
-const RE2D = /^(М?)\s*(\d+(?:[.,]\d+)?)\s*×\s*(\d+(?:[.,]\d+)?)$/;
+// Двухмерный размер крепежа: «М6×20», «6×10» (диаметр×длина), «4.8×50 RAL 3005».
+// Цвет — часть ярлыка у кровельных шурупов: без него в разборе размера сетка по
+// диаметру отключалась и полсотни позиций показывались одним плоским списком.
+const RE2D = /^(М?)\s*(\d+(?:[.,]\d+)?)\s*×\s*(\d+(?:[.,]\d+)?)(?:\s+(RAL\s*\d+))?$/;
 const num = (s: string) => parseFloat(s.replace(",", "."));
 
 export default function TypeSizePicker({
@@ -57,7 +59,8 @@ export default function TypeSizePicker({
   const LIMIT = 24;
   const lengthOf = (label: string) => {
     const m = label.match(RE2D);
-    return m ? m[3] : label;
+    if (!m) return label;
+    return m[4] ? `${m[3]} ${m[4]}` : m[3];   // длину показываем вместе с цветом
   };
   const toggle = (l: string) =>
     setPicked((p) => (p.includes(l) ? p.filter((x) => x !== l) : [...p, l]));
