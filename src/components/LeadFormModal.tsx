@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { X, Upload, CheckCircle } from "lucide-react";
-import { useAnalytics, getUtmParams } from "@/hooks/useAnalytics";
+import { useAnalytics, getUtmParams, getGA4ClientId, getGA4SessionId } from "@/hooks/useAnalytics";
 import { getWhatsAppUrl } from "@/config/company";
 import { openWhatsApp } from "@/lib/waTracking";
 import { useRouter } from "next/navigation";
@@ -70,6 +70,11 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
     try {
       // Подхватываем последний поисковый запрос — менеджеру виднее что искал клиент
       const searchQuery = sessionStorage.getItem("lastSearchQuery") || "";
+
+      // Получаем GA4 client_id и session_id асинхронно (таймаут 500мс)
+      const ga_client_id = await getGA4ClientId();
+      const ga_session_id = getGA4SessionId();
+
       let filePayload: { name: string; type: string; data: string } | undefined;
       if (file) {
         try {
@@ -85,6 +90,8 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
           category: category || "",
           search_query: searchQuery,
           page_url: window.location.href,
+          ga_client_id,
+          ga_session_id,
           ...getUtmParams(),
         }),
       });
@@ -264,7 +271,7 @@ export default function LeadFormModal({ open, onClose, category, title }: LeadFo
                   ? `Здравствуйте! Интересует ${category}. Прикреплю список товаров.`
                   : undefined,
                 category,
-              );
+              ).catch(() => {});
             }}
             className="block text-center text-sm font-medium text-green-400 hover:text-green-300 cursor-pointer"
           >

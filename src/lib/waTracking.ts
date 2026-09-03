@@ -2,7 +2,7 @@
 // Client-side утилита для отправки маячков в CRM через /api/wa-click
 
 import { COMPANY } from "@/config/company";
-import { getUtmParams } from "@/hooks/useAnalytics";
+import { getUtmParams, getGA4ClientId, getGA4SessionId } from "@/hooks/useAnalytics";
 
 /**
  * Генерирует токен в формате KRP-[A-Z2-7]{16}
@@ -28,6 +28,8 @@ export interface WaClickBeaconPayload {
   utm_content?: string;
   utm_term?: string;
   landing_page?: string;
+  ga_client_id?: string;
+  ga_session_id?: string;
 }
 
 /**
@@ -55,7 +57,7 @@ async function sendWaClickBeacon(payload: WaClickBeaconPayload): Promise<void> {
  * @param text Текст сообщения (опционально, используется дефолт)
  * @param category Категория (опционально, для аналитики)
  */
-export function openWhatsApp(text?: string, category?: string): void {
+export async function openWhatsApp(text?: string, category?: string): Promise<void> {
   if (typeof window === "undefined") return;
 
   const token = genWaToken();
@@ -66,6 +68,16 @@ export function openWhatsApp(text?: string, category?: string): void {
     attr = getUtmParams() || {};
   } catch {
     // Если не смогли получить, просто пропускаем (код работает без этого)
+  }
+
+  // Получаем GA4 client_id и session_id асинхронно (таймаут 500мс)
+  let ga_client_id: string | null = null;
+  let ga_session_id: string | null = null;
+  try {
+    ga_client_id = await getGA4ClientId();
+    ga_session_id = getGA4SessionId();
+  } catch {
+    // Если не смогли получить GA4 ID, просто пропускаем
   }
 
   // Шлём маячок в CRM (fire-and-forget)
@@ -80,6 +92,8 @@ export function openWhatsApp(text?: string, category?: string): void {
     utm_content: attr.utm_content || undefined,
     utm_term: attr.utm_term || undefined,
     landing_page: attr.landing_page || (typeof window !== "undefined" ? window.location.pathname + window.location.search : undefined),
+    ga_client_id: ga_client_id || undefined,
+    ga_session_id: ga_session_id || undefined,
   };
   sendWaClickBeacon(payload);
 

@@ -30,6 +30,8 @@ export interface LeadEmailData {
   wbraid?: string;
   landing_page?: string;
   whatsapp?: string;
+  ga_client_id?: string;
+  ga_session_id?: string;
   attachment?: { filename: string; content: Buffer };
 }
 
@@ -90,6 +92,8 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     utm_term: lead.utm_term || "",
     gclid: lead.gclid || lead.gbraid || lead.wbraid || "",
     landing_page: lead.landing_page || lead.pageUrl || "",
+    ga_client_id: lead.ga_client_id || "",
+    ga_session_id: lead.ga_session_id || "",
   };
   const jsonBlock = `LEADHUB-JSON:${JSON.stringify(crmJson)}:LEADHUB`;
 
@@ -177,6 +181,8 @@ export interface WaClickBeaconFields {
   utm_content?: string;
   utm_term?: string;
   landing_page?: string;
+  ga_client_id?: string;
+  ga_session_id?: string;
 }
 
 export async function sendWaClickBeacon(fields: WaClickBeaconFields): Promise<void> {
@@ -200,6 +206,8 @@ export async function sendWaClickBeacon(fields: WaClickBeaconFields): Promise<vo
     utm_content: fields.utm_content || "",
     utm_term: fields.utm_term || "",
     landing_page: fields.landing_page || "",
+    ga_client_id: fields.ga_client_id || "",
+    ga_session_id: fields.ga_session_id || "",
   };
   const jsonBlock = `LEADHUB-JSON:${JSON.stringify(crmJson)}:LEADHUB`;
 

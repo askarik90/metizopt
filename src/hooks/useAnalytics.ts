@@ -173,6 +173,57 @@ export function captureAttribution(): void {
   }
 }
 
+// Получить GA4 client_id через gtag асинхронно (таймаут 500мс)
+// Fallback: парсинг cookie _ga формата GA1.1.X.Y → X.Y
+export function getGA4ClientId(): Promise<string | null> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined" || typeof window.gtag !== "function") {
+      resolve(null);
+      return;
+    }
+
+    const timeout = setTimeout(() => resolve(null), 500);
+
+    try {
+      window.gtag("get", "G-TLDLTKY024", "client_id", (clientId: string) => {
+        clearTimeout(timeout);
+        resolve(clientId || null);
+      });
+    } catch {
+      clearTimeout(timeout);
+      // Fallback: парсинг _ga cookie
+      try {
+        const ga = readCookie("_ga");
+        if (ga) {
+          const match = ga.match(/GA1\.1\.(\d+\.\d+)/);
+          if (match) {
+            resolve(match[1]);
+            return;
+          }
+        }
+      } catch {}
+      resolve(null);
+    }
+  });
+}
+
+// Получить GA4 session_id из cookie или sessionStorage
+export function getGA4SessionId(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    // GA4 session_id хранится в _ga_* cookie или sessionStorage
+    const gaSession = readCookie("_ga_tldltky024");
+    if (gaSession) {
+      const match = gaSession.match(/GA1\.\d+\.(\d+)/);
+      if (match) return match[1];
+    }
+    // Fallback: свой session_id из sessionStorage
+    return sessionStorage.getItem("krp_sid") || null;
+  } catch {
+    return null;
+  }
+}
+
 // Полная атрибуция для отправки в форме/CRM: cookie (приоритет) + добор из текущего URL.
 export function getUtmParams(): Record<string, string> {
   if (typeof window === "undefined") return {};

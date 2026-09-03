@@ -58,6 +58,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
       gbraid: cap(body.gbraid, 200),
       wbraid: cap(body.wbraid, 200),
       landing_page: cap(body.landing_page, 500),
+      ga_client_id: cap(body.ga_client_id, 200),
+      ga_session_id: cap(body.ga_session_id, 200),
       created_at: new Date().toISOString(),
     };
 
@@ -137,6 +139,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<LeadResponse>
         wbraid: lead.wbraid,
         landing_page: lead.landing_page,
         whatsapp: lead.whatsapp,
+        ga_client_id: lead.ga_client_id,
+        ga_session_id: lead.ga_session_id,
         attachment,
       });
       console.log("✅ Email sent successfully");

@@ -19,6 +19,8 @@ export interface Lead {
   gbraid?: string;
   wbraid?: string;
   landing_page?: string;
+  ga_client_id?: string;
+  ga_session_id?: string;
   created_at: string;
 }
 

@@ -32,6 +32,8 @@ interface WaClickBody {
   utm_content?: string;
   utm_term?: string;
   landing_page?: string;
+  ga_client_id?: string;
+  ga_session_id?: string;
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -55,6 +57,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       utm_content: body.utm_content,
       utm_term: body.utm_term,
       landing_page: body.landing_page,
+      ga_client_id: body.ga_client_id,
+      ga_session_id: body.ga_session_id,
     };
 
     // ВАЖНО: на Vercel serverless нельзя fire-and-forget после ответа — функция
