@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { LEGACY_CATEGORY_SLUGS } from "./src/lib/catalogHref";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["sanitize-html", "nodemailer"],
@@ -10,6 +11,12 @@ const nextConfig: NextConfig = {
         destination: "https://krp.kz/:path*",
         permanent: true,
       },
+      // Старые короткие адреса категорий крепежа (/catalog/bolty …) → настоящие (24.09.2026, были 404).
+      ...Object.entries(LEGACY_CATEGORY_SLUGS).map(([from, to]) => ({
+        source: `/catalog/${from}`,
+        destination: `/catalog/${to}`,
+        permanent: true,
+      })),
     ];
   },
   async headers() {

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useGroups, useCategories } from "@/hooks/useCatalog";
+import { catalogHref } from "@/lib/catalogHref";
 import {
   Wrench, Wind, BarChart3, Star, Link2, Zap, Droplets, ChevronDown,
 } from "lucide-react";
@@ -122,7 +123,7 @@ function CatCard({ cat }: { cat: Cat }) {
   const imgUrl = CATEGORY_IMAGES[cat.slug];
   return (
     <Link
-      href={`/catalog/${cat.slug}`}
+      href={catalogHref(cat.slug)}
       className="relative overflow-hidden flex flex-col justify-between p-4 bg-slate-50 border border-slate-100 hover:border-orange-400 hover:shadow-md transition-all group/cat rounded min-h-[90px]"
     >
       {imgUrl && (

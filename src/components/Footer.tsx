@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Phone, MessageCircle, Mail, MapPin, Clock } from "lucide-react";
 import { COMPANY } from "@/config/company";
+import { catalogHref } from "@/lib/catalogHref";
 import { useSettings } from "@/hooks/useSettings";
 import { usePhone } from "@/hooks/usePhone";
 
@@ -44,7 +45,7 @@ export default function Footer() {
               {COMPANY.categories.slice(0, 6).map((cat) => (
                 <li key={cat.slug}>
                   <Link
-                    href={`/catalog/${cat.slug}`}
+                    href={catalogHref(cat.slug)}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
                     {cat.title}
