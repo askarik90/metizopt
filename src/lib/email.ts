@@ -4,8 +4,19 @@ const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
 const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
 const SMTP_USER = process.env.SMTP_USER || "";
 const SMTP_PASS = process.env.SMTP_PASS || "";
-const NOTIFY_TO = process.env.NOTIFY_EMAIL || "140@bugel.kz";
+// Кому письмо о заявке (решение владельца 24.09.2026): с рекламы — менеджеру рекламной воронки (Айгерим),
+// остальные — в отдел продаж. Старую переменную NOTIFY_EMAIL (140@bugel.kz, колл-центр) намеренно НЕ читаем:
+// если она осталась в настройках Vercel, она перебила бы новую маршрутизацию.
+const NOTIFY_ADS = process.env.NOTIFY_EMAIL_ADS || "131@bugel.kz";
+const NOTIFY_OTHER = process.env.NOTIFY_EMAIL_OTHER || "sales@bugel.kz";
 const NOTIFY_CC = process.env.NOTIFY_EMAIL_CC || "marketingbugel1@gmail.com";
+// Маячки wa-click нужны только CRM (она читает ящик отправителя по FROM) — людям их не шлём (было 137 шт в 140@).
+const BEACON_TO = process.env.BEACON_EMAIL || SMTP_USER;
+
+/** Заявка пришла по клику на объявление: метка Google Ads или платная UTM. */
+function isFromAds(lead: LeadEmailData): boolean {
+  return Boolean(lead.gclid || lead.gbraid || lead.wbraid || (lead.utm_medium || "").toLowerCase() === "cpc");
+}
 
 // Экранирование пользовательских полей в HTML письма (защита от инъекций)
 const esc = (s = "") =>
@@ -154,12 +165,13 @@ export async function sendLeadNotification(lead: LeadEmailData): Promise<void> {
     </body></html>
   `;
 
+  const fromAds = isFromAds(lead);
   await transporter.sendMail({
     from: `KRP.kz <${SMTP_USER}>`,
-    to: NOTIFY_TO,
+    to: fromAds ? NOTIFY_ADS : NOTIFY_OTHER,
     cc: NOTIFY_CC,
     // \r\n из полей убираем — защита от инъекции заголовков
-    subject: `📦 Новая заявка: ${lead.name.replace(/[\r\n]+/g, " ")} — ${lead.phone.replace(/[\r\n]+/g, " ")}`,
+    subject: `${fromAds ? "🎯 " : ""}📦 Новая заявка: ${lead.name.replace(/[\r\n]+/g, " ")} — ${lead.phone.replace(/[\r\n]+/g, " ")}`,
     html,
     attachments: lead.attachment ? [lead.attachment] : undefined,
     encoding: "utf8",
@@ -244,7 +256,7 @@ export async function sendWaClickBeacon(fields: WaClickBeaconFields): Promise<vo
 
   await transporter.sendMail({
     from: `KRP.kz <${SMTP_USER}>`,
-    to: NOTIFY_TO,
+    to: BEACON_TO,
     subject: `📱 wa-click: ${fields.token}`,
     html,
     encoding: "utf8",
