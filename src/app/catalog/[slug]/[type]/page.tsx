@@ -13,6 +13,7 @@ import { sanitizeRichText } from "@/lib/sanitize";
 import Image from "next/image";
 import { getCategoryImage, getTypeImage, heroBg } from "@/lib/categoryImages";
 import ImageEditOverlay from "@/components/edit/ImageEditOverlay";
+import { primaryCategoryForType } from "@/lib/catalogHref";
 
 export const revalidate = 86400; // ISR: контент в git, пересборка раз в сутки
 
@@ -40,7 +41,8 @@ export async function generateMetadata({
   const { slug, type } = await params;
   const node = findType(slug, type);
   if (!node) return {};
-  const canonical = `https://${COMPANY.domain}/catalog/${slug}/${type}`;
+  // Вид в нескольких категориях → canonical на главную из них (дубль «Заклепка А2» в нержавейке и т.п.)
+  const canonical = `https://${COMPANY.domain}/catalog/${primaryCategoryForType(tree, type, slug)}/${type}`;
   const sizeList = node.sizes.slice(0, 6).map((s) => s.label).join(", ");
   const title = `${node.name} оптом в Алматы`;
   const description = `${node.name}${

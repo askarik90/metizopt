@@ -15,7 +15,7 @@ export default function QuotePage() {
   return (
     <>
       <Header />
-      <QuickQuoteForm />
+      <QuickQuoteForm asPageHeading />
       <Footer />
     </>
   );

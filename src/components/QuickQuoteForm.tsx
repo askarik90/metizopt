@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 
 interface QuickQuoteFormProps {
   category?: string;
+  /** Форма — главное содержимое страницы (/quote): заголовок H1 вместо H2. */
+  asPageHeading?: boolean;
 }
 
-export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
+export default function QuickQuoteForm({ category, asPageHeading = false }: QuickQuoteFormProps) {
   const router = useRouter();
   const { trackLeadFormSubmit, trackFileUpload, trackLeadFormOpen } = useAnalytics();
 
@@ -72,9 +74,17 @@ export default function QuickQuoteForm({ category }: QuickQuoteFormProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           <div>
-            <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-4">
-              Получить коммерческое предложение
-            </h2>
+            {/* На /quote форма — главное содержимое страницы, там заголовок H1 (аудит 24.09.2026: у /quote не было H1);
+                на главной форма — один из блоков, там H2. */}
+            {asPageHeading ? (
+              <h1 className="text-3xl font-black text-white uppercase tracking-tight mb-4">
+                Получить коммерческое предложение
+              </h1>
+            ) : (
+              <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-4">
+                Получить коммерческое предложение
+              </h2>
+            )}
             <p className="text-slate-300 text-lg mb-6">
               Можно отправить Excel, PDF, фото бумажной заявки, скан или просто
               вставить список текстом.
